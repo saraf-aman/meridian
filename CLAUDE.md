@@ -32,7 +32,7 @@ Pure vanilla HTML/CSS/JS. No frameworks, no build tools, no npm.
 
 - `manifest.json` must be linked in every HTML `<head>`:
   ```html
-  <link rel="manifest" href="/manifest.json">
+  <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#1a6b72">
   ```
 
@@ -50,7 +50,7 @@ Pure vanilla HTML/CSS/JS. No frameworks, no build tools, no npm.
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(() => {});
+        navigator.serviceWorker.register('sw.js').catch(() => {});
       });
     }
   </script>

@@ -1,19 +1,22 @@
-const CACHE = 'app-4378d617';
+const CACHE = 'app-74b5fa3d';
 
-// All same-origin assets to pre-cache on install.
-// Add new pages/assets here as the site grows.
+// self.registration.scope resolves to the correct base regardless of
+// whether the site is deployed at the root or a sub-path (e.g. /meridian/).
+const SCOPE = self.registration.scope; // e.g. 'https://saraf-aman.github.io/meridian/'
+
+// Paths are relative to SCOPE — no leading slash needed.
 const PRECACHE = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/css/base.css',
-  '/css/layout.css',
-  '/css/home.css',
-  '/css/components.css',
-  '/js/app.js',
-  '/js/footer.js',
-  '/js/nav.js',
-  '/js/workout.js',
+  '',
+  'index.html',
+  'manifest.json',
+  'css/base.css',
+  'css/layout.css',
+  'css/home.css',
+  'css/components.css',
+  'js/app.js',
+  'js/footer.js',
+  'js/nav.js',
+  'js/workout.js',
 ];
 
 function cacheKey(url) {
@@ -31,7 +34,7 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE).then(cache =>
       Promise.all(PRECACHE.map(path =>
-        cache.add(self.location.origin + path).catch(() => {})
+        cache.add(SCOPE + path).catch(() => {})
       ))
     )
   );
@@ -51,9 +54,8 @@ self.addEventListener('fetch', event => {
   const url  = new URL(event.request.url);
   const path = url.pathname;
   const key  = cacheKey(event.request.url);
-  const root = self.location.origin + '/';
 
-  if (path.endsWith('.html') || path === '/' || path.endsWith('/')) {
+  if (path.endsWith('.html') || path.endsWith('/')) {
     // Network-first for HTML — fresh content online, fallback to cache offline
     event.respondWith(
       fetch(event.request)
@@ -62,10 +64,10 @@ self.addEventListener('fetch', event => {
           caches.open(CACHE).then(c => c.put(key, clone));
           return res;
         })
-        .catch(() => caches.match(key).then(r => r || caches.match(root)))
+        .catch(() => caches.match(key).then(r => r || caches.match(SCOPE)))
     );
   } else if (path.endsWith('.css') || path.endsWith('.js') || path.endsWith('.json')) {
-    // Cache-first for CSS/JS — hash-busting ensures staleness isn't an issue
+    // Cache-first for CSS/JS/JSON — hash-busting ensures staleness isn't an issue
     event.respondWith(
       caches.match(key).then(cached => {
         if (cached) return cached;

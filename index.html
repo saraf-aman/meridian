@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="css/base.css?v=28ee7145">
   <link rel="stylesheet" href="css/layout.css?v=d6b43e64">
   <link rel="stylesheet" href="css/home.css?v=3d7fef5c">
-  <link rel="manifest" href="/manifest.json">
+  <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#1a6b72">
 </head>
 <body>
@@ -138,7 +138,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js').catch(() => {});
+      navigator.serviceWorker.register('sw.js').catch(() => {});
     });
   }
 </script>
