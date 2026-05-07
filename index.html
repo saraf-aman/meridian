@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meridian</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css?v=2776148f">
+  <link rel="stylesheet" href="css/layout.css?v=4ae9803a">
+  <link rel="stylesheet" href="css/home.css?v=3d7fef5c">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#1a6b72">
+</head>
+<body>
+
+<main class="page">
+  <div class="container">
+
+    <!-- ── Hero ─────────────────────────────────────────────── -->
+    <section class="home-hero">
+      <div class="hero-glow"></div>
+      <div class="hero-content">
+        <div class="hero-eyebrow">Phase 1 · Week 1 of 4</div>
+        <h1>Your health,<br>all in one place.</h1>
+        <div class="hero-sub">A personal health system across training, nutrition, sleep, and recovery. One place, built for you.</div>
+        <a class="hero-cta" href="pages/workout/phase-1.html">Begin Phase 1 →</a>
+      </div>
+    </section>
+
+    <!-- ── Active Now ────────────────────────────────────────── -->
+    <div class="home-modules">
+      <div class="modules-block">
+        <p class="modules-label">Active Now</p>
+
+        <a class="featured-card" href="pages/workout/index.html" aria-label="Workout — Begin session">
+          <div class="featured-card-inner">
+            <div class="featured-left">
+              <div class="icon-badge icon-badge--lg accent-tint">🏋️</div>
+              <div class="featured-text">
+                <div class="featured-meta">
+                  <h2 class="featured-title">Workout</h2>
+                  <span class="active-chip">Phase 1 Active</span>
+                </div>
+                <p class="featured-desc">3-phase progressive strength program with back safety protocol, exercise guides, rest timer, and session tracking.</p>
+              </div>
+            </div>
+            <span class="featured-action">
+              Begin session
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+                <path d="M2 7.5h11M9 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </a>
+      </div>
+
+      <!-- ── On the Roadmap ──────────────────────────────────── -->
+      <div class="modules-block">
+        <p class="modules-label">On the Roadmap</p>
+
+        <div class="roadmap-grid">
+
+          <div class="roadmap-card">
+            <div class="icon-badge green-tint">🥗</div>
+            <h4 class="roadmap-title">Nutrition</h4>
+            <p class="roadmap-desc">Meal plans, macros, and dietary guidance tailored around your preferences and goals.</p>
+            <span class="soon-chip">Coming soon</span>
+          </div>
+
+          <div class="roadmap-card">
+            <div class="icon-badge amber-tint">😴</div>
+            <h4 class="roadmap-title">Sleep</h4>
+            <p class="roadmap-desc">Sleep hygiene protocols, wind-down routines, and recovery optimisation.</p>
+            <span class="soon-chip">Coming soon</span>
+          </div>
+
+          <div class="roadmap-card">
+            <div class="icon-badge orange-tint">🏃</div>
+            <h4 class="roadmap-title">Cardio</h4>
+            <p class="roadmap-desc">Structured run progression from brisk walking to continuous running over 16 weeks.</p>
+            <span class="soon-chip">Coming soon</span>
+          </div>
+
+          <div class="roadmap-card">
+            <div class="icon-badge accent-tint">💧</div>
+            <h4 class="roadmap-title">Hydration</h4>
+            <p class="roadmap-desc">Daily intake targets, timing around training sessions, and tracking.</p>
+            <span class="soon-chip">Coming soon</span>
+          </div>
+
+          <div class="roadmap-card">
+            <div class="icon-badge green-tint">💊</div>
+            <h4 class="roadmap-title">Supplements</h4>
+            <p class="roadmap-desc">What to take, when, and why — based on your goals, diet, and location.</p>
+            <span class="soon-chip">Coming soon</span>
+          </div>
+
+          <div class="roadmap-card">
+            <div class="icon-badge orange-tint">🧠</div>
+            <h4 class="roadmap-title">Habits</h4>
+            <p class="roadmap-desc">The small daily behaviours that compound into lasting results.</p>
+            <span class="soon-chip">Coming soon</span>
+          </div>
+
+          <div class="roadmap-card">
+            <div class="icon-badge accent-tint">📈</div>
+            <h4 class="roadmap-title">Progress</h4>
+            <p class="roadmap-desc">Body measurements, strength milestones, and visual progress over time.</p>
+            <span class="soon-chip">Coming soon</span>
+          </div>
+
+          <div class="roadmap-card">
+            <div class="icon-badge red-tint">🦴</div>
+            <h4 class="roadmap-title">Back Management</h4>
+            <p class="roadmap-desc">Injury history reference, safe exercise protocols, and red flag guidance.</p>
+            <span class="soon-chip">Coming soon</span>
+          </div>
+
+          <div class="roadmap-card">
+            <div class="icon-badge green-tint">🍽️</div>
+            <h4 class="roadmap-title">Picky Eating</h4>
+            <p class="roadmap-desc">Psychology-informed food expansion at your own pace, pressure-free.</p>
+            <span class="soon-chip">Coming soon</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script src="js/nav.js?v=bea7d987"></script>
+<script src="js/footer.js?v=040a11b6"></script>
+<script src="js/app.js?v=ed10dfbd"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

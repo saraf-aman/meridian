@@ -1,0 +1,107 @@
+/* ============================================================
+   MERIDIAN — BASE
+   Design tokens · Reset · Typography
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Background layers — warm off-white */
+  --bg:        #faf8f5;
+  --surface-1: #f3f0ea;
+  --surface-2: #eceae2;
+  --surface-3: #e3dfd6;
+  --surface-4: #d7d2c8;
+
+  /* Borders — warm dark */
+  --border:       rgba(28, 22, 14, 0.10);
+  --border-hover: rgba(28, 22, 14, 0.20);
+
+  /* Text — dark, warm, readable */
+  --text-1: #1c1a16;
+  --text-2: #5e5448;
+  --text-3: #9a8f82;
+
+  /* Accent — deep teal */
+  --accent:       #1a6b72;
+  --accent-hover: #155960;
+  --accent-dim:   rgba(26, 107, 114, 0.10);
+  --accent-dim-2: rgba(26, 107, 114, 0.18);
+
+  /* Semantic */
+  --green:      #2e7d52;
+  --green-dim:  rgba(46, 125, 82, 0.10);
+  --orange:     #b85c2a;
+  --orange-dim: rgba(184, 92, 42, 0.10);
+  --red:        #b83232;
+  --red-dim:    rgba(184, 50, 50, 0.10);
+  --amber:      #9a7018;
+  --amber-dim:  rgba(154, 112, 24, 0.10);
+
+  /* Typography */
+  --font: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Layout */
+  --nav-h:    62px;
+  --max-w:    1080px;
+
+  /* Radii */
+  --r-sm:   6px;
+  --r-md:   10px;
+  --r-lg:   14px;
+  --r-xl:   20px;
+  --r-full: 9999px;
+
+  /* Shadows — softer on light backgrounds */
+  --shadow-sm: 0 1px 4px rgba(28, 22, 14, 0.08);
+  --shadow-md: 0 4px 16px rgba(28, 22, 14, 0.10);
+  --shadow-lg: 0 8px 32px rgba(28, 22, 14, 0.12);
+
+  /* Transitions */
+  --t-fast: 0.14s ease;
+  --t-base: 0.22s ease;
+  --t-slow: 0.38s ease;
+}
+
+/* ── Reset ────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text-1);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, svg { display: block; }
+a { color: inherit; text-decoration: none; }
+button { font-family: var(--font); cursor: pointer; border: none; background: none; }
+ul, ol { list-style: none; }
+table { border-collapse: collapse; width: 100%; }
+
+/* ── Type scale ───────────────────────────────────────────── */
+h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.03em; }
+h2 { font-size: clamp(1.25rem, 2.5vw, 1.7rem);  font-weight: 600; line-height: 1.2;  letter-spacing: -0.02em; }
+h3 { font-size: 1.15rem; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; }
+h4 { font-size: 0.95rem; font-weight: 600; line-height: 1.35; }
+h5 { font-size: 0.72rem; font-weight: 700; line-height: 1.4; text-transform: uppercase; letter-spacing: 0.07em; }
+p  { line-height: 1.7; }
+
+/* ── Scrollbar ────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--surface-1); }
+::-webkit-scrollbar-thumb { background: var(--surface-4); border-radius: var(--r-full); }
+::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
+
+/* ── Focus & selection ────────────────────────────────────── */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--r-sm); }
+::selection { background: var(--accent-dim-2); color: var(--text-1); }

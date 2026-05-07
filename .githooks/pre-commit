@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# 1. Hash all .html, .css, .js files (excluding .git/ and sw.js itself)
+HASH=$(find . -type f \( -name '*.html' -o -name '*.css' -o -name '*.js' \) \
+  -not -path './.git/*' \
+  -not -name 'sw.js' \
+  | LC_ALL=C sort | xargs cat | shasum | cut -c1-8)
+
+echo "[pre-commit] asset hash: $HASH"
+
+# 2. Update CACHE constant in sw.js
+python3 - <<PYEOF
+import re, pathlib
+p = pathlib.Path('sw.js')
+txt = re.sub(r"const CACHE = 'app-[0-9a-f]+'", "const CACHE = 'app-${HASH}'", p.read_text())
+p.write_text(txt)
+PYEOF
+
+git add sw.js
+
+# 3. Run cache-busting on HTML files
+python3 bust.py
+
+# 4. Stage any HTML files that bust.py modified
+while IFS= read -r f; do
+  [ -n "$f" ] && git add "$f"
+done < <(git ls-files -m -- '*.html')
+
+echo "[pre-commit] done"
