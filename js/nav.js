@@ -21,15 +21,44 @@
     }).join('');
 
     var html = [
-      '<nav class="site-nav">',
+      '<nav class="site-nav" id="site-nav">',
         '<div class="nav-inner">',
           '<a class="nav-logo" href="' + basePath + 'index.html">Meri<span>dian</span></a>',
-          '<div class="nav-links">' + linksHtml + '</div>',
+          '<div class="nav-links" id="nav-links">' + linksHtml + '</div>',
+          '<button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">',
+            '<span></span><span></span><span></span>',
+          '</button>',
         '</div>',
       '</nav>',
     ].join('');
 
     var main = document.querySelector('main');
     if (main) main.insertAdjacentHTML('beforebegin', html);
+
+    var nav       = document.getElementById('site-nav');
+    var hamburger = document.getElementById('nav-hamburger');
+    var navLinks  = document.getElementById('nav-links');
+
+    if (!hamburger || !navLinks) return;
+
+    function closeMenu() {
+      navLinks.classList.remove('nav-open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      hamburger.classList.remove('is-open');
+    }
+
+    hamburger.addEventListener('click', function () {
+      var open = navLinks.classList.toggle('nav-open');
+      hamburger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      hamburger.classList.toggle('is-open', open);
+    });
+
+    navLinks.addEventListener('click', function (e) {
+      if (e.target.closest('a.nav-link')) closeMenu();
+    });
+
+    document.addEventListener('click', function (e) {
+      if (nav && !nav.contains(e.target)) closeMenu();
+    });
   };
 }());

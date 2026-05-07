@@ -1,4 +1,4 @@
-const CACHE = 'app-68682b0d';
+const CACHE = 'app-327cf5fb';
 
 function cacheKey(url) {
   try {
