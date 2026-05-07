@@ -1,4 +1,4 @@
-const CACHE = 'app-b8a6f787';
+const CACHE = 'app-68682b0d';
 
 function cacheKey(url) {
   try {
@@ -42,9 +42,9 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-  const url = new URL(event.request.url);
-  if (url.origin !== self.location.origin) return;
+  if (!event.request.url.startsWith(self.location.origin)) return;
 
+  const url  = new URL(event.request.url);
   const path = url.pathname;
   const key  = cacheKey(event.request.url);
 
