@@ -5,12 +5,15 @@ const CACHE = 'app-4378d617';
 const PRECACHE = [
   '/',
   '/index.html',
+  '/manifest.json',
   '/css/base.css',
   '/css/layout.css',
   '/css/home.css',
+  '/css/components.css',
   '/js/app.js',
   '/js/footer.js',
   '/js/nav.js',
+  '/js/workout.js',
 ];
 
 function cacheKey(url) {
@@ -61,7 +64,7 @@ self.addEventListener('fetch', event => {
         })
         .catch(() => caches.match(key).then(r => r || caches.match(root)))
     );
-  } else if (path.endsWith('.css') || path.endsWith('.js')) {
+  } else if (path.endsWith('.css') || path.endsWith('.js') || path.endsWith('.json')) {
     // Cache-first for CSS/JS — hash-busting ensures staleness isn't an issue
     event.respondWith(
       caches.match(key).then(cached => {
