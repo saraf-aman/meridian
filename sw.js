@@ -1,4 +1,4 @@
-const CACHE = 'app-6e00917e';
+const CACHE = 'app-32251d70';
 
 // self.registration.scope resolves to the correct base regardless of
 // whether the site is deployed at the root or a sub-path (e.g. /meridian/).
@@ -72,18 +72,16 @@ self.addEventListener('fetch', event => {
         .catch(() => caches.match(key).then(r => r || caches.match(SCOPE)))
     );
   } else if (path.endsWith('.css') || path.endsWith('.js') || path.endsWith('.json')) {
-    // Cache-first for CSS/JS/JSON — hash-busting ensures staleness isn't an issue
+    // Network-first for CSS/JS/JSON — ensures updates appear on next soft reload.
+    // GitHub Pages HTTP-caches sw.js, so the old SW may stay active for minutes after
+    // a deploy; cache-first would serve stale assets during that window.
     event.respondWith(
-      caches.match(key).then(cached => {
-        if (cached) return cached;
-        return fetch(event.request)
-          .then(res => {
-            const clone = res.clone();
-            caches.open(CACHE).then(c => c.put(key, clone));
-            return res;
-          })
-          .catch(() => new Response('', { status: 408, statusText: 'Offline' }));
-      })
+      fetch(event.request)
+        .then(res => {
+          if (res.ok) caches.open(CACHE).then(c => c.put(key, res.clone()));
+          return res;
+        })
+        .catch(() => caches.match(key).then(r => r || new Response('', { status: 408, statusText: 'Offline' })))
     );
   }
 });
