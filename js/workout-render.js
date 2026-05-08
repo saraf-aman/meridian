@@ -49,6 +49,17 @@ var WorkoutRender = (function () {
     return '<button class="rest-btn" data-duration="' + esc(secs) + '">' + I.clock + esc(secs) + 's</button>';
   }
 
+  /* ── Per-set weight section ────────────────────────────────── */
+  function setWeightsSection(exName, setCount) {
+    var n = parseInt(setCount, 10) || 0;
+    var tags = '';
+    for (var i = 0; i < n; i++) {
+      tags += '<span class="weight-tag" data-set="' + i + '">Set ' + (i + 1) + ': <span class="wt-val">—</span></span>';
+    }
+    return '<div class="card-section set-weights" data-ex-name="' + esc(exName) + '">' +
+      '<h5>Your weights</h5><div class="weight-row">' + tags + '</div></div>';
+  }
+
   /* ── Exercise card ─────────────────────────────────────────── */
   function exCard(cfg, num) {
     var form = WD.EX[cfg.id];
@@ -63,9 +74,9 @@ var WorkoutRender = (function () {
       mistakesCol = '<div class="card-section"><h5>Common Mistakes</h5><ul>' + ms + '</ul></div>';
     }
 
-    var bodyInner = mistakesCol
+    var bodyInner = setWeightsSection(form.name, cfg.sets) + (mistakesCol
       ? '<div class="card-cols">' + stepsCol + mistakesCol + '</div>'
-      : stepsCol;
+      : stepsCol);
 
     if (form.backNote) {
       bodyInner += '<div class="back-note"><strong>Back note: </strong>' + esc(form.backNote) + '</div>';

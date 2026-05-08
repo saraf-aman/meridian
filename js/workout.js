@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAccordions('.ref-header', '.ref-block');
   initMiniTabs();
   initSetTracker();
+  initWeightTracker();
   initResetButtons();
   initChecklists();
   initTimer();
@@ -118,6 +119,55 @@ function initResetButtons() {
         dots.forEach(d => d.classList.remove('done'));
         card.classList.remove('done');
         localStorage.removeItem(trackerKey(card));
+      });
+    });
+  });
+}
+
+/* ── Per-set weight tracker (persistent, never resets) ───── */
+function initWeightTracker() {
+  document.querySelectorAll('.set-weights').forEach(section => {
+    const exName = section.dataset.exName;
+    section.querySelectorAll('.weight-tag').forEach((tag, i) => {
+      const key = `m-weight|${exName}|${i}`;
+      const saved = localStorage.getItem(key);
+      if (saved) tag.querySelector('.wt-val').textContent = saved;
+
+      tag.addEventListener('click', e => {
+        e.stopPropagation();
+        if (tag.querySelector('input')) return;
+
+        const current = tag.querySelector('.wt-val').textContent;
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = current === '—' ? '' : current;
+        input.className = 'weight-input';
+        input.placeholder = 'e.g. 25 lbs';
+        tag.textContent = 'Set ' + (i + 1) + ': ';
+        tag.appendChild(input);
+        input.focus();
+        input.select();
+
+        const restore = val => {
+          tag.textContent = 'Set ' + (i + 1) + ': ';
+          const span = document.createElement('span');
+          span.className = 'wt-val';
+          span.textContent = val || '—';
+          tag.appendChild(span);
+        };
+
+        const save = () => {
+          const val = input.value.trim();
+          if (val) localStorage.setItem(key, val);
+          else localStorage.removeItem(key);
+          restore(val);
+        };
+
+        input.addEventListener('keydown', e => {
+          if (e.key === 'Enter')  { e.preventDefault(); save(); }
+          if (e.key === 'Escape') { e.preventDefault(); restore(current); }
+        });
+        input.addEventListener('blur', save);
       });
     });
   });
