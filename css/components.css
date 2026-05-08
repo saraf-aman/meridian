@@ -643,7 +643,6 @@
     gap: 8px;
   }
   .stat-chips     { justify-content: flex-start; }
-  .rest-btn       { display: none; }
   .session-head   { flex-direction: column; }
   .card-cols      { grid-template-columns: 1fr; }
 }
