@@ -48,9 +48,19 @@ self.addEventListener('install', event => {
 
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
-      .then(() => self.clients.claim())
+    caches.keys().then(keys => {
+      const stale = keys.filter(k => k !== CACHE);
+      return Promise.all(stale.map(k => caches.delete(k)))
+        .then(() => self.clients.claim())
+        .then(() => {
+          // On upgrade (not fresh install) force-reload every open tab so the
+          // user only needs to reload once to see the update everywhere.
+          if (stale.length > 0) {
+            return self.clients.matchAll({ type: 'window' })
+              .then(all => all.forEach(c => c.navigate(c.url)));
+          }
+        });
+    })
   );
 });
 
