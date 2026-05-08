@@ -26,13 +26,21 @@ def build_hash_map() -> dict:
 def bust_file(html_path: Path, hashes: dict) -> bool:
     text = html_path.read_text(encoding='utf-8')
     original = text
+    html_dir = html_path.parent
 
     def repl(m):
         prefix = m.group(1)  # e.g. href=" or src="
-        url    = m.group(2)  # e.g. css/base.css  or  css/base.css?v=old
+        url    = m.group(2)  # e.g. css/base.css  or  ../../js/app.js?v=old
         suffix = m.group(3)  # closing quote
         base   = re.sub(r'\?v=[0-9a-f]+$', '', url)
         h      = hashes.get(base)
+        if not h:
+            # Resolve relative paths (e.g. ../../js/app.js) to repo-root keys
+            try:
+                rel = (html_dir / base).resolve().relative_to(ROOT)
+                h   = hashes.get(rel.as_posix())
+            except ValueError:
+                pass
         if h:
             return f'{prefix}{base}?v={h}{suffix}'
         return m.group(0)

@@ -95,7 +95,7 @@
 
 /* ── Workout page header ──────────────────────────────────── */
 .workout-header {
-  padding: 40px 0 32px;
+  padding: 24px 0 20px;
   border-bottom: 1px solid var(--border);
   margin-bottom: 0;
 }
@@ -124,22 +124,6 @@
 }
 .phase-bar-inner::-webkit-scrollbar { display: none; }
 
-.phase-btn {
-  padding: 16px 20px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text-2);
-  border-bottom: 2px solid transparent;
-  white-space: nowrap;
-  transition: color var(--t-fast), border-color var(--t-fast);
-  flex-shrink: 0;
-  line-height: 1.2;
-}
-.phase-btn small  { display: block; font-size: 0.68rem; font-weight: 400; color: var(--text-3); margin-top: 2px; }
-.phase-btn:hover  { color: var(--text-1); }
-.phase-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
-.phase-btn.active small { color: var(--accent); opacity: 0.65; }
-
 /* ── Site footer ──────────────────────────────────────────── */
 .site-footer {
   border-top: 1px solid var(--border);
@@ -155,7 +139,7 @@
   .nav-inner        { padding: 0 16px; }
   .container        { padding: 0 16px; }
   .phase-bar-inner  { padding: 0 16px; }
-  .workout-header   { padding: 28px 0 24px; }
+  .workout-header   { padding: 18px 0 16px; }
 
   .nav-hamburger { display: flex; }
 

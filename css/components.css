@@ -3,69 +3,7 @@
    All reusable UI pieces
    ============================================================ */
 
-/* ── Phase panels ─────────────────────────────────────────── */
-.phase-panel         { display: none; padding-top: 24px; padding-bottom: 48px; }
-.phase-panel.active  { display: block; }
-
-/* ── Phase overview card ──────────────────────────────────── */
-.phase-overview {
-  background: var(--surface-1);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 24px;
-  margin-bottom: 24px;
-  display: grid;
-  gap: 20px;
-}
-
-.phase-overview-top {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.phase-badge {
-  display: inline-flex;
-  align-items: center;
-  background: var(--accent-dim);
-  color: var(--accent);
-  border: 1px solid rgba(124, 141, 244, 0.2);
-  padding: 4px 12px;
-  border-radius: var(--r-full);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  flex-shrink: 0;
-  margin-top: 4px;
-}
-
-.phase-overview-top h2  { color: var(--text-1); }
-.phase-overview-top p   { color: var(--text-2); font-size: 0.875rem; margin-top: 6px; }
-
-/* Schedule table */
-.schedule-table { border-radius: var(--r-md); overflow: hidden; border: 1px solid var(--border); }
-.schedule-table th,
-.schedule-table td { padding: 10px 16px; text-align: left; font-size: 0.83rem; border-bottom: 1px solid var(--border); }
-.schedule-table th  { background: var(--surface-2); color: var(--text-3); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; }
-.schedule-table tr:last-child td { border-bottom: none; }
-.schedule-table td:first-child { color: var(--text-2); font-weight: 600; width: 110px; }
-.schedule-table td:nth-child(2){ color: var(--text-1); font-weight: 500; }
-.schedule-table td  { color: var(--text-2); }
-.schedule-table tr:hover td { background: var(--surface-2); }
-.gym-day    { color: var(--accent)  !important; }
-.cardio-day { color: var(--green)   !important; }
-.rest-day   { color: var(--text-3)  !important; }
-
 /* ── Day tabs ─────────────────────────────────────────────── */
-.day-tabs-wrap {
-  background: var(--surface-1);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg) var(--r-lg) 0 0;
-  border-bottom: none;
-}
-
 .day-selector {
   display: flex;
   overflow-x: auto;
@@ -94,9 +32,9 @@
 .day-panels-wrap {
   background: var(--surface-1);
   border: 1px solid var(--border);
-  border-top: none;
-  border-radius: 0 0 var(--r-lg) var(--r-lg);
+  border-radius: var(--r-lg);
   padding: 28px;
+  margin-top: 20px;
 }
 
 .day-panel         { display: none; }
@@ -714,4 +652,108 @@
   .day-panels-wrap { padding: 18px; }
   .timer-widget    { right: 16px; bottom: calc(16px + 62px); width: 210px; }
   .timer-fab       { right: 16px; bottom: 16px; }
+}
+
+/* ── Rest-day message ─────────────────────────────────────── */
+.rest-day-msg {
+  padding: 32px 0;
+  text-align: center;
+  color: var(--text-3);
+  font-size: 0.875rem;
+}
+
+/* ── Phase reference blocks group ─────────────────────────── */
+.phase-refs { margin-top: 32px; padding-bottom: 16px; }
+
+/* ── Workout index — Phase cards ──────────────────────────── */
+.phase-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin: 28px 0 40px;
+}
+
+.phase-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 24px;
+  display: block;
+  transition: border-color var(--t-base), box-shadow var(--t-base), transform var(--t-base);
+}
+
+.phase-card--active       { border-color: var(--accent-dim-2); }
+.phase-card--active:hover { border-color: var(--accent); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.phase-card--upcoming     { opacity: 0.78; }
+.phase-card--upcoming:hover { opacity: 1; border-color: var(--border-hover); }
+.phase-card--locked       { opacity: 0.5; cursor: default; pointer-events: none; }
+
+.pc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: var(--r-full);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 16px;
+}
+.pc-badge-dot {
+  width: 6px; height: 6px;
+  border-radius: var(--r-full);
+  background: currentColor;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.75); }
+}
+.pc-badge--active   { background: var(--accent-dim); color: var(--accent); }
+.pc-badge--upcoming { background: var(--amber-dim);  color: var(--amber); }
+.pc-badge--locked   { background: var(--surface-3);  color: var(--text-3); }
+
+.pc-num   { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-3); margin-bottom: 4px; }
+.pc-title { font-size: 1.1rem;  font-weight: 700; color: var(--text-1); letter-spacing: -0.02em; margin-bottom: 4px; }
+.pc-weeks { font-size: 0.78rem; color: var(--text-3); margin-bottom: 14px; }
+.pc-goal  { font-size: 0.845rem; color: var(--text-2); line-height: 1.6; margin-bottom: 20px; }
+
+.pc-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+.pc-cta svg { width: 13px; height: 13px; }
+
+/* ── Quick access links ────────────────────────────────────── */
+.quick-links          { margin-bottom: 36px; }
+.quick-links-label    { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3); margin-bottom: 10px; }
+.quick-links-row      { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.quick-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  font-size: 0.825rem;
+  font-weight: 500;
+  color: var(--text-2);
+  min-height: 44px;
+  transition: all var(--t-fast);
+}
+.quick-link svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--text-3); }
+.quick-link:hover { background: var(--surface-2); color: var(--text-1); border-color: var(--border-hover); }
+.quick-link:hover svg { color: var(--accent); }
+
+@media (max-width: 640px) {
+  .phase-cards { grid-template-columns: 1fr; }
+  .quick-links-row { gap: 8px; }
+  .quick-link { font-size: 0.8rem; padding: 10px 14px; }
 }

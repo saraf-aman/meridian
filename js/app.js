@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var activePage = 'home';
   var basePath = '';
 
-  if (path.indexOf('/pages/workout/') !== -1) {
+  if (path.indexOf('/pages/workout') !== -1) {
     activePage = 'workout';
     basePath = '../../';
   } else if (path.indexOf('/pages/') !== -1) {

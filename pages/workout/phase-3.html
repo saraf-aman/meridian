@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 3 — Advanced Strength · Meridian</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="../../css/base.css?v=28ee7145">
+  <link rel="stylesheet" href="../../css/layout.css?v=26dc0ab1">
+  <link rel="stylesheet" href="../../css/components.css?v=c1fedc51">
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#1a6b72">
+</head>
+<body>
+
+<main class="page" id="page-root"></main>
+
+<script>
+var PHASE_CONFIG = {
+  num: 3,
+  title: 'Advanced Strength',
+  subtitle: 'Phase 3 · Weeks 11+',
+  tagline: '4 gym sessions + 1–2 cardio per week',
+  goal: 'Full push/pull/legs split. Heavy barbell compound lifts with linear progression. Running replaces intervals.',
+  sessions: {
+    mon: {
+      label: 'Mon', sub: 'Push', type: 'gym',
+      title: 'Monday — Push Day',
+      desc: 'All pressing movements. New exercise: barbell bench press and overhead tricep extension.',
+      duration: '~65 mins',
+      exercises: [
+        { id: 'bb_bench',          sets: 4, reps: '8',           tempo: '3-1-2-0', rest: 120, weight: 'Build from Phase 2' },
+        { id: 'incline_press',     sets: 3, reps: '10',          tempo: '3-1-2-0', rest: 90,  weight: 'Continue from Phase 2' },
+        { id: 'shoulder_press',    sets: 4, reps: '10',          tempo: '3-1-2-0', rest: 90,  weight: 'Continue from Phase 2' },
+        { id: 'cable_fly',         sets: 3, reps: '12',          tempo: '3-0-2-1', rest: 60,  weight: 'Continue from Phase 2' },
+        { id: 'face_pull',         sets: 3, reps: '15',          tempo: '2-1-2-1', rest: 60,  weight: 'Continue from Phase 2' },
+        { id: 'tricep_pushdown',   sets: 3, reps: '12',          tempo: '3-0-2-1', rest: 60,  weight: 'Continue from Phase 2' },
+        { id: 'overhead_tricep',   sets: 2, reps: '12',          tempo: '3-0-2-1', rest: 60,  weight: 'Light — feel the stretch' }
+      ]
+    },
+    tue: {
+      label: 'Tue', sub: 'Pull', type: 'gym',
+      title: 'Tuesday — Pull Day',
+      desc: 'All pulling movements. New exercise: hammer curl. Lat pulldown and cable row progress to heavier weights.',
+      duration: '~65 mins',
+      exercises: [
+        { id: 'lat_pulldown',  sets: 4, reps: '8',           tempo: '3-1-2-0', rest: 120, weight: 'Continue heavier from Phase 2' },
+        { id: 'cable_row',     sets: 4, reps: '10',          tempo: '3-1-2-1', rest: 90,  weight: 'Continue heavier from Phase 2' },
+        { id: 'bent_over_row', sets: 4, reps: '10 each',     tempo: '3-1-2-1', rest: 90,  weight: 'Continue from Phase 2' },
+        { id: 'face_pull',     sets: 3, reps: '15',          tempo: '2-1-2-1', rest: 60,  weight: 'Continue from Phase 2' },
+        { id: 'bicep_curl',    sets: 3, reps: '12',          tempo: '3-0-2-1', rest: 60,  weight: 'Continue from Phase 2' },
+        { id: 'hammer_curl',   sets: 2, reps: '12',          tempo: '3-0-2-1', rest: 60,  weight: 'Same as bicep curl weight' },
+        { id: 'dead_bug',      sets: 3, reps: '12 each side',tempo: 'Slow',    rest: 60,  weight: 'Bodyweight' }
+      ]
+    },
+    wed: {
+      label: 'Wed', sub: 'Cardio', type: 'cardio',
+      title: 'Wednesday — Running',
+      desc: 'Walking is done. Continuous running is the goal. Progress through the weekly targets at a pace where you can just barely hold a conversation.',
+      duration: '35–45 mins',
+      cardio: [
+        {
+          title: 'Weeks 11–12',
+          intervals: [
+            { label: '5 min warm-up', type: 'rest' },
+            { label: '5 min run', type: 'work' },
+            { label: '2 min walk', type: 'rest' },
+            { label: '× 3 rounds', type: 'work' },
+            { label: '5 min cool-down', type: 'rest' }
+          ]
+        },
+        {
+          title: 'Weeks 13–14',
+          intervals: [
+            { label: '5 min warm-up', type: 'rest' },
+            { label: '8 min run', type: 'work' },
+            { label: '2 min walk', type: 'rest' },
+            { label: '× 2 rounds', type: 'work' },
+            { label: '5 min cool-down', type: 'rest' }
+          ]
+        },
+        {
+          title: 'Weeks 15–16 — Target: Continuous Run',
+          desc: 'Run at a pace where you can just barely hold a conversation.',
+          intervals: [
+            { label: '5 min warm-up', type: 'rest' },
+            { label: '20 min continuous run', type: 'work' },
+            { label: '5 min cool-down', type: 'rest' }
+          ]
+        },
+        {
+          title: 'Weeks 17+ — Maintain',
+          intervals: [
+            { label: '5 min warm-up', type: 'rest' },
+            { label: '25–30 min continuous run', type: 'work' },
+            { label: '5 min cool-down', type: 'rest' }
+          ]
+        }
+      ]
+    },
+    thu: {
+      label: 'Thu', sub: 'Legs', type: 'gym',
+      title: 'Thursday — Legs Day',
+      desc: 'Heavy barbell squat and conventional deadlift are the cornerstone of this session.',
+      duration: '~65 mins',
+      exercises: [
+        { id: 'barbell_squat',  sets: 4, reps: '8',           tempo: '3-2-2-0', rest: 120, weight: 'Build from Phase 2' },
+        { id: 'conv_deadlift',  sets: 4, reps: '6',           tempo: '3-2-2-0', rest: 120, weight: 'Build from Phase 2' },
+        { id: 'leg_press',      sets: 3, reps: '12',          tempo: '3-1-2-0', rest: 90,  weight: 'Continue from Phase 2' },
+        { id: 'leg_curl',       sets: 4, reps: '12',          tempo: '3-1-2-1', rest: 90,  weight: 'Continue from Phase 2' },
+        { id: 'leg_extension',  sets: 3, reps: '12',          tempo: '3-0-2-1', rest: 60,  weight: 'Continue from Phase 2' },
+        { id: 'calf_raise',     sets: 4, reps: '15',          tempo: '2-1-2-1', rest: 60,  weight: 'Continue from Phase 2' },
+        { id: 'bird_dog',       sets: 3, reps: '12 each side',tempo: 'Slow',    rest: 60,  weight: 'Bodyweight' }
+      ]
+    },
+    fri: {
+      label: 'Fri', sub: 'Strength', type: 'gym',
+      title: 'Friday — Full Body Strength',
+      desc: 'Heavy 3×5 on the big three. This is a strength day — genuinely heavy weight at 80–85% of your max. Longer rests are correct here.',
+      duration: '~65 mins',
+      exercises: [
+        { id: 'barbell_squat',  sets: 3, reps: '5 (heavy)', tempo: '3-2-2-0', rest: 180, weight: '~80–85% of working max' },
+        { id: 'bb_bench',       sets: 3, reps: '5 (heavy)', tempo: '3-1-2-0', rest: 180, weight: '~80–85% of working max' },
+        { id: 'conv_deadlift',  sets: 3, reps: '5 (heavy)', tempo: '3-2-2-0', rest: 180, weight: '~80–85% of working max' },
+        { id: 'shoulder_press', sets: 3, reps: '8',         tempo: '3-1-2-0', rest: 90,  weight: 'Continue from Phase 2' },
+        { id: 'plank',          sets: 3, reps: '60 sec',    tempo: 'N/A',     rest: 60,  weight: 'Bodyweight' }
+      ]
+    },
+    sat: {
+      label: 'Sat', sub: 'Cardio', type: 'cardio',
+      title: 'Saturday — Cardio or Active Recovery',
+      desc: 'Optional. Either repeat Wednesday\'s run protocol or do 30 min of light activity (brisk walk, cycling). Active recovery — not hard training.',
+      duration: '30–40 mins',
+      cardio: [
+        {
+          title: 'Option A — Repeat Wednesday run protocol',
+          desc: 'Same structure as Wednesday. Keeps the running habit going.'
+        },
+        {
+          title: 'Option B — Active recovery',
+          desc: '30 min brisk walk, light cycling, or easy swimming. Keep intensity low. This is recovery, not training.'
+        }
+      ]
+    },
+    sun: {
+      label: 'Sun', sub: 'Rest', type: 'rest',
+      title: 'Sunday — Rest',
+      desc: 'Full rest day.'
+    }
+  }
+};
+</script>
+
+<script src="../../js/workout-data.js?v=0080ad94"></script>
+<script src="../../js/workout-render.js?v=f54f8ad6"></script>
+<script>
+  WorkoutRender.buildPhase(PHASE_CONFIG);
+  (function () {
+    var map = ['sun','mon','tue','wed','thu','fri','sat'];
+    var today = map[new Date().getDay()];
+    var sel  = document.querySelector('.day-selector');
+    if (!sel) return;
+    var wrap = document.querySelector('.day-panels-wrap[data-panel="' + sel.dataset.panel + '"]');
+    if (!wrap) return;
+    var btn  = sel.querySelector('[data-day="' + today + '"]');
+    var pnl  = wrap.querySelector('[data-day="' + today + '"]');
+    if (!btn || !pnl) return;
+    sel.querySelectorAll('.day-btn').forEach(function (b) { b.classList.remove('active'); });
+    wrap.querySelectorAll('.day-panel').forEach(function (p) { p.classList.remove('active'); });
+    btn.classList.add('active');
+    pnl.classList.add('active');
+    var btnRect = btn.getBoundingClientRect();
+    var selRect = sel.getBoundingClientRect();
+    sel.scrollLeft += btnRect.left - selRect.left - (selRect.width - btnRect.width) / 2;
+  }());
+</script>
+
+<script src="../../js/nav.js?v=eea56e0f"></script>
+<script src="../../js/footer.js?v=040a11b6"></script>
+<script src="../../js/app.js?v=eabc3ac5"></script>
+<script src="../../js/workout.js?v=789c712e"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('../../sw.js').catch(function () {});
+    });
+  }
+</script>
+</body>
+</html>

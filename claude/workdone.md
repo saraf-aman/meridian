@@ -9,33 +9,43 @@ Read this file, then read `website_plan.md` for the full architecture spec, then
 
 ## What This Project Is
 
-A personal health planning website called **Meridian**. It is a pure HTML/CSS/JS site (no build tool, no framework). It covers 10 health modules: Workout, Nutrition, Hydration, Sleep, Habits, Supplements, Cardio, Back Management, Picky Eating, Progress.
+A personal health planning website called **Meridian**. Pure HTML/CSS/JS — no build tool, no framework. Covers 10 health modules: Workout, Nutrition, Hydration, Sleep, Habits, Supplements, Cardio, Back Management, Picky Eating, Progress.
 
-Currently only the **Workout** module has content (sourced from `claude/comprehensive_workout_plan.md`). All other modules are stubs.
+Currently only the **Workout** module has content. All other modules are stubs (not yet built).
 
 ---
 
 ## Current File Structure
 
 ```
-health/
-├── index.html                    ✅ Homepage (complete)
-├── pages/                        ❌ Directory does not exist yet — create it
+meridian/
+├── index.html                        ✅ Homepage (complete)
+├── manifest.json                     ✅ PWA manifest (start_url fixed to "./")
+├── sw.js                             ✅ Service worker — network-first HTML, cache-first CSS/JS
+├── bust.py                           ✅ Cache-buster — appends ?v=<md5> to CSS/JS refs in all HTML
 ├── css/
-│   ├── base.css                  ✅ Design tokens + reset
-│   ├── layout.css                ✅ Nav, page shell, footer
-│   ├── components.css            ✅ Workout UI components (accordion, timer, etc.) — untouched, ready for workout pages
-│   └── home.css                  ✅ Homepage-specific styles
+│   ├── base.css                      ✅ Design tokens + reset
+│   ├── layout.css                    ✅ Nav, workout-header, phase-bar, page shell, footer
+│   ├── components.css                ✅ All workout UI components
+│   └── home.css                      ✅ Homepage-specific styles
 ├── js/
-│   ├── app.js                    ✅ Injects nav + footer on every page
-│   ├── nav.js                    ✅ Nav HTML + injectNav(activePage, basePath)
-│   ├── footer.js                 ✅ Footer HTML + injectFooter()
-│   └── workout.js                ✅ Full workout interactivity — DO NOT REWRITE
+│   ├── app.js                        ✅ Detects current page, injects nav + footer
+│   ├── nav.js                        ✅ injectNav(activePage, basePath)
+│   ├── footer.js                     ✅ injectFooter()
+│   ├── workout.js                    ✅ Full workout interactivity
+│   ├── workout-data.js               ✅ Exercise form library (27 exercises)
+│   └── workout-render.js             ✅ Renders PHASE_CONFIG → DOM
+├── pages/
+│   └── workout/
+│       ├── index.html                ✅ Workout landing — phase cards + quick access
+│       ├── phase-1.html              ✅ Foundation Building (Weeks 1–4)
+│       ├── phase-2.html              ✅ Load & Intensity (Weeks 5–10)
+│       └── phase-3.html              ✅ Advanced Strength (Weeks 11+)
 └── claude/
-    ├── health_planning_index.md  ✅ Master context: user profile, goals, all 10 module specs
-    ├── comprehensive_workout_plan.md  ✅ Full workout content: Phase 1, 2, 3 (source of truth for workout pages)
-    ├── website_plan.md           ✅ Full architecture and implementation plan
-    └── workdone.md               ✅ This file
+    ├── health_planning_index.md      ✅ User profile, goals, all 10 module specs
+    ├── comprehensive_workout_plan.md ✅ Full workout content (source of truth)
+    ├── website_plan.md               ✅ Full architecture and implementation plan
+    └── workdone.md                   ✅ This file
 ```
 
 ---
@@ -62,112 +72,137 @@ health/
 | `--orange` | `#b85c2a` |
 | `--red` | `#b83232` |
 | `--amber` | `#9a7018` |
-| Font | Inter (Google Fonts) |
-| Nav height | `62px` (var `--nav-h`) |
-| Max width | `1080px` (var `--max-w`) |
+| Font | Inter (Google Fonts, non-blocking) |
+| Nav height | `62px` (`--nav-h`) |
+| Max width | `1080px` (`--max-w`) |
 
 ---
 
-## Component Injection System (critical — read before touching any HTML)
+## Component Injection System
 
-Nav and footer are **not hardcoded** in HTML. They are injected by JavaScript on every page load.
+Nav and footer are injected by JS on every page. Never hardcode `<nav>` or `<footer>` in HTML.
 
 - `js/nav.js` → `window.injectNav(activePage, basePath)`
 - `js/footer.js` → `window.injectFooter()`
-- `js/app.js` → detects current page, calls both on `DOMContentLoaded`
+- `js/app.js` → detects current page path, calls both on `DOMContentLoaded`
 
-**basePath convention** (how deep is the page from root):
+**basePath convention:**
 - `index.html` at root → `basePath = ''`
-- `pages/nutrition.html` etc. → `basePath = '../'`
-- `pages/workout/phase-1.html` etc. → `basePath = '../../'`
+- `pages/workout/*.html` → `basePath = '../../'`
+- `pages/*.html` (future stubs) → `basePath = '../'`
 
-**Every HTML file must:**
-1. Have only `<main class="page">` in the body (no `<nav>` or `<footer>` tags)
-2. Load scripts at end of body: `nav.js`, `footer.js`, `app.js` (with correct relative paths)
+`app.js` detects workout pages with `path.indexOf('/pages/workout')` (no trailing slash required — this was a bug that was fixed).
 
 ---
 
-## What Has Been Built
+## Workout Architecture
 
-### Homepage (`index.html` + `css/home.css`)
-- Hero: eyebrow label "Phase 1 · Week 1 of 4" (pulsing dot), h1 "Your health, all in one place.", subtitle, "Begin Phase 1 →" CTA button linking to `pages/workout/phase-1.html`
-- "Active Now" section: full-width featured card for Workout (gradient border, accent chip, animated arrow)
-- "On the Roadmap" section: 3-col grid of 9 muted cards with colour-tinted icon badges
-- Entry animations (staggered fade-up)
+### Data-render separation pattern
 
-### Shared CSS
-- `base.css`: all design tokens, reset, typography
-- `layout.css`: nav, page shell, footer — **note**: nav background is `rgba(250,248,245,0.92)`, phase-bar is `rgba(250,248,245,0.95)` (hardcoded, not using var)
-- `components.css`: complete workout UI — phase panels, day tabs, exercise cards, set tracker, rest timer, back safety panel, transition checklists, reference blocks. All of this is ready and waiting for workout HTML to use it.
+```
+PHASE_CONFIG (inline in each phase HTML)
+    ↓
+workout-data.js  (WD.EX — exercise form library)
+    ↓
+workout-render.js  (WorkoutRender.buildPhase → fills #page-root)
+    ↓
+workout.js  (DOMContentLoaded → binds all event listeners)
+```
 
-### Shared JS
-- `workout.js` (260 lines): full interactivity for workout pages — phase tabs, day tabs, accordion expand/collapse, set tracker (localStorage), rest timer (Web Audio API, SVG progress ring), transition checklists (localStorage), back safety toggle, reference block toggles, mini-tabs (warmup variants). **Do not modify or rewrite this file.**
+### Each phase HTML is a thin shell containing:
+- Head with CSS links (`?v=` hashes managed by `bust.py`)
+- `<main class="page" id="page-root"></main>`
+- Inline `PHASE_CONFIG` object with: `num`, `title`, `subtitle`, `tagline`, `goal`, `sessions` (per-day data), `checklist`
+- Inline auto-day script (scrolls day strip + activates today's tab without scrolling the page)
+- Script tags: `workout-data.js`, `workout-render.js`, then `WorkoutRender.buildPhase(PHASE_CONFIG)`, then `nav.js`, `footer.js`, `app.js`, `workout.js`, SW registration
 
----
+### What `workout-render.js` currently renders (in order):
+1. `.workout-header` — phase title + subtitle/tagline
+2. `.phase-bar` (sticky) — day selector tabs (Mon–Sun)
+3. `.container` containing:
+   - `.day-panels-wrap` — the active day's session content
+   - `.phase-refs` — back safety accordion, warmup guide, transition checklist
 
-## What Has NOT Been Built
-
-### 1. `css/workout.css` — not yet extracted
-`components.css` currently contains all workout-specific CSS. The plan calls for extracting it to `workout.css`, but this has not been done. For now, all workout pages should load `components.css` directly. Extract to `workout.css` as a cleanup step once all workout pages are built.
-
-### 2. Workout pages — `pages/workout/` (NEXT STEP)
-Content source: `claude/comprehensive_workout_plan.md`
-
-- **`pages/workout/index.html`** — Workout landing page
-  - 3 phase cards: Phase 1 (Active), Phase 2 (Upcoming), Phase 3 (Locked)
-  - Each card: phase name, week range, key goal, status badge, link to phase page
-  - Quick-access links: Back Safety reference, Equipment Setup, Form Library
-
-- **`pages/workout/phase-1.html`** — Foundation Building (Weeks 1–4)
-  - Sticky day-tab bar: Mon (Upper Body), Tue (Cardio walk), Wed (Lower Body), Thu (Rest), Fri (Full Body), Sat (Cardio walk), Sun (Rest)
-  - Exercise accordions with: sets/reps chips, weight chip, tempo chip, set tracker dots, rest-timer buttons
-  - Warm-up mini-tabs (Evening vs Morning routine)
-  - Back safety panel (expandable, red-flag symptoms table + green-light list)
-  - Phase 1→2 transition checklist
-  - Floating rest timer FAB (already in `workout.js` + `components.css`)
-
-- **`pages/workout/phase-2.html`** — Load & Intensity (Weeks 5–10)
-  - Same structure as Phase 1
-  - New exercises: incline dumbbell press, face pull (cable), cable chest fly
-  - Barbell introduction protocol section
-  - Walk-to-run cardio progression with interval pills
-  - Phase 2→3 transition checklist
-
-- **`pages/workout/phase-3.html`** — Advanced Strength (Weeks 11+)
-  - Push/Pull/Legs split
-  - Barbell bench press, continuous running protocol
-  - Linear progression and volume progression rules
-
-**CSS to load on all workout pages:** `../../css/base.css`, `../../css/layout.css`, `../../css/components.css`
-**JS to load:** `../../js/nav.js`, `../../js/footer.js`, `../../js/app.js`, `../../js/workout.js`
-**Pass to injectNav:** `activePage = 'workout'`, `basePath = '../../'`
-
-### 3. Stub pages — `pages/` (after workout pages are done)
-9 pages each with: nav/footer injection, page header + "In Development" badge, brief content preview (from `claude/health_planning_index.md`), link back to home.
-
-`nutrition.html`, `hydration.html`, `sleep.html`, `habits.html`, `cardio.html`, `back-care.html`, `supplements.html`, `picky-eating.html`, `progress.html`
-
-**CSS/JS paths for these:** `../css/...` and `../js/...`
-**Pass to injectNav:** relevant `activePage`, `basePath = '../'`
+### What was removed from rendering (dead code already deleted):
+- Phase nav pills (Phase 1 / Phase 2 / Phase 3 breadcrumb) — user didn't want it
+- Phase overview card (weekly schedule table) — user didn't want it
 
 ---
 
-## Important Technical Notes
+## Service Worker & Cache Busting
 
-1. **`workout.js` expects specific HTML structure.** The JS uses class names and `data-` attributes from the original workout page design. When building workout HTML, use the class names already defined in `components.css`: `.phase-panel`, `.day-panel`, `.exercise-card`, `.set-dot`, `.rest-btn`, `.ref-block`, `.mini-tab`, `.checklist-item`, etc. Read `components.css` to see what classes are available before writing workout HTML.
+- SW is at repo root (`sw.js`), registered as `../../sw.js` from phase pages
+- **HTML**: network-first (fresh online, cache fallback offline). SW only caches responses where `res.ok` is true.
+- **CSS/JS/JSON**: cache-first. The `?v=<hash>` suffix on script/link tags acts as the bust signal — but note the SW's `cacheKey()` strips query strings, so the cache is actually invalidated by the CACHE name rotating on commit (via `.githooks/pre-commit`).
+- **bust.py**: run after any CSS/JS change. Now correctly resolves relative paths (`../../js/app.js`) from HTML files in subdirectories. Run from repo root: `python3 bust.py`
+- **Pre-commit hook**: updates `const CACHE = 'app-<hash>'` in `sw.js` and runs `bust.py`. Activate with: `git config core.hooksPath .githooks && chmod +x .githooks/pre-commit`
 
-2. **`pages/workout/` directory does not exist.** Create it before writing files there.
-
-3. **`layout.css` still has `.workout-header` and `.phase-bar`/`.phase-btn` styles** — these are used by workout pages, do not remove them.
-
-4. **There is a `frontend-design` skill available** in Claude Code for building polished UI. It has been used in this project before. Invoke it with the `Skill` tool when building new pages that need careful visual design.
-
-5. **All exercise content, form guides, progressions, back safety protocol, warm-up routines, and transition checklists** are in `claude/comprehensive_workout_plan.md`. Read it thoroughly before building workout pages — it is 1,488 lines and very detailed.
+**Important**: while developing locally without committing, the SW will serve stale JS/CSS. Workaround: hard refresh (Cmd+Shift+R) or unregister the SW in DevTools → Application → Service Workers.
 
 ---
 
-## Immediate Next Step
+## Known Issues / Minor Remaining Cleanup
 
-**Build the workout section.** Start with `pages/workout/index.html` (the landing page), then `pages/workout/phase-1.html` (the most important page — this is what gets used daily). Phases 2 and 3 can follow.
+- The `goal` field in each `PHASE_CONFIG` is no longer rendered anywhere (it was used by `phaseOverview` which was deleted). It can be removed from `phase-1/2/3.html` in a future cleanup pass.
+- `manifest.json` is missing a `scope` field. It defaults correctly to the manifest's directory (`/meridian/`) but adding `"scope": "./"` explicitly would be cleaner.
 
-Read `claude/comprehensive_workout_plan.md` before starting. All content comes from there.
+---
+
+## What Has Been Built — Session 2 (2026-05-07)
+
+### Workout UI refinements and bug fixes
+
+**Layout & UX fixes on phase pages:**
+- Removed phase overview card (weekly schedule table) from each phase page — user wanted workout content to be higher on the page
+- Removed phase nav pills (Phase 1/2/3 breadcrumb tabs) from each phase page
+- Fixed `.day-panels-wrap` border-radius: was flat on top (`0 0 r r`) because it was designed to attach to the day selector bar; now fully rounded with top border restored. Added `margin-top: 20px`.
+- Reduced `.workout-header` padding from `40px/32px` → `24px/20px` desktop, `28px/24px` → `18px/16px` mobile
+- Fixed page auto-scroll on load: replaced `btn.scrollIntoView({ inline: 'center' })` with manual `sel.scrollLeft` adjustment using `getBoundingClientRect()` — this horizontally centres the active day tab without scrolling the page vertically
+
+**Day tab colour fix:**
+- `cardio-day` (green) and `rest-day` (grey) colour classes were bleeding from the (now-removed) schedule table onto the day buttons, with `!important` overriding even the active accent state. Fixed by removing type classes from day button HTML entirely, and scoping the colour rules to `.schedule-table .cardio-day` etc.
+
+**Workout index 404 fix:**
+- Phase card links used relative `href="phase-1.html"` which broke when the browser URL was `/pages/workout` (no trailing slash) — the browser resolved it to `/pages/phase-1.html`. Fixed with an inline script that computes the correct absolute base URL handling all three URL forms: `.../workout`, `.../workout/`, `.../workout/index.html`.
+- `app.js` basePath detection also fixed: `indexOf('/pages/workout/')` → `indexOf('/pages/workout')` (no trailing slash required).
+- `manifest.json` `start_url` fixed from `"/index.html"` (broke GitHub Pages sub-path deployment) to `"./"`.
+- SW now guards against caching error responses: `if (res.ok)` before `cache.put()`.
+
+**bust.py fix:**
+- Now resolves relative asset paths (`../../js/app.js`) against the HTML file's directory before looking up in the hash map. Previously, all HTML files in subdirectories were silently skipped.
+
+**Dead code removed:**
+| Removed | Location |
+|---|---|
+| `phaseOverview()` function | `workout-render.js` |
+| `phaseNav()` function | `workout-render.js` |
+| `initPhaseTabs()` call + function | `workout.js` |
+| `.phase-panel`, `.phase-overview`, `.phase-badge`, `.schedule-table` CSS | `components.css` |
+| `.day-tabs-wrap` CSS | `components.css` |
+| `.phase-nav-links` / `.phase-nav-link` CSS | `components.css` |
+| `.phase-btn` CSS | `layout.css` |
+| `schedule:` data arrays | `phase-1/2/3.html` |
+
+---
+
+## Immediate Next Steps
+
+### 1. Commit current work
+None of the workout pages or new JS files have been committed yet (`pages/` and `js/workout-data.js`, `js/workout-render.js` are untracked). Committing will:
+- Trigger the pre-commit hook → rotates the CACHE name in `sw.js` → invalidates the SW cache
+- Deploy to GitHub Pages (if push follows)
+
+### 2. Build stub pages for the 9 remaining modules
+Each page lives at `pages/<module>.html`. Structure for each:
+- Standard head (viewport, fonts, base/layout/components CSS with `?v=` hashes, manifest, theme-color)
+- `<main class="page">` with a page header + "In Development" badge + brief content preview
+- Nav/footer injection via `nav.js`, `footer.js`, `app.js` with `basePath = '../'`
+- SW registration script
+- Add path to `PRECACHE` in `sw.js`
+
+Modules: `nutrition.html`, `hydration.html`, `sleep.html`, `habits.html`, `cardio.html`, `back-care.html`, `supplements.html`, `picky-eating.html`, `progress.html`
+
+Content previews should come from `claude/health_planning_index.md`.
+
+### 3. Extract workout CSS (optional cleanup)
+`components.css` currently holds all workout-specific UI styles mixed with general component styles. The original plan called for extracting workout styles to `css/workout.css`. Low priority — do this when starting a non-workout module that needs a clean `components.css`.

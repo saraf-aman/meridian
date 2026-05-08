@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 1 — Foundation Building · Meridian</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="../../css/base.css?v=28ee7145">
+  <link rel="stylesheet" href="../../css/layout.css?v=26dc0ab1">
+  <link rel="stylesheet" href="../../css/components.css?v=c1fedc51">
+  <link rel="manifest" href="../../manifest.json">
+  <meta name="theme-color" content="#1a6b72">
+</head>
+<body>
+
+<main class="page" id="page-root"></main>
+
+<script>
+var PHASE_CONFIG = {
+  num: 1,
+  title: 'Foundation Building',
+  subtitle: 'Phase 1 · Weeks 1–4',
+  tagline: '3 gym sessions + 2 cardio per week',
+  goal: 'Build movement patterns, connective tissue, and the training habit using back-safe machine and dumbbell work.',
+  sessions: {
+    mon: {
+      label: 'Mon', sub: 'Upper Body', type: 'gym',
+      title: 'Monday — Upper Body',
+      desc: 'Foundational pushing and pulling strength. Chest, back, shoulders, and arms.',
+      duration: '~55 mins',
+      exercises: [
+        { id: 'db_bench',         sets: 3, reps: '10',          tempo: '3-1-2-0', rest: 90, weight: '20–25 lbs/hand' },
+        { id: 'cable_row',        sets: 3, reps: '10',          tempo: '3-1-2-1', rest: 90, weight: '25–35 lbs' },
+        { id: 'shoulder_press',   sets: 3, reps: '10',          tempo: '3-1-2-0', rest: 90, weight: '10–12 lbs/hand' },
+        { id: 'lat_pulldown',     sets: 3, reps: '12',          tempo: '3-1-2-0', rest: 90, weight: '35–45 lbs' },
+        { id: 'bicep_curl',       sets: 2, reps: '12',          tempo: '3-0-2-1', rest: 60, weight: '10–12 lbs/hand' },
+        { id: 'tricep_pushdown',  sets: 2, reps: '12',          tempo: '3-0-2-1', rest: 60, weight: '12–18 lbs' },
+        { id: 'dead_bug',         sets: 3, reps: '8 each side', tempo: 'Slow',    rest: 60, weight: 'Bodyweight' }
+      ]
+    },
+    tue: {
+      label: 'Tue', sub: 'Cardio', type: 'cardio',
+      title: 'Tuesday — Cardio',
+      desc: 'Brisk walk. Build aerobic base and prepare the cardiovascular system for run intervals in Phase 2.',
+      duration: '25–30 mins',
+      cardio: [
+        {
+          title: 'Weeks 1–2 — Brisk Walk',
+          desc: 'Walk at a purposeful pace — slightly out of breath, able to speak in full sentences. Treadmill: 5.0–6.0 km/h. Outdoors: as if slightly late for something.'
+        },
+        {
+          title: 'Weeks 3–4 — Interval Walk',
+          desc: '5 min easy warm-up walk, then 6 rounds, then 5 min cool-down walk.',
+          intervals: [
+            { label: '5 min warm-up', type: 'rest' },
+            { label: '1 min fast walk', type: 'work' },
+            { label: '2 min easy walk', type: 'rest' },
+            { label: '× 6 rounds', type: 'work' },
+            { label: '5 min cool-down', type: 'rest' }
+          ]
+        }
+      ]
+    },
+    wed: {
+      label: 'Wed', sub: 'Lower Body', type: 'gym',
+      title: 'Wednesday — Lower Body',
+      desc: 'Foundational leg, glute, and hamstring strength. Core stability work. No barbell this phase.',
+      duration: '~55 mins',
+      exercises: [
+        { id: 'leg_press',     sets: 3, reps: '12',          tempo: '3-1-2-0', rest: 90, weight: '65–90 lbs' },
+        { id: 'goblet_squat',  sets: 3, reps: '10',          tempo: '3-1-2-0', rest: 90, weight: '15–20 lbs' },
+        { id: 'leg_curl',      sets: 3, reps: '12',          tempo: '3-1-2-1', rest: 90, weight: '25–35 lbs' },
+        { id: 'leg_extension', sets: 3, reps: '12',          tempo: '3-0-2-1', rest: 60, weight: '25–35 lbs' },
+        { id: 'calf_raise',    sets: 3, reps: '15',          tempo: '2-1-2-1', rest: 60, weight: '35–45 lbs' },
+        { id: 'glute_bridge',  sets: 3, reps: '15',          tempo: '2-1-2-1', rest: 60, weight: 'Bodyweight' },
+        { id: 'bird_dog',      sets: 3, reps: '8 each side', tempo: 'Slow',    rest: 60, weight: 'Bodyweight' }
+      ]
+    },
+    thu: {
+      label: 'Thu', sub: 'Rest', type: 'rest',
+      title: 'Thursday — Rest',
+      desc: 'Full rest day. Muscles grow during recovery, not during training.'
+    },
+    fri: {
+      label: 'Fri', sub: 'Full Body', type: 'gym',
+      title: 'Friday — Full Body',
+      desc: 'Lighter compound session working the whole body. Reinforces movement patterns and bridges the week.',
+      duration: '~55 mins',
+      exercises: [
+        { id: 'goblet_squat',      sets: 3, reps: '10',         tempo: '3-1-2-0', rest: 90, weight: '15–20 lbs' },
+        { id: 'romanian_dl',       sets: 3, reps: '10',         tempo: '3-1-2-0', rest: 90, weight: '15–20 lbs/hand' },
+        { id: 'push_ups',          sets: 3, reps: 'Max (8–15)', tempo: '3-0-2-0', rest: 90, weight: 'Bodyweight' },
+        { id: 'bent_over_row',     sets: 3, reps: '10 each',    tempo: '3-1-2-1', rest: 90, weight: '15–20 lbs' },
+        { id: 'plank',             sets: 3, reps: '20–30 sec',  tempo: 'N/A',     rest: 60, weight: 'Bodyweight' },
+        { id: 'mountain_climbers', sets: 2, reps: '20 total',   tempo: 'Controlled', rest: 60, weight: 'Bodyweight' }
+      ]
+    },
+    sat: {
+      label: 'Sat', sub: 'Cardio', type: 'cardio',
+      title: 'Saturday — Cardio (Morning)',
+      desc: 'Morning walk. Use the full Morning Warm-Up protocol before starting — your spine needs extra time after sleep.',
+      duration: '25–30 mins',
+      cardio: [
+        {
+          title: 'Same protocol as Tuesday',
+          desc: 'Weeks 1–2: Brisk walk. Weeks 3–4: Interval walk. Start at 4.0–4.5 km/h for the first 5 min before increasing to your working pace.'
+        }
+      ]
+    },
+    sun: {
+      label: 'Sun', sub: 'Rest', type: 'rest',
+      title: 'Sunday — Rest',
+      desc: 'Full rest day.'
+    }
+  },
+  checklist: {
+    phase: 1,
+    title: 'Phase 1 → Phase 2 Transition Checklist',
+    desc: 'Do not move to Phase 2 based on calendar time alone. Move when every item on this list is checked. This may happen at Week 4 or take until Week 6 — both are normal.',
+    groups: [
+      {
+        label: 'Strength',
+        items: [
+          'DB flat bench press: all 3 × 10 at 25 lbs each hand with correct tempo',
+          'Goblet squat: all 3 × 10 at 22 lbs with correct tempo',
+          'Seated cable row: all 3 × 10 at 35 lbs with correct tempo',
+          'Push-ups: 3 sets of at least 8 full push-ups (not knee push-ups) with correct form'
+        ]
+      },
+      {
+        label: 'Form',
+        items: [
+          'Romanian deadlift: spine stays neutral for all 10 reps without any conscious reminder',
+          'Goblet squat: heels stay flat throughout and knees track over toes',
+          'Seated cable row: torso stays upright, no rounding at full arm extension',
+          'Dumbbell shoulder press: no back arch at any point during the set'
+        ]
+      },
+      {
+        label: 'Core & Back',
+        items: [
+          'Dead bug: lower back stays flat on the floor for all 8 reps each side',
+          'Bird-dog: hips stay level throughout — no rotation for all 8 reps each side',
+          'Plank: 3 × 30 seconds without form breakdown',
+          'Zero back pain or unusual sensation during or after any session in the last 2 weeks'
+        ]
+      },
+      {
+        label: 'Habit',
+        items: [
+          'Completed at least 10 out of 12 planned gym sessions in Phase 1',
+          'No more than 5 consecutive days without any form of physical activity',
+          'Week 3–4 interval walk: 6 rounds of 1 min fast / 2 min easy feels manageable'
+        ]
+      }
+    ]
+  }
+};
+</script>
+
+<script src="../../js/workout-data.js?v=0080ad94"></script>
+<script src="../../js/workout-render.js?v=f54f8ad6"></script>
+<script>
+  WorkoutRender.buildPhase(PHASE_CONFIG);
+  /* Auto-activate today's day tab */
+  (function () {
+    var map = ['sun','mon','tue','wed','thu','fri','sat'];
+    var today = map[new Date().getDay()];
+    var sel   = document.querySelector('.day-selector');
+    if (!sel) return;
+    var wrap  = document.querySelector('.day-panels-wrap[data-panel="' + sel.dataset.panel + '"]');
+    if (!wrap) return;
+    var btn   = sel.querySelector('[data-day="' + today + '"]');
+    var pnl   = wrap.querySelector('[data-day="' + today + '"]');
+    if (!btn || !pnl) return;
+    sel.querySelectorAll('.day-btn').forEach(function (b) { b.classList.remove('active'); });
+    wrap.querySelectorAll('.day-panel').forEach(function (p) { p.classList.remove('active'); });
+    btn.classList.add('active');
+    pnl.classList.add('active');
+    var btnRect = btn.getBoundingClientRect();
+    var selRect = sel.getBoundingClientRect();
+    sel.scrollLeft += btnRect.left - selRect.left - (selRect.width - btnRect.width) / 2;
+  }());
+</script>
+
+<script src="../../js/nav.js?v=eea56e0f"></script>
+<script src="../../js/footer.js?v=040a11b6"></script>
+<script src="../../js/app.js?v=eabc3ac5"></script>
+<script src="../../js/workout.js?v=789c712e"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('../../sw.js').catch(function () {});
+    });
+  }
+</script>
+</body>
+</html>

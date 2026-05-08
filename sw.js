@@ -1,4 +1,4 @@
-const CACHE = 'app-74b5fa3d';
+const CACHE = 'app-df90a268';
 
 // self.registration.scope resolves to the correct base regardless of
 // whether the site is deployed at the root or a sub-path (e.g. /meridian/).
@@ -17,6 +17,12 @@ const PRECACHE = [
   'js/footer.js',
   'js/nav.js',
   'js/workout.js',
+  'js/workout-data.js',
+  'js/workout-render.js',
+  'pages/workout/index.html',
+  'pages/workout/phase-1.html',
+  'pages/workout/phase-2.html',
+  'pages/workout/phase-3.html',
 ];
 
 function cacheKey(url) {
@@ -60,8 +66,7 @@ self.addEventListener('fetch', event => {
     event.respondWith(
       fetch(event.request)
         .then(res => {
-          const clone = res.clone();
-          caches.open(CACHE).then(c => c.put(key, clone));
+          if (res.ok) caches.open(CACHE).then(c => c.put(key, res.clone()));
           return res;
         })
         .catch(() => caches.match(key).then(r => r || caches.match(SCOPE)))

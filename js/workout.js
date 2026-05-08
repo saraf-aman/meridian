@@ -1,12 +1,11 @@
 /* ============================================================
    MERIDIAN — workout.js
-   Phase tabs · Day tabs · Exercise accordion
-   Back safety · Ref sections · Mini tabs
-   Set tracker · Rest timer · Checklists
+   Day tabs · Exercise accordion · Back safety
+   Ref sections · Mini tabs · Set tracker
+   Rest timer · Checklists
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
-  initPhaseTabs();
   initDayTabs();
   initAccordions('.exercise-card-header', '.exercise-card');
   initToggle('.back-safety-header', '.back-safety');
@@ -17,21 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initChecklists();
   initTimer();
 });
-
-/* ── Phase tabs ───────────────────────────────────────────── */
-function initPhaseTabs() {
-  const btns   = document.querySelectorAll('.phase-btn');
-  const panels = document.querySelectorAll('.phase-panel');
-  btns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const phase = btn.dataset.phase;
-      btns.forEach(b => b.classList.remove('active'));
-      panels.forEach(p => p.classList.remove('active'));
-      btn.classList.add('active');
-      document.querySelector(`.phase-panel[data-phase="${phase}"]`)?.classList.add('active');
-    });
-  });
-}
 
 /* ── Day tabs ─────────────────────────────────────────────── */
 function initDayTabs() {

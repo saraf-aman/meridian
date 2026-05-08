@@ -1,7 +1,7 @@
 {
   "name": "Meridian Health",
   "short_name": "Meridian",
-  "start_url": "/index.html",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#faf8f5",
   "theme_color": "#1a6b72"
