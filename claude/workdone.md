@@ -1,6 +1,6 @@
 # Meridian — Work Done & Next Steps
 
-Last updated: 2026-05-07
+Last updated: 2026-05-07 (all work committed and live on GitHub Pages)
 
 This file is the single source of truth for any new chat picking up this project.
 Read this file, then read `website_plan.md` for the full architecture spec, then proceed with the next step listed at the bottom of this file.
@@ -187,12 +187,7 @@ workout.js  (DOMContentLoaded → binds all event listeners)
 
 ## Immediate Next Steps
 
-### 1. Commit current work
-None of the workout pages or new JS files have been committed yet (`pages/` and `js/workout-data.js`, `js/workout-render.js` are untracked). Committing will:
-- Trigger the pre-commit hook → rotates the CACHE name in `sw.js` → invalidates the SW cache
-- Deploy to GitHub Pages (if push follows)
-
-### 2. Build stub pages for the 9 remaining modules
+### 1. Build stub pages for the 9 remaining modules
 Each page lives at `pages/<module>.html`. Structure for each:
 - Standard head (viewport, fonts, base/layout/components CSS with `?v=` hashes, manifest, theme-color)
 - `<main class="page">` with a page header + "In Development" badge + brief content preview

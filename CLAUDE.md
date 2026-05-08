@@ -4,6 +4,12 @@ Pure vanilla HTML/CSS/JS. No frameworks, no build tools, no npm.
 
 ---
 
+## Non-negotiable rules
+
+- **Never `git commit` or `git push` anything.** The user always handles commits and pushes themselves. Do not suggest, stage, or run any git commit/push commands.
+
+---
+
 ## Always apply these standards when writing any code
 
 ### Service worker & caching
