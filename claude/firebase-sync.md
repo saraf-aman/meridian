@@ -101,7 +101,7 @@ users/
 
 ---
 
-### Stage 2 — Gym Calendar ⬜ NOT STARTED
+### Stage 2 — Gym Calendar ✅ COMPLETE
 **Goal:** New page at `pages/workout/calendar.html`. Click a day to log a gym visit. Data lives in Firestore.
 
 **What to build:**
@@ -113,16 +113,16 @@ users/
 - Prev/Next month navigation
 - Days in the future: greyed out, not clickable
 - Days in the past + today: clickable to toggle gym visit
-- Visited day: filled teal circle with checkmark
+- Visited day: filled teal circle
 - Current day: accent ring
 - Show current streak + total visits this month at the top
 
 **Firestore path:** `users/{uid}/calendar/{YYYY-MM-DD}` → `{ visited: true, phase: 1 }`  
-**Offline:** If user is offline, write to localStorage as a pending queue; sync to Firestore on reconnect. (Firestore offline persistence handles this automatically if enabled.)
+**Offline:** Enabled via `persistentLocalCache()` in `firebase-config.js` — Firestore queues writes locally when offline and syncs on reconnect.
 
-**Add to workout index:** Add a "Gym Calendar" card on `pages/workout/index.html` linking to `calendar.html`.
+**Add to workout index:** Added "Gym Calendar" entry card on `pages/workout/index.html` linking to `calendar.html`.
 
-**Status:** ⬜ NOT STARTED
+**Status:** ✅ COMPLETE (2026-05-10)
 
 ---
 

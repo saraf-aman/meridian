@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', function () {
   var basePath = '';
 
   if (path.indexOf('/pages/workout') !== -1) {
-    activePage = 'workout';
     basePath = '../../';
+    activePage = path.indexOf('/calendar') !== -1 ? 'calendar' : 'workout';
   } else if (path.indexOf('/pages/') !== -1) {
     basePath = '../';
     if (path.indexOf('/nutrition') !== -1)   activePage = 'nutrition';

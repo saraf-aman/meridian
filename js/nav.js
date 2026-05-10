@@ -6,6 +6,7 @@
 
     var links = [
       { id: 'workout',   label: 'Workout',    href: basePath + 'pages/workout/index.html' },
+      { id: 'calendar',  label: 'Calendar',   href: basePath + 'pages/workout/calendar.html' },
       { id: 'nutrition', label: 'Nutrition',  disabled: true },
       { id: 'sleep',     label: 'Sleep',      disabled: true },
       { id: 'habits',    label: 'Habits',     disabled: true },

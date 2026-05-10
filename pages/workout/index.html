@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="../../css/base.css?v=28ee7145">
   <link rel="stylesheet" href="../../css/layout.css?v=dd1ec7b2">
   <link rel="stylesheet" href="../../css/components.css?v=92e2d458">
+  <link rel="stylesheet" href="../../css/calendar.css?v=ca57d032">
   <link rel="manifest" href="../../manifest.json">
   <meta name="theme-color" content="#1a6b72">
 </head>
@@ -66,6 +67,26 @@
       </a>
 
     </div>
+
+    <!-- ── Gym Calendar ──────────────────────────────────────── -->
+    <a class="cal-entry-card" href="calendar.html">
+      <div class="cal-entry-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+          <rect x="2" y="4" width="18" height="16" rx="2.5" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M7 2v4M15 2v4M2 9h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="7" cy="14" r="1.25" fill="currentColor"/>
+          <circle cx="11" cy="14" r="1.25" fill="currentColor"/>
+          <circle cx="15" cy="14" r="1.25" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="cal-entry-text">
+        <div class="cal-entry-title">Gym Calendar</div>
+        <div class="cal-entry-desc">Track gym visits, view your streak, and build consistency over time.</div>
+      </div>
+      <svg class="cal-entry-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
 
     <!-- ── Quick access ─────────────────────────────────────── -->
     <div class="quick-links">
@@ -140,9 +161,9 @@
   </div>
 </main>
 
-<script src="../../js/nav.js?v=f168b537"></script>
+<script src="../../js/nav.js?v=e0c5f1d5"></script>
 <script src="../../js/footer.js?v=040a11b6"></script>
-<script src="../../js/app.js?v=eabc3ac5"></script>
+<script src="../../js/app.js?v=190fc37a"></script>
 <script type="module" src="../../js/auth.js?v=95dff806"></script>
 <script>
   /* Resolve phase card hrefs to absolute URLs.
@@ -160,7 +181,7 @@
     } else {
       base = window.location.origin + p + '/';
     }
-    document.querySelectorAll('a[href^="phase-"]').forEach(function (a) {
+    document.querySelectorAll('a[href^="phase-"], a[href="calendar.html"]').forEach(function (a) {
       a.href = base + a.getAttribute('href');
     });
   }());
