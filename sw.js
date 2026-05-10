@@ -1,4 +1,4 @@
-const CACHE = 'app-c0c55fbf';
+const CACHE = 'app-d47b995d';
 
 // self.registration.scope resolves to the correct base regardless of
 // whether the site is deployed at the root or a sub-path (e.g. /meridian/).
@@ -18,6 +18,7 @@ const PRECACHE = [
   'js/auth.js',
   'js/calendar.js',
   'js/firebase-config.js',
+  'js/firestore-sync.js',
   'js/footer.js',
   'js/nav.js',
   'js/workout.js',

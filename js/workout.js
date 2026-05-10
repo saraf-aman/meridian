@@ -161,6 +161,12 @@ function initWeightTracker() {
           if (val) localStorage.setItem(key, val);
           else localStorage.removeItem(key);
           restore(val);
+          const numSets = section.querySelectorAll('.weight-tag').length;
+          const sets = [];
+          for (let j = 0; j < numSets; j++) {
+            sets.push(localStorage.getItem(`m-weight|${exName}|${j}`) || '');
+          }
+          window.FirestoreSync?.saveWeights(exName, sets);
         };
 
         input.addEventListener('keydown', e => {

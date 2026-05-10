@@ -110,21 +110,25 @@ users/
 
 ---
 
-### Stage 3 — Weight Progression to Firestore ⬜ NOT STARTED
+### Stage 3 — Weight Progression to Firestore ✅ COMPLETE (2026-05-10)
 **Goal:** Weight logs per exercise sync to Firestore. View progression over time.
 
-**What to build:**
-- `js/firestore-sync.js` — `saveWeight(exerciseName, setIndex, value)`, `loadWeights(exerciseName)`, `getWeightHistory(exerciseName)`
-- Update `workout.js` — replace `m-weight|...` localStorage calls with Firestore via `firestore-sync.js`
-- Keep localStorage as a write-through cache so the UI stays snappy (write to both; read from localStorage first, Firestore in background)
+**What was built:**
+- `js/firestore-sync.js` — ES module; `saveWeights(exName, sets)` writes to Firestore; `syncAllFromFirestore(user)` runs on auth resolve and populates localStorage + DOM with Firestore data on fresh devices. Exposes `window.FirestoreSync` for `workout.js`.
+- Updated `workout.js` — `save()` function in `initWeightTracker()` builds the full sets array from localStorage and calls `window.FirestoreSync?.saveWeights()` after each localStorage write.
+- Added `<script type="module" src="../../js/firestore-sync.js">` to phase-1, phase-2, phase-3 HTML files.
+- Added `'js/firestore-sync.js'` to PRECACHE in `sw.js`.
 
-**Firestore paths:**
-- Current weights: `users/{uid}/weights/{exerciseName}`
-- History snapshot per day: `users/{uid}/weight-history/{exerciseName}/{YYYY-MM-DD}`
+**Firestore paths used:**
+- Current weights: `users/{uid}/weights/{exerciseName}` → `{ sets: [...], updatedAt: timestamp }`
+- Daily snapshot: `users/{uid}/weight-history/{exerciseName}_{YYYY-MM-DD}` → `{ exName, date, sets }` (flat structure, no sub-subcollection)
 
-**History snapshot logic:** When a weight is saved, if there's no snapshot for today yet, write one. This builds a day-by-day history automatically.
+**Sync behaviour:**
+- localStorage is always written first (instant UI, no regression)
+- Firestore write happens async in the background (fire-and-forget, errors silently swallowed)
+- On auth resolve: Firestore data is pulled and always written to localStorage/DOM — Firestore is the source of truth, ensuring changes from any device propagate everywhere
 
-**Status:** ⬜ NOT STARTED
+**Status:** ✅ COMPLETE
 
 ---
 

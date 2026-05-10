@@ -197,7 +197,7 @@ workout.js  (DOMContentLoaded → binds all event listeners)
 
 - ✅ Stage 1 — Firebase Auth (Google Sign-In, nav chip, persists across sessions)
 - ✅ Stage 2 — Gym Calendar (Firestore-backed calendar page, streak + monthly stats, nav link)
-- ⬜ Stage 3 — Weight Progression to Firestore (`firestore-sync.js`, replace localStorage weight tracker)
+- ✅ Stage 3 — Weight Progression to Firestore (`firestore-sync.js`, write-through localStorage cache, cross-device sync on auth)
 - ⬜ Stage 4 — PR Tracking + Session History (auto-detect PRs, Epley 1RM estimate, per-exercise history)
 
 ---
