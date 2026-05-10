@@ -21,23 +21,28 @@ Currently only the **Workout** module has content. All other modules are stubs (
 meridian/
 ├── index.html                        ✅ Homepage (complete)
 ├── manifest.json                     ✅ PWA manifest (start_url fixed to "./")
-├── sw.js                             ✅ Service worker — network-first HTML, cache-first CSS/JS
+├── sw.js                             ✅ Service worker — network-first HTML/CSS/JS; c.navigate() removed (iOS Safari fix)
 ├── bust.py                           ✅ Cache-buster — appends ?v=<md5> to CSS/JS refs in all HTML
 ├── css/
 │   ├── base.css                      ✅ Design tokens + reset
-│   ├── layout.css                    ✅ Nav, workout-header, phase-bar, page shell, footer
+│   ├── layout.css                    ✅ Nav, workout-header, phase-bar, page shell, footer; auth chip styles
 │   ├── components.css                ✅ All workout UI components
-│   └── home.css                      ✅ Homepage-specific styles
+│   ├── home.css                      ✅ Homepage-specific styles
+│   └── calendar.css                  ✅ Gym calendar page + entry card styles
 ├── js/
-│   ├── app.js                        ✅ Detects current page, injects nav + footer
-│   ├── nav.js                        ✅ injectNav(activePage, basePath)
+│   ├── app.js                        ✅ Detects current page, injects nav + footer; calendar page detection
+│   ├── nav.js                        ✅ injectNav(activePage, basePath); #nav-auth slot; Calendar nav link
 │   ├── footer.js                     ✅ injectFooter()
+│   ├── firebase-config.js            ✅ Firebase init; exports db (Firestore) + auth; persistentLocalCache w/ fallback
+│   ├── auth.js                       ✅ Google Sign-In; onAuthStateChanged; window.meridianAuth; updates nav chip
+│   ├── calendar.js                   ✅ Gym calendar UI + Firestore sync (optimistic toggle, streak, monthly stats)
 │   ├── workout.js                    ✅ Full workout interactivity
 │   ├── workout-data.js               ✅ Exercise form library (27 exercises)
 │   └── workout-render.js             ✅ Renders PHASE_CONFIG → DOM
 ├── pages/
 │   └── workout/
-│       ├── index.html                ✅ Workout landing — phase cards + quick access
+│       ├── index.html                ✅ Workout landing — phase cards + Calendar entry card + quick access
+│       ├── calendar.html             ✅ Gym calendar page
 │       ├── phase-1.html              ✅ Foundation Building (Weeks 1–4)
 │       ├── phase-2.html              ✅ Load & Intensity (Weeks 5–10)
 │       └── phase-3.html              ✅ Advanced Strength (Weeks 11+)
@@ -45,6 +50,7 @@ meridian/
     ├── health_planning_index.md      ✅ User profile, goals, all 10 module specs
     ├── comprehensive_workout_plan.md ✅ Full workout content (source of truth)
     ├── website_plan.md               ✅ Full architecture and implementation plan
+    ├── firebase-sync.md              ✅ Firebase feature plan — Stages 1–2 done, Stages 3–4 next
     └── workdone.md                   ✅ This file
 ```
 
@@ -187,7 +193,12 @@ workout.js  (DOMContentLoaded → binds all event listeners)
 
 ## Active Feature In Progress
 
-**Firebase Sync (cross-device persistence)** — see `claude/firebase-sync.md` for the full plan, data schema, file list, and per-stage status. Build this before any other next steps below.
+**Firebase Sync (cross-device persistence)** — see `claude/firebase-sync.md` for the full plan, data schema, file list, and per-stage status.
+
+- ✅ Stage 1 — Firebase Auth (Google Sign-In, nav chip, persists across sessions)
+- ✅ Stage 2 — Gym Calendar (Firestore-backed calendar page, streak + monthly stats, nav link)
+- ⬜ Stage 3 — Weight Progression to Firestore (`firestore-sync.js`, replace localStorage weight tracker)
+- ⬜ Stage 4 — PR Tracking + Session History (auto-detect PRs, Epley 1RM estimate, per-exercise history)
 
 ---
 

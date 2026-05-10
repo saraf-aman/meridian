@@ -1,6 +1,6 @@
 # Firebase Sync — Feature Plan & Progress
 
-**Status:** In progress  
+**Status:** Stages 1–2 complete. Stages 3–4 not started.
 **Started:** 2026-05-10  
 **Goal:** Replace localStorage for all persistent data (weights, PRs, history, gym calendar) with Firebase Firestore so data survives cache clears and syncs across devices (mobile + desktop).
 
@@ -25,6 +25,7 @@ const firebaseConfig = {
 - **Auth provider:** Google Sign-In (popup)
 - **Persistence:** Firebase default = `LOCAL` — auth token stored in IndexedDB by the SDK, survives browser close, cache clears, and app restarts. User never has to sign in again after the first time.
 - **Firestore rules:** Only the authenticated user can read/write their own data (`/users/{uid}/**`).
+- **Authorized domains:** `localhost` + the GitHub Pages domain must both be listed in Firebase Console → Authentication → Settings → Authorized domains.
 
 ---
 
@@ -56,73 +57,56 @@ users/
 
 ---
 
-## File Plan
+## Files Created / Modified (Stages 1–2)
 
-### New files to create
-| File | Purpose |
-|------|---------|
-| `js/firebase-config.js` | Firebase SDK imports + config init (imported by all pages via `type="module"`) |
-| `js/auth.js` | Google Sign-In, auth state listener, exposes `getCurrentUser()` |
-| `pages/workout/calendar.html` | Gym calendar page |
-| `js/calendar.js` | Calendar UI + Firestore read/write for gym visits |
-| `js/firestore-sync.js` | Shared sync utilities for weight tracker, PRs, session history |
-
-### Existing files to modify
-| File | Change |
-|------|--------|
-| `nav.js` | Add auth button (sign in when logged out, avatar + name when logged in) |
-| `app.js` | Initialize auth on every page load |
-| `workout.js` | Stage 3: replace localStorage weight tracker with Firestore |
-| `sw.js` | Add `calendar.html` and new JS files to `PRECACHE` array |
-| All HTML phase files | Add Firebase SDK `<script type="module">` tags |
-| `pages/workout/index.html` | Add Calendar card linking to `calendar.html` |
+| File | Status | Notes |
+|------|--------|-------|
+| `js/firebase-config.js` | ✅ Created | Initialises Firebase app; exports `db` (Firestore) and `auth`. Uses `persistentLocalCache` with `memoryLocalCache` fallback for iOS compatibility. |
+| `js/auth.js` | ✅ Created | Google Sign-In popup, `onAuthStateChanged` listener, exposes `window.meridianAuth`. Updates `#nav-auth` slot in nav reactively. |
+| `js/calendar.js` | ✅ Created | Calendar UI + Firestore sync. Loads all visits once, renders monthly grid, optimistic toggle. |
+| `css/calendar.css` | ✅ Created | Calendar entry card + full calendar page styles. |
+| `pages/workout/calendar.html` | ✅ Created | Gym calendar page. |
+| `js/nav.js` | ✅ Modified | Added `#nav-auth` slot; added Calendar as a nav link (second item, after Workout). |
+| `js/app.js` | ✅ Modified | Calendar page sets `activePage = 'calendar'` for correct nav highlight. |
+| `sw.js` | ✅ Modified | Added new files to PRECACHE; removed `c.navigate(c.url)` from activate handler (was causing iOS Safari double-load bug). |
+| All HTML files | ✅ Modified | Added `<script type="module" src="...js/auth.js">` to every page. |
+| `pages/workout/index.html` | ✅ Modified | Added Gym Calendar entry card; loaded `calendar.css`; URL-fix script extended to cover `calendar.html`. |
+| `css/layout.css` | ✅ Modified | Auth chip styles (sign-in button, avatar, user name); sign-in button height fixed to 36px to match hamburger. |
 
 ---
 
 ## Stage Plan
 
-### Stage 1 — Firebase Auth ✅ COMPLETE
+### Stage 1 — Firebase Auth ✅ COMPLETE (2026-05-10)
 **Goal:** User signs in with Google once. Auth persists forever. Every page knows who the user is.
 
-**What to build:**
-- `js/firebase-config.js` — init Firebase app, export `db` (Firestore) and `auth` instances
-- `js/auth.js` — `signInWithGoogle()`, `signOut()`, `onAuthStateChanged` listener, exposes `window.meridianAuth`
-- Update `nav.js` — add auth chip to the nav (sign-in button when logged out; user avatar/first name + sign-out on tap when logged in)
-- Update `app.js` — load auth on every page
-- Update all HTML files — add Firebase SDK module script
-
-**Auth UI in nav:**
-- Logged out: small "Sign in" button (teal, 44px tall, sits in nav right side)
-- Logged in: circular avatar (Google photo) + first name, tap → sign out confirm
-
-**Key detail:** Do NOT block the UI waiting for auth. Pages load instantly; auth state resolves in the background and the nav updates reactively.
-
-**Status:** ✅ COMPLETE (2026-05-10)
+- `js/firebase-config.js` — Firebase app init, exports `db` and `auth`
+- `js/auth.js` — Google Sign-In, auth state listener, `window.meridianAuth`, updates nav chip reactively
+- `nav.js` — `#nav-auth` slot added; Calendar link added to nav
+- All HTML files — `<script type="module" src="...js/auth.js">` added
+- Auth UI: teal "Sign in" button when logged out; Google avatar + first name when logged in; tap avatar → sign out confirm
 
 ---
 
-### Stage 2 — Gym Calendar ✅ COMPLETE
+### Stage 2 — Gym Calendar ✅ COMPLETE (2026-05-10)
 **Goal:** New page at `pages/workout/calendar.html`. Click a day to log a gym visit. Data lives in Firestore.
 
-**What to build:**
-- `pages/workout/calendar.html` — monthly calendar view
-- `js/calendar.js` — calendar UI + Firestore sync
+- `pages/workout/calendar.html` — monthly calendar page
+- `js/calendar.js` — calendar UI + Firestore sync; optimistic UI updates
+- `css/calendar.css` — all calendar styles
+- Calendar entry card added to `pages/workout/index.html`
+- Calendar link added to nav (accessible from all pages, highlights correctly)
 
 **Calendar UI:**
-- Monthly grid (Mon–Sun headers)
-- Prev/Next month navigation
-- Days in the future: greyed out, not clickable
-- Days in the past + today: clickable to toggle gym visit
-- Visited day: filled teal circle
-- Current day: accent ring
-- Show current streak + total visits this month at the top
+- Monthly grid (Mon–Sun headers), Prev/Next month navigation (up to 12 months back)
+- Future days greyed out and non-interactive
+- Visited day: filled teal circle; Today: accent ring; Visited + Today: double ring
+- Stats bar: visits this month + current streak
 
 **Firestore path:** `users/{uid}/calendar/{YYYY-MM-DD}` → `{ visited: true, phase: 1 }`  
-**Offline:** Enabled via `persistentLocalCache()` in `firebase-config.js` — Firestore queues writes locally when offline and syncs on reconnect.
+**Offline:** `persistentLocalCache()` in `firebase-config.js` with `memoryLocalCache` fallback.
 
-**Add to workout index:** Added "Gym Calendar" entry card on `pages/workout/index.html` linking to `calendar.html`.
-
-**Status:** ✅ COMPLETE (2026-05-10)
+**iOS Safari fix:** Removed `c.navigate(c.url)` from sw.js activate handler — was causing double-load failure on normal Safari (didn't occur in private mode because private mode has no prior SW installation).
 
 ---
 
