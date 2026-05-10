@@ -185,6 +185,12 @@ workout.js  (DOMContentLoaded → binds all event listeners)
 
 ---
 
+## Active Feature In Progress
+
+**Firebase Sync (cross-device persistence)** — see `claude/firebase-sync.md` for the full plan, data schema, file list, and per-stage status. Build this before any other next steps below.
+
+---
+
 ## Immediate Next Steps
 
 ### 1. Build stub pages for the 9 remaining modules

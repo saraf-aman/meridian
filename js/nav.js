@@ -25,6 +25,7 @@
         '<div class="nav-inner">',
           '<a class="nav-logo" href="' + basePath + 'index.html">Meri<span>dian</span></a>',
           '<div class="nav-links" id="nav-links">' + linksHtml + '</div>',
+          '<div class="nav-auth" id="nav-auth"></div>',
           '<button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">',
             '<span></span><span></span><span></span>',
           '</button>',
