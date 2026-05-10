@@ -433,6 +433,19 @@
 .routine-table td:nth-child(2){ color: var(--text-3); width: 80px; }
 .routine-table td { color: var(--text-2); }
 
+/* Warmup step blocks */
+.wu-step { border-bottom: 1px solid var(--border); padding: 14px 0; }
+.wu-step:first-child { padding-top: 4px; }
+.wu-step:last-child { border-bottom: none; padding-bottom: 0; }
+.wu-step-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.wu-step-name { font-size: 0.9rem; font-weight: 600; color: var(--text-1); }
+.wu-step-dur { font-size: 0.75rem; font-weight: 600; color: var(--accent); background: var(--accent-dim); border-radius: var(--r-sm); padding: 3px 9px; white-space: nowrap; }
+.wu-step ol { counter-reset: wi; list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.wu-step ol li { position: relative; padding-left: 26px; font-size: 0.855rem; color: var(--text-2); line-height: 1.65; }
+.wu-step ol li::before { counter-increment: wi; content: counter(wi); position: absolute; left: 0; top: 0; width: 18px; height: 18px; border-radius: 50%; background: var(--surface-3); font-size: 0.72rem; font-weight: 700; color: var(--text-3); display: flex; align-items: center; justify-content: center; }
+.wu-step .wu-note { margin-top: 8px; font-size: 0.815rem; color: var(--accent); background: var(--accent-dim); border-radius: var(--r-sm); padding: 6px 10px; line-height: 1.55; }
+.wu-step .wu-note strong { color: var(--accent); }
+
 /* Mini tabs inside ref sections */
 .mini-tabs { display: flex; gap: 6px; margin-bottom: 16px; }
 .mini-tab {

@@ -211,30 +211,162 @@ var WorkoutRender = (function () {
 
   /* ── Warmup reference accordion ────────────────────────────── */
   function warmupRef() {
-    var eveningRows = [
-      ['Treadmill walk',             '3 min',         '4.5–5.5 km/h, 0% incline — gets blood moving.'],
-      ['Arm circles (fwd + back)',   '10 each arm',   'Large, smooth circles from the shoulder.'],
-      ['Hip circles',                '10 each way',   'Hands on hips, large hula-hoop motion.'],
-      ['Leg swings (front/back)',    '10 each leg',   'Hold wall for balance. Controlled pendulum.'],
-      ['Leg swings (side to side)',  '10 each leg',   'Same support. Swing across and out.'],
-      ['Bodyweight squat (slow)',    '8 reps',        '3 sec down, pause — movement rehearsal only.'],
-      ['Glute bridge (bodyweight)',  '10 reps',       'Activates glutes and lower back safely.'],
-      ['Dead bug (slow)',            '4 each side',   'Lower back pressed to floor throughout.']
-    ];
-    var morningRows = [
-      ['Slow walk',                  '5 min',         '4.0–4.5 km/h — raise core temp, decompress spine.'],
-      ['Cat-cow stretch',            '10 reps',       'On hands and knees. Arch up (cat), dip belly (cow), 2 sec each.'],
-      ['Child\'s pose',              '30 sec',        'Hips to heels, arms extended. Breathe deeply.'],
-      ['Lying knee-to-chest',        '5 each side',   'Pull one knee to chest, 10 sec hold. Releases lower back.'],
-      ['Glute bridge (bodyweight)',  '12 reps',       'More reps in the morning — glutes are slower to activate.'],
-      ['Bodyweight squat (slow)',    '10 reps',       '3 sec down, pause, stand.'],
-      ['Leg swings + arm circles',  '10 each',       'As described above.']
+    function wuStep(name, dur, steps, note) {
+      var stepsHtml = steps.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('');
+      var noteHtml  = note ? '<p class="wu-note"><strong>Important: </strong>' + esc(note) + '</p>' : '';
+      return [
+        '<div class="wu-step">',
+          '<div class="wu-step-header">',
+            '<span class="wu-step-name">' + esc(name) + '</span>',
+            '<span class="wu-step-dur">' + esc(dur) + '</span>',
+          '</div>',
+          '<ol>' + stepsHtml + '</ol>',
+          noteHtml,
+        '</div>'
+      ].join('');
+    }
+
+    var eveningSteps = [
+      wuStep('Treadmill Walk', '3 min', [
+        'Set the treadmill speed to 4.5–5.5 km/h — a purposeful walking pace, slightly faster than casual.',
+        'Set incline to 0%.',
+        'Walk for 3 full minutes. This gets blood flowing to your legs, hips and core without taxing the system. You should feel slightly warmer by the end.'
+      ]),
+      wuStep('Arm Circles — Forward', '10 each arm', [
+        'Stand tall with your feet shoulder-width apart.',
+        'Extend one arm fully out to the side.',
+        'Draw large circles forward from the shoulder — think of making the biggest possible circle, not a small tight one.',
+        'Keep the movement smooth and controlled. Complete 10 circles, then switch arms.'
+      ]),
+      wuStep('Arm Circles — Backward', '10 each arm', [
+        'Same as forward arm circles but reverse the direction.',
+        'Extend one arm fully, draw 10 large circles going backward, then switch arms.',
+        'This loosens the shoulder joint in the opposite direction and is especially important before any pressing or rowing movements.'
+      ]),
+      wuStep('Shoulder Cross-Body Stretch', '5 each side, 5 sec hold', [
+        'Bring your right arm straight across your chest at shoulder height.',
+        'Use your left hand to gently press your right arm closer to your chest.',
+        'You should feel a stretch in the rear of your right shoulder. Hold for 5 seconds.',
+        'Do not yank — gentle, steady pressure. Switch arms and repeat. Do 5 holds per side.'
+      ]),
+      wuStep('Neck Rolls — Half Circle Only', '5 each side', [
+        'Stand or sit comfortably. Drop your chin slowly toward your chest.',
+        'From there, slowly roll your head to the right shoulder. Hold 2 seconds at the side.',
+        'Return your chin back to the centre (chest position), then roll to the left shoulder.',
+        'Hold 2 seconds, then return to centre. That is one rep.',
+        'Only do half circles — from shoulder to shoulder through the front. Never roll your neck backward (ear toward shoulder going backward) as this can compress the cervical spine.'
+      ], 'Only roll front to side. Never roll the neck backward.'),
+      wuStep('Hip Circles', '10 each direction', [
+        'Stand with feet shoulder-width apart, hands resting on your hips.',
+        'Imagine you have a hula hoop around your waist. Begin drawing large slow circles with your hips.',
+        'Keep your upper body relatively still — the movement comes from the hips only.',
+        'Do 10 circles in one direction, then reverse for 10 in the other direction.',
+        'This loosens the hip joints and lower back before any leg work.'
+      ]),
+      wuStep('Leg Swings — Front to Back', '10 each leg', [
+        'Stand next to a wall or machine and place one hand on it for balance.',
+        'Lift your right foot slightly off the floor and swing it forward and backward like a pendulum.',
+        'Keep the movement controlled — this is not a kick. Swing as high as is comfortable without forcing range.',
+        'Count 10 swings, then switch to the left leg.',
+        'This loosens the hip flexors and glutes before squatting or pressing movements.'
+      ]),
+      wuStep('Leg Swings — Side to Side', '10 each leg', [
+        'Stay holding the wall with one hand for balance.',
+        'Swing your right leg across the front of your body to the left, then out to the right side.',
+        'Again, controlled pendulum motion — not a forced kick. The leg crosses your midline going one way.',
+        'Do 10 swings, then switch to the left leg.',
+        'This opens up the inner thigh and outer hip — areas that tighten from sitting.'
+      ]),
+      wuStep('Bodyweight Squat — Slow', '8 reps', [
+        'Stand with feet shoulder-width apart, toes pointed slightly outward (about 15–20 degrees).',
+        'Hold your arms out in front for counterbalance if needed.',
+        'Lower slowly, counting 3 seconds on the way down. Push your knees outward in the direction your toes point.',
+        'At the bottom, pause briefly — as low as you can go while keeping heels flat.',
+        'Stand back up at a normal pace.',
+        'This is movement rehearsal only — no weight. You are teaching your body the squatting pattern before adding load.'
+      ]),
+      wuStep('Glute Bridge — Bodyweight', '10 reps', [
+        'Lie on your back on the floor. Bend your knees so your feet are flat on the floor, hip-width apart.',
+        'Place your feet close enough to your backside that you could just touch your heels with your fingertips.',
+        'Push your hips upward toward the ceiling by squeezing your glutes — think of "tucking" your tailbone up.',
+        'At the top, your body forms a straight line from knees to shoulders. Hold for 1 second and squeeze hard.',
+        'Lower your hips slowly back to the floor.',
+        'This activates the glutes and gently wakes up the lower back stabilisers before any exercise.'
+      ]),
+      wuStep('Dead Bug — Slow', '4 each side', [
+        'Lie on your back. Press your lower back firmly into the floor — there should be no gap between your back and the floor.',
+        'Raise both arms straight toward the ceiling, wrists above your shoulders.',
+        'Raise both legs so your knees are bent at 90 degrees in the air — shins parallel to the floor. This is your starting position.',
+        'Breathe out fully.',
+        'Slowly lower your RIGHT arm overhead toward the floor and simultaneously lower your LEFT leg toward the floor (straightening it as it goes). Take 3–4 seconds to reach the end position.',
+        'Both limbs should hover just 1–2 cm above the floor. Do NOT let them touch.',
+        'Return both limbs to the starting position slowly.',
+        'Then switch: lower LEFT arm and RIGHT leg simultaneously.',
+        'That is one rep on each side. Do 4 each side.'
+      ], 'Your lower back must stay flat against the floor at ALL times. If it lifts off, you have gone too far — shorten the range of motion and try again.')
     ];
 
-    function tableOf(rows) {
-      return '<table class="routine-table"><thead><tr><th>Movement</th><th>Reps / Time</th><th>Notes</th></tr></thead><tbody>' +
-        rows.map(function (r) { return '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td>' + esc(r[2]) + '</td></tr>'; }).join('') +
-        '</tbody></table>';
+    var morningSteps = [
+      wuStep('Slow Walk', '5 min', [
+        'Set the treadmill to 4.0–4.5 km/h — a gentle, comfortable pace.',
+        'Do not go faster in this first 5 minutes. Your spine is slightly compressed from lying down all night and needs time to decompress.',
+        'Walk for the full 5 minutes before moving on.'
+      ]),
+      wuStep('Cat-Cow Stretch', '10 reps', [
+        'Get onto your hands and knees on a mat. Hands should be directly below your shoulders, knees directly below your hips.',
+        'CAT: Arch your back upward toward the ceiling — imagine a scared cat rounding its back. Hold this position for 2 seconds. You will feel a stretch along the entire spine.',
+        'COW: Dip your belly toward the floor and lift your head and tailbone gently upward. Hold 2 seconds. You will feel your spine extend.',
+        'Move slowly between cat and cow. This is not a fast movement. Each full cat-to-cow is one rep.',
+        'Do 10 full reps. This gently mobilises every segment of your spine before you ask it to support movement.'
+      ]),
+      wuStep('Child\'s Pose', '30 sec hold', [
+        'From hands and knees, slowly sit your hips backward toward your heels.',
+        'Extend both arms forward along the floor as far as they will go.',
+        'Let your forehead rest on the mat. If it does not reach the mat, place a folded towel under your forehead.',
+        'Breathe deeply and slowly. With each exhale, let your lower back soften and relax further.',
+        'Hold for 30 full seconds. This gently decompresses the lower spine after sleep.'
+      ]),
+      wuStep('Lying Knee-to-Chest', '5 each side', [
+        'Lie on your back on the mat, legs extended.',
+        'Pull your RIGHT knee toward your chest with both hands. Gently hug it in.',
+        'Hold for 10 seconds. Breathe normally. You should feel a release in the lower back and hip.',
+        'Lower the right leg, then repeat with the LEFT knee.',
+        'Do 5 holds per side. This releases the lower back and hip flexors which tighten overnight.'
+      ]),
+      wuStep('Glute Bridge — Bodyweight', '12 reps', [
+        'Lie on your back. Knees bent, feet flat on the floor, hip-width apart.',
+        'Push your hips upward by squeezing your glutes. Count 2 seconds on the way up.',
+        'At the top, hold 1 second and squeeze hard.',
+        'Lower slowly over 2 seconds.',
+        'Do 12 reps — more than the evening version because your glutes are slower to wake up after sleep and need extra activation.'
+      ]),
+      wuStep('Bodyweight Squat — Slow', '10 reps', [
+        'Stand with feet shoulder-width apart, toes pointing slightly outward.',
+        'Lower yourself slowly — 3 seconds going down — pushing your knees outward in the direction your toes point.',
+        'At the bottom, pause briefly with heels flat on the floor.',
+        'Stand back up at a normal pace.',
+        'If your heels lift, do not force depth — go only as low as your heels stay flat. Morning stiffness in the ankles is normal and will ease.'
+      ]),
+      wuStep('Leg Swings — Front to Back', '10 each leg', [
+        'Stand next to a wall and hold it with one hand for balance.',
+        'Swing one leg forward and backward like a pendulum — controlled, not a kick.',
+        'Do 10 swings per leg.'
+      ]),
+      wuStep('Arm Circles', '10 fwd + 10 back, each arm', [
+        'Extend one arm fully to the side.',
+        'Do 10 large circles forward from the shoulder.',
+        'Then 10 large circles backward.',
+        'Switch to the other arm and repeat.'
+      ]),
+      wuStep('Hip Circles', '10 each direction', [
+        'Feet shoulder-width apart, hands on hips.',
+        'Draw large slow circles with your hips as if hula-hooping.',
+        'Do 10 in one direction, then 10 in the other.'
+      ])
+    ];
+
+    function stepsOf(items) {
+      return '<div class="wu-steps-list">' + items.join('') + '</div>';
     }
 
     return [
@@ -248,12 +380,12 @@ var WorkoutRender = (function () {
             '<button class="mini-tab" data-tab="morning">Morning (Sat)</button>',
           '</div>',
           '<div class="mini-panel active" data-group="warmup" data-tab="evening">',
-            '<p>Body already warm from daily movement. Goal: joint mobilisation and muscle activation. Start with a 3 min treadmill walk, then:</p>',
-            tableOf(eveningRows),
+            '<p>Your body is already warm from daily movement. Goal: joint mobilisation and muscle activation — not raising temperature from scratch. Duration: 8–10 minutes.</p>',
+            stepsOf(eveningSteps),
           '</div>',
           '<div class="mini-panel" data-group="warmup" data-tab="morning">',
-            '<p>Coming off sleep — spine compressed, muscles cold. More time needed. Start with a 5 min slow walk, then:</p>',
-            tableOf(morningRows),
+            '<p>Your body is coming off sleep. The spine is slightly compressed, muscles are cold, and joints need more time. This warm-up is longer. Duration: 12–15 minutes.</p>',
+            stepsOf(morningSteps),
           '</div>',
         '</div></div>',
       '</div>'
