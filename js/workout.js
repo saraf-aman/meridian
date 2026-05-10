@@ -93,6 +93,15 @@ function initSetTracker() {
         dot.classList.toggle('done');
         persist(card, dots);
         updateCardDone(card, dots);
+        if (Array.from(dots).every(d => d.classList.contains('done'))) {
+          const section = card.querySelector('.set-weights');
+          if (section) {
+            const exName = section.dataset.exName;
+            const sets = Array.from({length: dots.length}, (_, j) =>
+              localStorage.getItem(`m-weight|${exName}|${j}`) || '');
+            window.FirestoreSync?.logExercise(exName, sets);
+          }
+        }
       });
     });
     updateCardDone(card, dots);
@@ -166,7 +175,7 @@ function initWeightTracker() {
           for (let j = 0; j < numSets; j++) {
             sets.push(localStorage.getItem(`m-weight|${exName}|${j}`) || '');
           }
-          window.FirestoreSync?.saveWeights(exName, sets);
+          window.FirestoreSync?.saveWeights(exName, sets, section.dataset.reps || '');
         };
 
         input.addEventListener('keydown', e => {

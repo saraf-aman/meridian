@@ -132,17 +132,27 @@ users/
 
 ---
 
-### Stage 4 — PR Tracking + Session History ⬜ NOT STARTED
+### Stage 4 — PR Tracking + Session History ✅ COMPLETE (2026-05-10)
 **Goal:** Auto-detect personal records. View session history per exercise.
 
-**What to build:**
-- PR detection in `firestore-sync.js`: on each weight save, compare against `users/{uid}/prs/{exerciseName}`. If new weight (for same or fewer reps) exceeds stored best, overwrite + flash "New PR!" in the exercise card.
-- Session history: when user marks all sets for an exercise done, write a session log entry to `users/{uid}/sessions/{YYYY-MM-DD}`.
-- History UI: a collapsible "History" section inside each exercise card showing the last 5 sessions (date + weights used).
+**What was built:**
+- `workout-render.js` — added `data-reps` attribute to `.set-weights` div so reps are accessible to JS
+- `workout.js` — passes `section.dataset.reps` to `saveWeights`; dot click handler calls `FirestoreSync.logExercise` when all sets are marked done
+- `firestore-sync.js` — PR detection in `saveWeights` using Epley formula; `logExercise` writes to exercise-history; `syncAllFromFirestore` loads history and renders it; `flashPR` shows animated PR banner
+- `css/components.css` — `.pr-flash` (green, animated) + `.history-section` / `.hist-row` / `.hist-date` / `.hist-set` styles
 
-**1RM estimate:** Store `estimated1rm` in the PR doc using Epley formula: `weight × (1 + reps / 30)`. Show it in the PR flash + exercise card header.
+**PR detection logic:**
+- Epley 1RM = weight × (1 + reps / 30)
+- Only runs for exercises with clean integer reps ("10", "8") — skipped for "each side", "Max", "sec" etc.
+- Compares new estimated1rm against stored; if higher, updates Firestore + flashes banner
 
-**Status:** ⬜ NOT STARTED
+**Firestore paths used:**
+- PRs: `users/{uid}/prs/{exerciseName}` → `{ weight, reps, date, estimated1rm }`
+- Exercise history: `users/{uid}/exercise-history/{exerciseName}` → `{ 'YYYY-MM-DD': ['25 lbs', '30 lbs'], ... }` (merged per day, last 5 shown)
+
+**History UI:** Injected dynamically inside `.card-content` after `.set-weights` when Firestore data loads. Shows last 5 sessions with date + per-set weights. Also updates immediately when an exercise is logged in the current session.
+
+**Status:** ✅ COMPLETE
 
 ---
 

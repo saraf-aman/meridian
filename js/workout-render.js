@@ -50,13 +50,13 @@ var WorkoutRender = (function () {
   }
 
   /* ── Per-set weight section ────────────────────────────────── */
-  function setWeightsSection(exName, setCount) {
+  function setWeightsSection(exName, setCount, repsStr) {
     var n = parseInt(setCount, 10) || 0;
     var tags = '';
     for (var i = 0; i < n; i++) {
       tags += '<span class="weight-tag" data-set="' + i + '">Set ' + (i + 1) + ': <span class="wt-val">—</span></span>';
     }
-    return '<div class="card-section set-weights" data-ex-name="' + esc(exName) + '">' +
+    return '<div class="card-section set-weights" data-ex-name="' + esc(exName) + '" data-reps="' + esc(repsStr || '') + '">' +
       '<h5>Your weights</h5><div class="weight-row">' + tags + '</div></div>';
   }
 
@@ -74,7 +74,7 @@ var WorkoutRender = (function () {
       mistakesCol = '<div class="card-section"><h5>Common Mistakes</h5><ul>' + ms + '</ul></div>';
     }
 
-    var bodyInner = setWeightsSection(form.name, cfg.sets) + (mistakesCol
+    var bodyInner = setWeightsSection(form.name, cfg.sets, cfg.reps) + (mistakesCol
       ? '<div class="card-cols">' + stepsCol + mistakesCol + '</div>'
       : stepsCol);
 
