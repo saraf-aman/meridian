@@ -1,4 +1,4 @@
-const CACHE = 'app-7cb950a8';
+const CACHE = 'app-c0c55fbf';
 
 // self.registration.scope resolves to the correct base regardless of
 // whether the site is deployed at the root or a sub-path (e.g. /meridian/).
@@ -56,15 +56,10 @@ self.addEventListener('activate', event => {
     caches.keys().then(keys => {
       const stale = keys.filter(k => k !== CACHE);
       return Promise.all(stale.map(k => caches.delete(k)))
-        .then(() => self.clients.claim())
-        .then(() => {
-          // On upgrade (not fresh install) force-reload every open tab so the
-          // user only needs to reload once to see the update everywhere.
-          if (stale.length > 0) {
-            return self.clients.matchAll({ type: 'window' })
-              .then(all => all.forEach(c => c.navigate(c.url)));
-          }
-        });
+        .then(() => self.clients.claim());
+      // Note: clients.navigate() removed — iOS Safari mishandles it, causing
+      // double-load failures. HTML is network-first so updates appear on next
+      // navigation without needing a forced reload.
     })
   );
 });

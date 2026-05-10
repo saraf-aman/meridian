@@ -1,5 +1,5 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
-import { initializeFirestore, persistentLocalCache } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+import { initializeFirestore, persistentLocalCache, memoryLocalCache } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 import { getAuth } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 
 const firebaseConfig = {
@@ -13,6 +13,14 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-// persistentLocalCache enables offline reads/writes via IndexedDB
-export const db = initializeFirestore(app, { localCache: persistentLocalCache() });
+
+// persistentLocalCache uses IndexedDB for offline support.
+// Falls back to memory cache if IndexedDB is unavailable (iOS private browsing, etc.).
+export let db;
+try {
+  db = initializeFirestore(app, { localCache: persistentLocalCache() });
+} catch {
+  db = initializeFirestore(app, { localCache: memoryLocalCache() });
+}
+
 export const auth = getAuth(app);
