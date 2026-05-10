@@ -1,6 +1,6 @@
 # Meridian — Work Done & Next Steps
 
-Last updated: 2026-05-07 (all work committed and live on GitHub Pages)
+Last updated: 2026-05-10 (all work committed and live on GitHub Pages)
 
 This file is the single source of truth for any new chat picking up this project.
 Read this file, then read `website_plan.md` for the full architecture spec, then proceed with the next step listed at the bottom of this file.
@@ -36,9 +36,10 @@ meridian/
 │   ├── firebase-config.js            ✅ Firebase init; exports db (Firestore) + auth; persistentLocalCache w/ fallback
 │   ├── auth.js                       ✅ Google Sign-In; onAuthStateChanged; window.meridianAuth; updates nav chip
 │   ├── calendar.js                   ✅ Gym calendar UI + Firestore sync (optimistic toggle, streak, monthly stats)
-│   ├── workout.js                    ✅ Full workout interactivity
+│   ├── firestore-sync.js             ✅ Weight sync + PR detection + exercise history (ES module, exposes window.FirestoreSync)
+│   ├── workout.js                    ✅ Full workout interactivity; calls FirestoreSync on weight save + exercise complete
 │   ├── workout-data.js               ✅ Exercise form library (27 exercises)
-│   └── workout-render.js             ✅ Renders PHASE_CONFIG → DOM
+│   └── workout-render.js             ✅ Renders PHASE_CONFIG → DOM; data-reps on .set-weights for PR detection
 ├── pages/
 │   └── workout/
 │       ├── index.html                ✅ Workout landing — phase cards + Calendar entry card + quick access
@@ -50,7 +51,6 @@ meridian/
     ├── health_planning_index.md      ✅ User profile, goals, all 10 module specs
     ├── comprehensive_workout_plan.md ✅ Full workout content (source of truth)
     ├── website_plan.md               ✅ Full architecture and implementation plan
-    ├── firebase-sync.md              ✅ Firebase feature plan — Stages 1–2 done, Stages 3–4 next
     └── workdone.md                   ✅ This file
 ```
 
@@ -191,14 +191,50 @@ workout.js  (DOMContentLoaded → binds all event listeners)
 
 ---
 
-## Active Feature In Progress
+## What Has Been Built — Session 3 (2026-05-10)
 
-**Firebase Sync (cross-device persistence)** — see `claude/firebase-sync.md` for the full plan, data schema, file list, and per-stage status.
+### Firebase Sync (all 4 stages complete)
 
-- ✅ Stage 1 — Firebase Auth (Google Sign-In, nav chip, persists across sessions)
-- ✅ Stage 2 — Gym Calendar (Firestore-backed calendar page, streak + monthly stats, nav link)
-- ✅ Stage 3 — Weight Progression to Firestore (`firestore-sync.js`, write-through localStorage cache, cross-device sync on auth)
-- ✅ Stage 4 — PR Tracking + Session History (Epley PR detection, per-exercise history UI, PR flash banner)
+**Goal:** Replace localStorage for all persistent data with Firestore so data syncs across devices and survives cache clears.
+
+**Stage 1 — Firebase Auth**
+- `js/firebase-config.js` — Firebase init, exports `db` + `auth`, `persistentLocalCache` with `memoryLocalCache` fallback (iOS)
+- `js/auth.js` — Google Sign-In popup, `onAuthStateChanged`, `window.meridianAuth`, updates `#nav-auth` nav slot
+- All HTML files — `<script type="module" src="...js/auth.js">` added
+- Auth UI: teal "Sign in" button when logged out; Google avatar + first name when signed in; tap → sign-out confirm
+
+**Stage 2 — Gym Calendar**
+- `pages/workout/calendar.html` — monthly calendar page, linked from nav and workout index entry card
+- `js/calendar.js` — Firestore-backed calendar UI; optimistic toggle; streak + monthly visit stats
+- `css/calendar.css` — full calendar + entry card styles
+- Firestore path: `users/{uid}/calendar/{YYYY-MM-DD}` → `{ visited: true, phase: 1 }`
+
+**Stage 3 — Weight Progression to Firestore**
+- `js/firestore-sync.js` — ES module; saves weights to Firestore on every edit; syncs all weights from Firestore on auth resolve (Firestore is source of truth); exposes `window.FirestoreSync`
+- `js/workout.js` — calls `FirestoreSync.saveWeights(exName, sets, reps)` after each localStorage weight write
+- Firestore paths: `users/{uid}/weights/{exName}` (current) + `users/{uid}/weight-history/{exName}_{date}` (daily snapshot)
+
+**Stage 4 — PR Tracking + Exercise History**
+- PR detection: Epley 1RM = weight × (1 + reps / 30); compared against `users/{uid}/prs/{exName}` on every weight save; green flash banner on new PR
+- Only detects PRs for exercises with clean integer reps; skips "each side", "Max", "sec" etc.
+- Exercise history: `users/{uid}/exercise-history/{exName}` → `{ 'YYYY-MM-DD': sets[] }` written when all sets marked done
+- History UI: last 5 sessions injected into each exercise card below "Your weights"; updates live in current session
+- `workout-render.js` — `data-reps` attribute added to `.set-weights` div
+- `css/components.css` — `.pr-flash` (animated green banner) + `.history-section` / `.hist-row` / `.hist-set` styles
+
+**Firestore data schema (final):**
+```
+users/{uid}/
+  calendar/{YYYY-MM-DD}                    → { visited: true, phase: 1 }
+  weights/{exName}                         → { sets: [...], updatedAt }
+  weight-history/{exName}_{YYYY-MM-DD}     → { exName, date, sets }
+  prs/{exName}                             → { weight, reps, date, estimated1rm }
+  exercise-history/{exName}                → { 'YYYY-MM-DD': sets[], ... }
+```
+
+**What stays in localStorage only (intentional):**
+- `m-sets|{date}|{exercise}` — set completion dots (ephemeral, today only)
+- `m-check|{key}` — phase transition checklist items (one-time milestones, device-local is fine)
 
 ---
 
