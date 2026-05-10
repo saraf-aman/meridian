@@ -392,6 +392,176 @@ var WorkoutRender = (function () {
     ].join('');
   }
 
+  /* ── Cooldown reference accordion ──────────────────────────── */
+  function cooldownRef() {
+    function cdStretch(name, dur, steps, note) {
+      var stepsHtml = steps.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('');
+      var noteHtml  = note ? '<p class="wu-note"><strong>Note: </strong>' + esc(note) + '</p>' : '';
+      return [
+        '<div class="wu-step">',
+          '<div class="wu-step-header">',
+            '<span class="wu-step-name">' + esc(name) + '</span>',
+            '<span class="wu-step-dur">' + esc(dur) + '</span>',
+          '</div>',
+          '<ol>' + stepsHtml + '</ol>',
+          noteHtml,
+        '</div>'
+      ].join('');
+    }
+
+    function stepsOf(items) {
+      return '<div class="wu-steps-list">' + items.join('') + '</div>';
+    }
+
+    var upperStretches = [
+      cdStretch('Doorway Chest Stretch', '30 sec each side', [
+        'Find a doorway or the edge of a machine or wall.',
+        'Place your right forearm vertically against the door frame, elbow bent at 90 degrees, upper arm roughly parallel to the floor.',
+        'Turn your body slowly to the left — away from your right arm — until you feel a stretch across your right chest and the front of your right shoulder.',
+        'Hold for 30 seconds. Breathe normally. Do not force or yank.',
+        'Switch sides: left forearm on the frame, turn right. Hold 30 seconds.'
+      ]),
+      cdStretch('Cross-Body Shoulder Stretch', '30 sec each side', [
+        'Bring your right arm straight across your chest at shoulder height.',
+        'Use your left hand to gently press your right arm closer to your chest.',
+        'You should feel the stretch in the rear of your right shoulder.',
+        'Hold for 30 seconds. Do not rotate your body — keep facing forward.',
+        'Switch: left arm across chest, right hand pressing. Hold 30 seconds.'
+      ]),
+      cdStretch('Overhead Tricep Stretch', '30 sec each side', [
+        'Raise your right arm straight above your head.',
+        'Bend your right elbow so your right hand falls behind your head and your right elbow points toward the ceiling.',
+        'Use your left hand to gently press your right elbow further back and downward.',
+        'You should feel the stretch running down the back of your right upper arm.',
+        'Hold 30 seconds. Switch arms.'
+      ]),
+      cdStretch('Lat Stretch (Arm Overhead Side Lean)', '30 sec each side', [
+        'Stand upright. Raise your right arm straight above your head.',
+        'Lean your entire torso slowly to the left — away from the raised arm.',
+        'You will feel the stretch running down your right side from armpit to hip. This is the lat muscle.',
+        'Hold 30 seconds. Return to centre. Switch: raise left arm, lean right.'
+      ]),
+      cdStretch('Child\'s Pose', '45 sec', [
+        'Kneel on a mat. Sit your hips back toward your heels.',
+        'Extend both arms forward along the floor as far as they will go.',
+        'Let your forehead rest on the mat. Breathe slowly and deeply.',
+        'With each exhale, let your lower back relax and soften further.',
+        'Hold for 45 seconds. This decompresses the entire spine and releases the lats after pulling work.'
+      ]),
+      cdStretch('Neck Side Stretch', '20 sec each side', [
+        'Sit or stand comfortably.',
+        'Drop your right ear toward your right shoulder — do not raise the shoulder to meet your ear, let the ear drop toward it.',
+        'Gently place your right hand on the left side of your head and apply a very light downward pressure to deepen the stretch.',
+        'Hold 20 seconds. You should feel the stretch on the left side of your neck.',
+        'Switch: left ear toward left shoulder, left hand on head. Hold 20 seconds.'
+      ])
+    ];
+
+    var lowerStretches = [
+      cdStretch('Standing Quad Stretch', '30 sec each side', [
+        'Stand on your left foot. Hold a wall or machine with your left hand for balance.',
+        'Bend your right knee and pull your right foot toward your backside with your right hand. Hold the top of your foot or ankle.',
+        'Keep your knees together — your right knee should be pointing straight down, roughly alongside your left knee. Do not let the right knee swing outward.',
+        'Stand tall and hold for 30 seconds. You should feel the stretch running down the front of your right thigh.',
+        'Switch: stand on right foot, pull left foot to backside. Hold 30 seconds.'
+      ]),
+      cdStretch('Standing Hamstring Stretch', '30 sec each side', [
+        'Find a surface at roughly knee to hip height — a bench edge, a step, or the bottom rung of a rack.',
+        'Place your right heel on the surface with your right leg straight.',
+        'Stand tall and hinge forward from your hips — not from your waist — until you feel a stretch in the back of your right thigh (hamstring). Keep your back neutral, not rounded.',
+        'Hold 30 seconds. Switch legs.'
+      ]),
+      cdStretch('Kneeling Hip Flexor Stretch', '30 sec each side', [
+        'Kneel on your right knee on a mat. Your left foot is forward, flat on the floor, with your left knee at roughly 90 degrees.',
+        'Keep your torso upright — do not lean forward.',
+        'Push your hips gently forward until you feel a stretch in the front of your right hip and down the front of your right thigh. The stretch is on the kneeling side.',
+        'Hold 30 seconds. For a deeper stretch, raise your right arm overhead.',
+        'Switch: kneel on left knee, right foot forward. Hold 30 seconds.'
+      ]),
+      cdStretch('Lying Glute Stretch (Figure-4)', '30 sec each side', [
+        'Lie on your back on a mat. Knees bent, feet flat on the floor.',
+        'Cross your right ankle over your left knee — your right leg forms a figure-4 shape.',
+        'Reach both hands through or around your left thigh and pull your left leg toward your chest.',
+        'You should feel a deep stretch in the back of your right hip (the glute). This is the piriformis area.',
+        'Hold 30 seconds. Switch: left ankle over right knee, pull right thigh in.'
+      ]),
+      cdStretch('Calf Stretch', '30 sec each side', [
+        'Stand facing a wall. Place both hands on the wall for support.',
+        'Step your right foot back roughly 60–70 cm. Keep the right leg straight.',
+        'Press your right heel firmly into the floor. Lean gently into the wall.',
+        'You should feel the stretch in the back of your right lower leg (the calf muscle).',
+        'Hold 30 seconds. Switch: left foot back, press left heel down.'
+      ]),
+      cdStretch('Child\'s Pose', '45 sec', [
+        'Kneel on a mat. Sit hips back toward heels. Extend arms forward on the floor.',
+        'Forehead rests on the mat. Breathe deeply.',
+        'Hold for 45 seconds. Releases the lower back and hips after all the leg work.'
+      ])
+    ];
+
+    var fullBodyStretches = [
+      cdStretch('Doorway Chest Stretch', '30 sec each side', [
+        'Place one forearm vertically on a door frame, elbow at 90 degrees.',
+        'Turn your body away from the arm until you feel a stretch across the chest and front shoulder.',
+        'Hold 30 seconds. Switch sides.'
+      ]),
+      cdStretch('Lat Stretch (Side Lean)', '30 sec each side', [
+        'Stand tall. Raise your right arm straight above your head.',
+        'Lean your entire torso to the left until you feel the stretch down your right side from armpit to hip.',
+        'Hold 30 seconds. Switch arms and lean the other way.'
+      ]),
+      cdStretch('Standing Quad Stretch', '30 sec each side', [
+        'Stand on one foot with a hand on a wall for balance.',
+        'Pull the opposite foot toward your backside. Keep knees together, stand tall.',
+        'Hold 30 seconds. Switch legs.'
+      ]),
+      cdStretch('Lying Glute Stretch (Figure-4)', '30 sec each side', [
+        'Lie on your back, knees bent, feet flat.',
+        'Cross one ankle over the opposite knee to form a figure-4 shape.',
+        'Reach through and pull the uncrossed leg toward your chest. Feel the stretch deep in the crossed-leg glute.',
+        'Hold 30 seconds. Switch sides.'
+      ]),
+      cdStretch('Kneeling Hip Flexor Stretch', '30 sec each side', [
+        'Kneel on one knee on a mat. Other foot forward, knee at 90 degrees.',
+        'Push hips gently forward until you feel a stretch in the front of the kneeling-side hip.',
+        'Hold 30 seconds. Switch sides.'
+      ]),
+      cdStretch('Child\'s Pose', '60 sec', [
+        'Kneel on a mat. Sit hips back toward heels. Extend both arms forward on the floor.',
+        'Let your forehead rest on the mat. Breathe slowly and deeply.',
+        'Hold for 60 seconds — longer on full body days because you have worked more total muscle groups and your spine needs the extra decompression time.'
+      ])
+    ];
+
+    return [
+      '<div class="ref-block" id="cooldown-guide">',
+        '<div class="ref-header"><h4>Cool-Down &amp; Stretching</h4>',
+          '<div class="ref-header-right"><span class="chip chip-default">8–10 min</span>',
+            '<div class="chevron">' + I.chevron + '</div></div></div>',
+        '<div class="ref-body"><div class="ref-content">',
+          '<p>Stretching after training is not optional. Your muscles are warm and pliable — this is the best time to improve flexibility and reduce next-day soreness. For your back specifically, the cool-down is part of the injury prevention protocol. Select the tab for today\'s session type.</p>',
+          '<div class="mini-tabs" data-group="cooldown">',
+            '<button class="mini-tab active" data-tab="upper">Upper Body (Mon)</button>',
+            '<button class="mini-tab" data-tab="lower">Lower Body (Wed)</button>',
+            '<button class="mini-tab" data-tab="full">Full Body (Fri)</button>',
+          '</div>',
+          '<div class="mini-panel active" data-group="cooldown" data-tab="upper">',
+            '<p>After pressing and pulling work — chest, shoulders, back, arms. Focus on the chest, shoulder, lat and neck areas.</p>',
+            stepsOf(upperStretches),
+          '</div>',
+          '<div class="mini-panel" data-group="cooldown" data-tab="lower">',
+            '<p>After leg and glute work — quads, hamstrings, glutes, calves. These muscles contract hard and need a thorough release.</p>',
+            stepsOf(lowerStretches),
+          '</div>',
+          '<div class="mini-panel" data-group="cooldown" data-tab="full">',
+            '<p>After full body sessions — pick the most important stretches from both upper and lower, plus a longer child\'s pose.</p>',
+            stepsOf(fullBodyStretches),
+          '</div>',
+        '</div></div>',
+      '</div>'
+    ].join('');
+  }
+
   /* ── Transition checklist ───────────────────────────────────── */
   function checklist(cfg) {
     var groups = cfg.groups.map(function (g) {
@@ -477,6 +647,7 @@ var WorkoutRender = (function () {
     html += '<div class="phase-refs">';
     html += backSafety();
     html += warmupRef();
+    html += cooldownRef();
     if (cfg.checklist) html += checklist(cfg.checklist);
     html += '</div>';
 
