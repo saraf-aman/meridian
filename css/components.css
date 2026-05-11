@@ -518,6 +518,10 @@
 }
 .cardio-block h5 { color: var(--green); margin-bottom: 10px; }
 .cardio-block p  { font-size: 0.875rem; color: var(--text-2); margin-bottom: 6px; line-height: 1.65; }
+.cardio-detail-list { display: flex; flex-direction: column; gap: 7px; margin: 8px 0; list-style: none; }
+.cardio-detail-list li { position: relative; padding-left: 16px; font-size: 0.855rem; color: var(--text-2); line-height: 1.65; }
+.cardio-detail-list li::before { content: '–'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+.cardio-note { font-size: 0.815rem; color: var(--green); background: var(--green-dim); border-radius: var(--r-sm); padding: 7px 11px; line-height: 1.55; margin-top: 10px; }
 
 .interval-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
 .int-pill      { padding: 4px 12px; border-radius: var(--r-full); font-size: 0.72rem; font-weight: 700; background: var(--green-dim); color: var(--green); }

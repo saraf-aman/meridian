@@ -105,15 +105,21 @@ var WorkoutRender = (function () {
   /* ── Cardio blocks ─────────────────────────────────────────── */
   function cardioBlocks(blocks) {
     return blocks.map(function (b) {
-      var pills = '';
+      var inner = '';
+      if (b.desc) inner += '<p>' + esc(b.desc) + '</p>';
+      if (b.details && b.details.length) {
+        inner += '<ul class="cardio-detail-list">' +
+          b.details.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') +
+          '</ul>';
+      }
       if (b.intervals && b.intervals.length) {
-        pills = '<div class="interval-row">' +
+        inner += '<div class="interval-row">' +
           b.intervals.map(function (iv) {
             return '<span class="' + (iv.type === 'rest' ? 'rest-pill' : 'int-pill') + '">' + esc(iv.label) + '</span>';
           }).join('') + '</div>';
       }
-      return '<div class="cardio-block"><h5>' + esc(b.title) + '</h5>' +
-        (b.desc ? '<p>' + esc(b.desc) + '</p>' : '') + pills + '</div>';
+      if (b.note) inner += '<p class="cardio-note">' + esc(b.note) + '</p>';
+      return '<div class="cardio-block"><h5>' + esc(b.title) + '</h5>' + inner + '</div>';
     }).join('');
   }
 
@@ -210,7 +216,7 @@ var WorkoutRender = (function () {
   }
 
   /* ── Warmup reference accordion ────────────────────────────── */
-  function warmupRef() {
+  function warmupRef(phase) {
     function wuStep(name, dur, steps, note) {
       var stepsHtml = steps.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('');
       var noteHtml  = note ? '<p class="wu-note"><strong>Important: </strong>' + esc(note) + '</p>' : '';
@@ -365,6 +371,48 @@ var WorkoutRender = (function () {
       ])
     ];
 
+    var cardioSteps = [
+      wuStep('Slow Walk to Start', phase === 1 ? '3 min' : '5 min', [
+        'Begin walking at 4.0–4.5 km/h — noticeably slower than your target pace for today.',
+        'This initial slow walk is mandatory. Even though it is evening and your body feels warm from the day, your legs and lungs need a gradual ramp before being pushed harder.',
+        phase === 1
+          ? 'Walk slowly for 3 minutes, then build up to your brisk walking pace.'
+          : 'Walk slowly for the full 5 minutes before attempting any jogging. Do not rush this — your legs need it.'
+      ]),
+      wuStep('Leg Swings — Front to Back', '10 each leg', [
+        'Stand next to a wall or lamp post and place one hand on it for balance.',
+        'Lift your right foot slightly off the ground and swing it forward and backward like a pendulum — loose and relaxed, not a forceful kick.',
+        'Let the swing get a little bigger with each rep as the hip loosens. Do 10 swings.',
+        'Switch to the left leg. Do 10 swings.',
+        'This directly prepares the hip flexors and glutes for the walking or running motion.'
+      ]),
+      wuStep('Leg Swings — Side to Side', '10 each leg', [
+        'Stay next to the wall with one hand for balance.',
+        'Swing your right leg across the front of your body to the left, then back out to the right side.',
+        'The leg crosses your centreline on one swing and opens out to the side on the return.',
+        'Do 10 swings, then switch to the left leg.',
+        'This opens the inner thighs and outer hips — areas that tighten during sustained walking or running.'
+      ]),
+      wuStep('Hip Circles', '10 each direction', [
+        'Stand with feet shoulder-width apart, hands on your hips.',
+        'Draw large slow circles with your hips — as if hula-hooping.',
+        'Do 10 circles in one direction, then 10 in the reverse direction.',
+        'This loosens the hip joints and lower back before sustained forward movement.'
+      ]),
+      wuStep('Ankle Circles', '10 each foot, each direction', [
+        'Stand on one foot with a hand on the wall for balance.',
+        'Lift the other foot slightly off the floor. Rotate the ankle slowly in large circles — 10 going clockwise, then 10 going anticlockwise.',
+        'Switch feet and repeat.',
+        'Your ankles absorb impact on every step. This takes 30 seconds and meaningfully reduces ankle stiffness, especially if you have been sitting at a desk all day.'
+      ]),
+      wuStep('Calf Raises — Slow', '10 reps', [
+        'Stand flat on the floor (no machine needed — just the ground).',
+        'Rise up slowly onto your tiptoes, counting 2 seconds.',
+        'Lower slowly, counting 2 seconds, all the way back down.',
+        'Do 10 reps. This activates the calf muscles before they are asked to propel you forward for the next 25–35 minutes.'
+      ])
+    ];
+
     function stepsOf(items) {
       return '<div class="wu-steps-list">' + items.join('') + '</div>';
     }
@@ -372,16 +420,23 @@ var WorkoutRender = (function () {
     return [
       '<div class="ref-block" id="warmup-guide">',
         '<div class="ref-header"><h4>Warm-Up Guide</h4>',
-          '<div class="ref-header-right"><span class="chip chip-default">8–15 min</span>',
+          '<div class="ref-header-right"><span class="chip chip-default">5–15 min</span>',
             '<div class="chevron">' + I.chevron + '</div></div></div>',
         '<div class="ref-body"><div class="ref-content">',
           '<div class="mini-tabs" data-group="warmup">',
-            '<button class="mini-tab active" data-tab="evening">Evening (Mon / Wed / Fri)</button>',
-            '<button class="mini-tab" data-tab="morning">Morning (Sat)</button>',
+            '<button class="mini-tab active" data-tab="evening">' + (phase === 1 ? 'Gym (Mon / Wed / Fri)' : 'Gym (Mon / Tue / Fri)') + '</button>',
+            '<button class="mini-tab" data-tab="cardio">' + (phase === 1 ? 'Cardio (Tue)' : 'Cardio (Wed)') + '</button>',
+            '<button class="mini-tab" data-tab="morning">' + (phase === 1 ? 'Gym — Morning (Sat)' : 'Gym — Morning (Sat)') + '</button>',
           '</div>',
           '<div class="mini-panel active" data-group="warmup" data-tab="evening">',
             '<p>Your body is already warm from daily movement. Goal: joint mobilisation and muscle activation — not raising temperature from scratch. Duration: 8–10 minutes.</p>',
             stepsOf(eveningSteps),
+          '</div>',
+          '<div class="mini-panel" data-group="warmup" data-tab="cardio">',
+            phase === 1
+              ? '<p>Tuesday is your brisk walk day. Your legs and lungs still need a gradual ramp — do not step outside and immediately push to full pace. Duration: 5–8 minutes.</p>'
+              : '<p>Wednesday is your run interval day. Running puts far more impact on joints than walking — the warm-up is non-negotiable before jogging. Duration: 5–8 minutes.</p>',
+            stepsOf(cardioSteps),
           '</div>',
           '<div class="mini-panel" data-group="warmup" data-tab="morning">',
             '<p>Your body is coming off sleep. The spine is slightly compressed, muscles are cold, and joints need more time. This warm-up is longer. Duration: 12–15 minutes.</p>',
@@ -646,7 +701,7 @@ var WorkoutRender = (function () {
     /* Reference blocks */
     html += '<div class="phase-refs">';
     html += backSafety();
-    html += warmupRef();
+    html += warmupRef(cfg.num);
     html += cooldownRef();
     if (cfg.checklist) html += checklist(cfg.checklist);
     html += '</div>';

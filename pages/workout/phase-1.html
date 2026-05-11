@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="../../css/base.css?v=28ee7145">
   <link rel="stylesheet" href="../../css/layout.css?v=ca476a89">
-  <link rel="stylesheet" href="../../css/components.css?v=fbbeabe8">
+  <link rel="stylesheet" href="../../css/components.css?v=572e4856">
   <link rel="manifest" href="../../manifest.json">
   <meta name="theme-color" content="#1a6b72">
 </head>
@@ -43,23 +43,37 @@ var PHASE_CONFIG = {
     tue: {
       label: 'Tue', sub: 'Cardio', type: 'cardio',
       title: 'Tuesday — Cardio',
-      desc: 'Brisk walk. Build aerobic base and prepare the cardiovascular system for run intervals in Phase 2.',
-      duration: '25–30 mins',
+      desc: 'Goal: build your aerobic base. These sessions are not about speed — they are about training your heart, lungs, and legs to sustain effort over time. Do the Cardio warm-up before starting.',
+      duration: '25–32 mins',
       cardio: [
         {
           title: 'Weeks 1–2 — Brisk Walk',
-          desc: 'Walk at a purposeful pace — slightly out of breath, able to speak in full sentences. Treadmill: 5.0–6.0 km/h. Outdoors: as if slightly late for something.'
+          desc: 'A continuous brisk walk for 25–30 minutes. "Brisk" means purposeful and slightly effortful — not a gentle stroll, but not gasping either.',
+          details: [
+            'Treadmill: set speed to 5.0–6.0 km/h. Start at the lower end in Week 1 and inch it up as the weeks go on. Adjust based on how you feel — the speed is a guideline, not a rule.',
+            'Outdoors: walk as if you are slightly late for something. Arms swinging, stride purposeful.',
+            'The talk test — how to know if your pace is right: you should be able to speak in complete sentences, but you would not want to hold a long conversation. If you can chat easily with zero effort, go faster. If you cannot string a sentence together, slow down.',
+            'What you will feel: a noticeable increase in breathing, mild warmth in your legs, and a light sweat by the end. This is exactly right.',
+            'If 25 minutes feels very easy by the end of Week 2, that is a good sign — your fitness is already improving. The interval protocol in Weeks 3–4 will challenge you again.'
+          ]
         },
         {
           title: 'Weeks 3–4 — Interval Walk',
-          desc: '5 min easy warm-up walk, then 6 rounds, then 5 min cool-down walk.',
+          desc: 'Total duration: 28–32 minutes. Same overall time as Weeks 1–2, but now you alternate between a fast push and an easy recovery. This trains your cardiovascular system more efficiently than a steady pace.',
+          details: [
+            'Fast walk (work interval): 6.0–7.0 km/h on the treadmill, or outdoors at a pace where you are quite breathless — you can only manage a few words, not a full sentence. This should feel hard but survivable.',
+            'Easy walk (recovery interval): drop back to 4.5–5.0 km/h. Use this time to recover your breathing — you should feel mostly recovered before the next fast interval begins.',
+            'The warm-up and cool-down walks count toward your total time. Do not skip them — they are part of the session.',
+            'If 1 minute of fast walking feels genuinely easy by the end of Week 4, you can extend the fast interval to 1.5 minutes and reduce the easy interval to 1.5 minutes. This is the bridge into Phase 2 run training.'
+          ],
           intervals: [
-            { label: '5 min warm-up', type: 'rest' },
+            { label: '5 min warm-up walk', type: 'rest' },
             { label: '1 min fast walk', type: 'work' },
             { label: '2 min easy walk', type: 'rest' },
             { label: '× 6 rounds', type: 'work' },
-            { label: '5 min cool-down', type: 'rest' }
-          ]
+            { label: '5 min cool-down walk', type: 'rest' }
+          ],
+          note: 'Total active interval time: 6 × 3 min = 18 min + 10 min warm-up/cool-down = 28 min. If a round feels too hard to complete, slow the fast interval slightly rather than stopping — keep moving.'
         }
       ]
     },
@@ -100,12 +114,44 @@ var PHASE_CONFIG = {
     sat: {
       label: 'Sat', sub: 'Cardio', type: 'cardio',
       title: 'Saturday — Cardio (Morning)',
-      desc: 'Morning walk. Use the full Morning Warm-Up protocol before starting — your spine needs extra time after sleep.',
-      duration: '25–30 mins',
+      desc: 'Same walk protocol as Tuesday, but it is morning — your body is in a different state and needs to be treated differently. Use the full Morning Warm-Up before starting.',
+      duration: '25–32 mins',
       cardio: [
         {
-          title: 'Same protocol as Tuesday',
-          desc: 'Weeks 1–2: Brisk walk. Weeks 3–4: Interval walk. Start at 4.0–4.5 km/h for the first 5 min before increasing to your working pace.'
+          title: 'Morning vs. Evening — What Is Different',
+          details: [
+            'Your spine is slightly compressed after lying down all night. Your muscles are cold. Your joints are stiffer. All of this is normal, but it means you need more time to ease in before pushing.',
+            'The first 5 minutes of walking must be at 4.0–4.5 km/h — slower than your eventual working pace. Do not skip this. It is not the warm-up from the warm-up guide; it is part of the session itself.',
+            'You may feel sluggish for the first 5–10 minutes. This is normal and will pass. Do not judge your fitness by how you feel in the first few minutes of a morning session.',
+            'Drink a glass of water before you leave. Your body has been without water for 7–8 hours.'
+          ]
+        },
+        {
+          title: 'Weeks 1–2 — Brisk Walk (Morning)',
+          desc: 'Same target as Tuesday, but eased into more gradually.',
+          details: [
+            'Minutes 1–5: slow walk at 4.0–4.5 km/h. This is mandatory. Do not jump straight to the brisk pace.',
+            'Minutes 5–25: increase to your brisk walking pace (5.0–6.0 km/h on treadmill, or the "slightly late" outdoor pace).',
+            'Talk test still applies: able to speak in full sentences, slightly breathless, would not want to hold a long conversation.',
+            'Total session: 25–30 minutes including the slow opening.'
+          ]
+        },
+        {
+          title: 'Weeks 3–4 — Interval Walk (Morning)',
+          desc: 'Same interval structure as Tuesday. The warm-up walk within the session replaces the slow opening — do not double up.',
+          details: [
+            'The 5-minute easy warm-up walk at the start of the interval protocol (4.5–5.0 km/h) serves as your gradual ramp-up. This is especially important in the morning.',
+            'The fast walk intervals (6.0–7.0 km/h) may feel harder in the morning than the same effort on Tuesday evening — this is normal. Adjust the speed slightly down if needed rather than stopping.',
+            'The 5-minute cool-down walk at the end counts toward total session time.'
+          ],
+          intervals: [
+            { label: '5 min warm-up walk', type: 'rest' },
+            { label: '1 min fast walk', type: 'work' },
+            { label: '2 min easy walk', type: 'rest' },
+            { label: '× 6 rounds', type: 'work' },
+            { label: '5 min cool-down walk', type: 'rest' }
+          ],
+          note: 'If Saturday morning feels significantly harder than Tuesday evening at the same pace — that is expected. Your body performs differently first thing in the morning. Slow down rather than stop.'
         }
       ]
     },
@@ -161,7 +207,7 @@ var PHASE_CONFIG = {
 </script>
 
 <script src="../../js/workout-data.js?v=7bdb7e4b"></script>
-<script src="../../js/workout-render.js?v=150cd1c9"></script>
+<script src="../../js/workout-render.js?v=e181517e"></script>
 <script>
   WorkoutRender.buildPhase(PHASE_CONFIG);
   /* Auto-activate today's day tab */
