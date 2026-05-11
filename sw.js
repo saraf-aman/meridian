@@ -42,7 +42,10 @@ function cacheKey(url) {
 }
 
 self.addEventListener('install', event => {
-  self.skipWaiting();
+  // skipWaiting() intentionally removed. On iOS Safari it causes the browser
+  // to reload the active page twice and crash the tab when a new SW activates
+  // mid-session. The new SW now waits until all tabs are closed, then activates
+  // cleanly on the next launch.
   event.waitUntil(
     caches.open(CACHE).then(cache =>
       Promise.all(PRECACHE.map(path =>
@@ -53,9 +56,6 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('activate', event => {
-  // Note: clients.claim() intentionally removed. Combined with skipWaiting(),
-  // it seizes open pages mid-load and crashes iOS Safari tabs. New SW handles
-  // all fresh navigations; the current page is left undisturbed.
   event.waitUntil(
     caches.keys().then(keys => {
       const stale = keys.filter(k => k !== CACHE);
