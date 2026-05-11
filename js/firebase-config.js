@@ -1,5 +1,5 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
-import { initializeFirestore, persistentLocalCache, memoryLocalCache } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+import { initializeFirestore, memoryLocalCache } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 import { getAuth } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 
 const firebaseConfig = {
@@ -14,13 +14,10 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-// persistentLocalCache uses IndexedDB for offline support.
-// Falls back to memory cache if IndexedDB is unavailable (iOS private browsing, etc.).
-export let db;
-try {
-  db = initializeFirestore(app, { localCache: persistentLocalCache() });
-} catch {
-  db = initializeFirestore(app, { localCache: memoryLocalCache() });
-}
+// memoryLocalCache avoids IndexedDB entirely. persistentLocalCache() can cause
+// iOS Safari crashes: IDB data grows under ITP, the async failure isn't caught
+// by a sync try/catch, and iOS kills tabs under memory pressure from large IDB.
+// Cross-device sync still works — only the offline IDB cache is skipped.
+export const db = initializeFirestore(app, { localCache: memoryLocalCache() });
 
 export const auth = getAuth(app);

@@ -1,4 +1,4 @@
-const CACHE = 'app-51c3427a';
+const CACHE = 'app-aa6339a0';
 
 // self.registration.scope resolves to the correct base regardless of
 // whether the site is deployed at the root or a sub-path (e.g. /meridian/).
@@ -53,14 +53,13 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('activate', event => {
+  // Note: clients.claim() intentionally removed. Combined with skipWaiting(),
+  // it seizes open pages mid-load and crashes iOS Safari tabs. New SW handles
+  // all fresh navigations; the current page is left undisturbed.
   event.waitUntil(
     caches.keys().then(keys => {
       const stale = keys.filter(k => k !== CACHE);
-      return Promise.all(stale.map(k => caches.delete(k)))
-        .then(() => self.clients.claim());
-      // Note: clients.navigate() removed — iOS Safari mishandles it, causing
-      // double-load failures. HTML is network-first so updates appear on next
-      // navigation without needing a forced reload.
+      return Promise.all(stale.map(k => caches.delete(k)));
     })
   );
 });
