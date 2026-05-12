@@ -1,4 +1,4 @@
-const CACHE = 'app-aa6339a0';
+const CACHE = 'app-9752cd00';
 
 // self.registration.scope resolves to the correct base regardless of
 // whether the site is deployed at the root or a sub-path (e.g. /meridian/).
@@ -72,14 +72,20 @@ self.addEventListener('fetch', event => {
   const key  = cacheKey(event.request.url);
 
   if (path.endsWith('.html') || path.endsWith('/')) {
-    // Network-first for HTML — fresh content online, fallback to cache offline
+    // Network-first for HTML — fresh content online, cached version offline.
+    // Fallback chain always resolves to a valid Response (never undefined),
+    // which would otherwise crash iOS Safari instead of showing an offline page.
     event.respondWith(
       fetch(event.request)
         .then(res => {
           if (res.ok) caches.open(CACHE).then(c => c.put(key, res.clone()));
           return res;
         })
-        .catch(() => caches.match(key).then(r => r || caches.match(SCOPE)))
+        .catch(() =>
+          caches.match(key)
+            .then(r => r || caches.match(SCOPE))
+            .then(r => r || Response.error())
+        )
     );
   } else if (path.endsWith('.css') || path.endsWith('.js') || path.endsWith('.json')) {
     // Network-first for CSS/JS/JSON — ensures updates appear on next soft reload.

@@ -25,7 +25,12 @@ const MONTH_NAMES = [
 const DOW = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 
 // ── Date helpers ──────────────────────────────────────────────
-function toDateStr(d) { return d.toISOString().slice(0, 10); }
+function toDateStr(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
 function todayStr()   { return toDateStr(new Date()); }
 
 // ── Auth listener ─────────────────────────────────────────────
