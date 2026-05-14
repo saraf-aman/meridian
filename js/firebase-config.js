@@ -1,6 +1,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
 import { initializeFirestore, persistentLocalCache, memoryLocalCache } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
-import { initializeAuth, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+import { initializeAuth, browserLocalPersistence, browserPopupRedirectResolver } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAbF9mFUEb-wvPdTICOrDe9-pElFh25w4g",
@@ -28,4 +28,7 @@ try {
 // Safari's ITP blocks that iframe's storage access, causing a reload loop and
 // tab crash in the normal browser (not incognito/home-screen where ITP differs).
 // browserLocalPersistence uses same-origin localStorage — no iframe needed.
-export const auth = initializeAuth(app, { persistence: browserLocalPersistence });
+export const auth = initializeAuth(app, {
+  persistence: browserLocalPersistence,
+  popupRedirectResolver: browserPopupRedirectResolver
+});
