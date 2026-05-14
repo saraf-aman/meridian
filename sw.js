@@ -1,4 +1,4 @@
-const CACHE = 'app-bc659eca';
+const CACHE = 'app-a356831d';
 
 // self.registration.scope resolves to the correct base regardless of
 // whether the site is deployed at the root or a sub-path (e.g. /meridian/).
