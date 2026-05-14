@@ -1,3 +1,9 @@
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('controllerchange', function () {
+    window.location.reload();
+  });
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   var path = window.location.pathname;
   var activePage = 'home';
