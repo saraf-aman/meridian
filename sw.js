@@ -1,4 +1,4 @@
-const CACHE = 'app-9752cd00';
+const CACHE = 'app-2072275b';
 
 // self.registration.scope resolves to the correct base regardless of
 // whether the site is deployed at the root or a sub-path (e.g. /meridian/).
@@ -42,10 +42,7 @@ function cacheKey(url) {
 }
 
 self.addEventListener('install', event => {
-  // skipWaiting() intentionally removed. On iOS Safari it causes the browser
-  // to reload the active page twice and crash the tab when a new SW activates
-  // mid-session. The new SW now waits until all tabs are closed, then activates
-  // cleanly on the next launch.
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE).then(cache =>
       Promise.all(PRECACHE.map(path =>

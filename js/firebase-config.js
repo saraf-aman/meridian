@@ -1,6 +1,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
-import { initializeFirestore, memoryLocalCache } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
-import { getAuth } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+import { initializeFirestore, persistentLocalCache, memoryLocalCache } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+import { initializeAuth, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAbF9mFUEb-wvPdTICOrDe9-pElFh25w4g",
@@ -14,10 +14,18 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-// memoryLocalCache avoids IndexedDB entirely. persistentLocalCache() can cause
-// iOS Safari crashes: IDB data grows under ITP, the async failure isn't caught
-// by a sync try/catch, and iOS kills tabs under memory pressure from large IDB.
-// Cross-device sync still works — only the offline IDB cache is skipped.
-export const db = initializeFirestore(app, { localCache: memoryLocalCache() });
+// persistentLocalCache uses IndexedDB for offline Firestore access.
+// Falls back to memory if IDB is unavailable (iOS private browsing).
+export let db;
+try {
+  db = initializeFirestore(app, { localCache: persistentLocalCache() });
+} catch {
+  db = initializeFirestore(app, { localCache: memoryLocalCache() });
+}
 
-export const auth = getAuth(app);
+// initializeAuth with browserLocalPersistence avoids the cross-origin iframe
+// (firebaseapp.com/__/auth/iframe) that getAuth() spins up by default.
+// Safari's ITP blocks that iframe's storage access, causing a reload loop and
+// tab crash in the normal browser (not incognito/home-screen where ITP differs).
+// browserLocalPersistence uses same-origin localStorage — no iframe needed.
+export const auth = initializeAuth(app, { persistence: browserLocalPersistence });
