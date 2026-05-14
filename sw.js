@@ -1,4 +1,4 @@
-const CACHE = 'app-a356831d';
+const CACHE = 'app-260daf4f';
 
 // self.registration.scope resolves to the correct base regardless of
 // whether the site is deployed at the root or a sub-path (e.g. /meridian/).
@@ -42,7 +42,6 @@ function cacheKey(url) {
 }
 
 self.addEventListener('install', event => {
-  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE).then(cache =>
       Promise.all(PRECACHE.map(path =>
