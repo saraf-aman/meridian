@@ -132,15 +132,6 @@
   </div>
 </main>
 
-<!-- TEMP: unregister stuck SW — remove after confirming Safari fix -->
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then(function(regs) {
-      regs.forEach(function(r) { r.unregister(); });
-    });
-  }
-</script>
-<!-- END TEMP -->
 <script src="js/nav.js?v=e0c5f1d5"></script>
 <script src="js/footer.js?v=040a11b6"></script>
 <script src="js/app.js?v=190fc37a"></script>
