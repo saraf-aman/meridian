@@ -149,9 +149,42 @@ users/{uid}/
 
 ## Active Section: Nutrition
 
-**Status:** Not started  
-**Content spec:** `claude/comprehensive_nutrition_plan.md`  
+**Status:** In progress — Step 1 of 9 (Foundation)
+**Content spec:** `claude/comprehensive_nutrition_plan.md` (read "Website Implementation Notes" section first)
 **Pattern reference:** `claude/section-patterns.md` — follow Workout patterns for all UI/UX decisions.
+
+### Build Log
+
+| Step | Deliverable | Status |
+|---|---|---|
+| 1 | Foundation — auth.js whitelist, nutrition-data.js, nutrition-render.js, nutrition.js, CSS block, nav link, homepage card | ✅ Done |
+| 2 | `supplements.html` — product card, tables, no tabs (validates auth + basePath) | ⬜ Not started |
+| 3 | `lunch.html` — 5 lunch option cards + rotation table | ⬜ Not started |
+| 4 | `dinner.html` — 7 dinner cards + reheating table + Bhurji recipe collapsible | ⬜ Not started |
+| 5 | `health.html` — A1C panel + protein snapshot table + pre/post mini-tabs | ⬜ Not started |
+| 6 | `schedule.html` — two-tab strip (Office/WFH) + schedule table with critical row highlights | ⬜ Not started |
+| 7 | `meal-plan.html` — 7-day tab strip, today auto-activates, protein color-coded | ⬜ Not started |
+| 8 | `index.html` — auth wall → stat cards + Quick Reference collapsibles + nav links | ⬜ Not started |
+| 9 | Finish — sw.js PRECACHE (10 entries), bust.py, workdone.md completion protocol | ⬜ Not started |
+
+### Page → Content Spec Mapping
+
+| Page | Nutrition Plan Sections |
+|---|---|
+| `index.html` | Section 18 (Quick Reference Card) + Section 1 (Daily Targets as stat cards) |
+| `schedule.html` | Section 14 (Fixed Daily Schedule) |
+| `meal-plan.html` | Section 4 (7-Day Meal Plan) + Section 5 (Milk Solution rules) |
+| `lunch.html` | Section 6 (Office Lunch Rotation) |
+| `dinner.html` | Section 7 (Dinner Rotation) + Section 8 (WFH Leftover System) + Section 9 (Bhurji Recipe) |
+| `supplements.html` | Section 11 (Whey Protein) + Section 12 (Breakfast Options) + Section 13 (Fruit Habit) |
+| `health.html` | Section 2 (A1C Panel) + Section 3 (Protein Sources) + Section 10 (Pre/Post Workout) + Section 16 (Protein Snapshot) |
+
+### Key Architecture Notes
+
+- **Auth gating:** All 7 pages behind Google OAuth. Whitelist: `amansaraf28@gmail.com`, `sarafaman1998@gmail.com`. Implemented in `auth.js` via `onAuthStateChanged` + `meridian-auth-ready` custom event. Auth wall is inline content (not a redirect).
+- **basePath:** `'../'` for `pages/nutrition/` — NOT `../../` (that's workout-specific). SW registered as `'../sw.js'`.
+- **JS pattern:** Data (`nutrition-data.js`) → Render (`nutrition-render.js`) → Interact (`nutrition.js`). `NutritionInteract.init()` is called by auth callback after render, NOT auto-run on DOMContentLoaded.
+- **CSS:** Append a `/* ── Nutrition ── */` block to `css/components.css`. Reuse `.ref-block`, `.mini-tabs`, `.day-selector` / `.day-panels-wrap` from workout.
 
 ---
 
