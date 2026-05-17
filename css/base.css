@@ -55,6 +55,12 @@
   --shadow-md: 0 4px 16px rgba(28, 22, 14, 0.10);
   --shadow-lg: 0 8px 32px rgba(28, 22, 14, 0.12);
 
+  /* Note (sticky-note yellow) */
+  --note-bg:      #fffbea;
+  --note-border:  rgba(195, 150, 10, 0.38);
+  --note-icon:    rgba(180, 140, 8, 0.22);
+  --note-icon-on: rgba(168, 128, 6, 0.72);
+
   /* Transitions */
   --t-fast: 0.14s ease;
   --t-base: 0.22s ease;

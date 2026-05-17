@@ -192,6 +192,107 @@
 .rest-btn svg           { width: 11px; height: 11px; flex-shrink: 0; }
 .rest-btn:hover         { color: var(--orange); border-color: rgba(251,146,60,0.4); background: var(--orange-dim); }
 
+/* Note button */
+.note-btn {
+  width: 28px; height: 28px;
+  border-radius: var(--r-sm);
+  border: 1px solid transparent;
+  background: var(--note-icon);
+  color: rgba(130, 100, 4, 0.65);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast);
+  padding: 0;
+}
+.note-btn svg { width: 13px; height: 13px; }
+.note-btn:hover {
+  background: var(--note-icon-on);
+  color: rgba(90, 68, 3, 0.9);
+  border-color: rgba(180, 140, 8, 0.35);
+}
+.note-btn.has-note {
+  background: var(--note-icon-on);
+  color: rgba(90, 68, 3, 0.9);
+  border-color: rgba(180, 140, 8, 0.4);
+}
+
+/* Note popover */
+.note-popover {
+  position: fixed;
+  width: 260px;
+  z-index: 9000;
+  background: var(--note-bg);
+  border: 1.5px solid var(--note-border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-5px);
+  transition: opacity var(--t-fast), transform var(--t-fast);
+}
+.note-popover.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.note-popover-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 10px 3px 12px;
+}
+.note-popover-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: rgba(110, 80, 4, 0.75);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+.note-close {
+  font-size: 1rem;
+  line-height: 1;
+  padding: 2px 5px;
+  border-radius: var(--r-sm);
+  color: rgba(130, 100, 4, 0.45);
+  cursor: pointer;
+  transition: color var(--t-fast), background var(--t-fast);
+  flex-shrink: 0;
+}
+.note-close:hover { color: rgba(90, 68, 3, 0.9); background: rgba(195, 150, 10, 0.14); }
+.note-textarea {
+  display: block;
+  width: 100%;
+  min-height: 108px;
+  max-height: 210px;
+  padding: 4px 12px 24px;
+  background: transparent;
+  border: none;
+  resize: none;
+  font-family: var(--font);
+  font-size: 0.82rem;
+  color: var(--text-1);
+  line-height: 1.65;
+  outline: none;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+.note-textarea::placeholder { color: rgba(130, 100, 4, 0.38); font-style: italic; }
+.note-textarea:disabled     { opacity: 0.6; cursor: default; }
+.note-saved {
+  position: absolute;
+  bottom: 7px;
+  right: 11px;
+  font-size: 0.67rem;
+  color: rgba(110, 80, 4, 0.5);
+  opacity: 0;
+  transition: opacity var(--t-base);
+  pointer-events: none;
+}
+.note-saved.visible { opacity: 1; }
+
 /* Expand chevron */
 .chevron {
   color: var(--text-3);

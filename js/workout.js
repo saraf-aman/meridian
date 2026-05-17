@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initResetButtons();
   initChecklists();
   initTimer();
+  initExerciseNotes();
 });
 
 /* ── Day tabs ─────────────────────────────────────────────── */
@@ -38,11 +39,11 @@ function initDayTabs() {
   });
 }
 
-/* ── Generic accordion (skip set-dots / rest-btn clicks) ─── */
+/* ── Generic accordion (skip set-dots / rest-btn / note-btn clicks) ─── */
 function initAccordions(headerSel, cardSel) {
   document.querySelectorAll(headerSel).forEach(header => {
     header.addEventListener('click', e => {
-      if (e.target.closest('.set-tracker') || e.target.closest('.rest-btn')) return;
+      if (e.target.closest('.set-tracker') || e.target.closest('.rest-btn') || e.target.closest('.note-btn')) return;
       header.closest(cardSel)?.classList.toggle('open');
     });
   });
@@ -305,4 +306,139 @@ function initTimer() {
 
   /* Init */
   setDuration(90);
+}
+
+/* ── Exercise notes (floating sticky-note popover) ───────── */
+function initExerciseNotes() {
+  const cache = {};
+  let popover    = null;
+  let activeBtn  = null;
+  let activeId   = null;
+  let saveTimer  = null;
+
+  function buildPopover() {
+    const el = document.createElement('div');
+    el.className = 'note-popover';
+    el.innerHTML =
+      '<div class="note-popover-header">' +
+        '<span class="note-popover-title"></span>' +
+        '<button class="note-close" aria-label="Close">×</button>' +
+      '</div>' +
+      '<textarea class="note-textarea" placeholder="Add form notes, reminders…"></textarea>' +
+      '<div class="note-saved">Saved</div>';
+    document.body.appendChild(el);
+
+    el.querySelector('.note-close').addEventListener('click', e => {
+      e.stopPropagation();
+      closePopover();
+    });
+
+    el.querySelector('.note-textarea').addEventListener('input', function () {
+      clearTimeout(saveTimer);
+      const val = this.value;
+      saveTimer = setTimeout(() => persistNote(val), 800);
+    });
+
+    el.addEventListener('click', e => e.stopPropagation());
+    return el;
+  }
+
+  function persistNote(value) {
+    if (!activeId) return;
+    cache[activeId] = value;
+    refreshIcon(activeId);
+    window.FirestoreSync?.saveNote(activeId, value);
+    const ind = popover?.querySelector('.note-saved');
+    if (ind) {
+      ind.classList.add('visible');
+      clearTimeout(ind._hideTimer);
+      ind._hideTimer = setTimeout(() => ind.classList.remove('visible'), 1400);
+    }
+  }
+
+  function refreshIcon(exId) {
+    const hasNote = !!(cache[exId] && cache[exId].trim());
+    document.querySelectorAll('.note-btn[data-ex-id="' + exId + '"]').forEach(btn => {
+      btn.classList.toggle('has-note', hasNote);
+    });
+  }
+
+  function positionPopover(btn) {
+    const r = btn.getBoundingClientRect();
+    const W = 260;
+    let left = r.right - W;
+    let top  = r.bottom + 6;
+    if (left < 8) left = 8;
+    if (left + W > window.innerWidth - 8) left = window.innerWidth - W - 8;
+    if (top + 240 > window.innerHeight - 8) top = r.top - 240 - 6;
+    if (top < 8) top = 8;
+    popover.style.left = left + 'px';
+    popover.style.top  = top  + 'px';
+  }
+
+  function openPopover(btn) {
+    if (!popover) popover = buildPopover();
+
+    // flush pending save before switching exercises
+    if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; }
+    if (activeId) {
+      const ta = popover.querySelector('.note-textarea');
+      if (ta) persistNote(ta.value);
+    }
+
+    activeBtn = btn;
+    activeId  = btn.dataset.exId;
+    const user = window._meridianUser;
+
+    popover.querySelector('.note-popover-title').textContent = btn.dataset.exName || '';
+    const ta = popover.querySelector('.note-textarea');
+    ta.value       = cache[activeId] || '';
+    ta.disabled    = !user;
+    ta.placeholder = user
+      ? 'Add form notes, reminders…'
+      : 'Sign in to save notes';
+
+    positionPopover(btn);
+    popover.classList.add('open');
+    if (user) requestAnimationFrame(() => ta.focus());
+  }
+
+  function closePopover() {
+    if (!popover || !popover.classList.contains('open')) return;
+    clearTimeout(saveTimer);
+    if (activeId) {
+      const ta = popover.querySelector('.note-textarea');
+      if (ta) persistNote(ta.value);
+    }
+    popover.classList.remove('open');
+    activeBtn = null;
+    activeId  = null;
+  }
+
+  document.querySelectorAll('.note-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (popover?.classList.contains('open') && activeBtn === btn) {
+        closePopover();
+      } else {
+        openPopover(btn);
+      }
+    });
+  });
+
+  document.addEventListener('click', () => closePopover());
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopover(); });
+
+  // called by FirestoreSync after auth + fetch
+  window.WorkoutNotes = {
+    applyNotes(notes) {
+      Object.assign(cache, notes);
+      Object.keys(notes).forEach(id => refreshIcon(id));
+      // if popover is open for one of these exercises, fill its textarea
+      if (activeId && notes[activeId] !== undefined && popover) {
+        const ta = popover.querySelector('.note-textarea');
+        if (ta && !ta.value) ta.value = notes[activeId] || '';
+      }
+    }
+  };
 }

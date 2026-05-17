@@ -120,6 +120,18 @@ async function logExercise(exName, sets) {
   } catch (_) {}
 }
 
+/* ── Save exercise note ───────────────────────────────────── */
+async function saveNote(exId, value) {
+  const user = auth.currentUser;
+  if (!user) return;
+  try {
+    await setDoc(
+      doc(db, 'users', user.uid, 'exercise-notes', exId),
+      { note: value, updatedAt: serverTimestamp() }
+    );
+  } catch (_) {}
+}
+
 /* ── Sync all data from Firestore on auth ─────────────────── */
 async function syncAllFromFirestore(user) {
   try {
@@ -148,11 +160,21 @@ async function syncAllFromFirestore(user) {
     histSnap.forEach(docSnap => {
       renderHistorySection(docSnap.id, docSnap.data());
     });
+
+    // Exercise notes
+    const notesSnap = await getDocs(collection(db, 'users', user.uid, 'exercise-notes'));
+    const notes = {};
+    notesSnap.forEach(docSnap => {
+      const { note } = docSnap.data();
+      if (note !== undefined) notes[docSnap.id] = note;
+    });
+    if (Object.keys(notes).length) window.WorkoutNotes?.applyNotes(notes);
   } catch (_) {}
 }
 
-window.FirestoreSync = { saveWeights, logExercise };
+window.FirestoreSync = { saveWeights, logExercise, saveNote };
 
 onAuthStateChanged(auth, user => {
+  window._meridianUser = user || null;
   if (user) syncAllFromFirestore(user);
 });

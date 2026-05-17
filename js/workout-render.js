@@ -13,7 +13,8 @@ var WorkoutRender = (function () {
     clock:   '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8.5" r="5.5" stroke="currentColor" stroke-width="1.4"/><path d="M8 5.5v3l1.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
     check:   '<svg viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     warn:    '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2.5l5.5 10h-11z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 7v3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="11.5" r="0.7" fill="currentColor"/></svg>',
-    arrow:   '<svg viewBox="0 0 15 15" fill="none" aria-hidden="true"><path d="M2 7.5h11M9 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    arrow:   '<svg viewBox="0 0 15 15" fill="none" aria-hidden="true"><path d="M2 7.5h11M9 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    note:    '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2.5" y="1.5" width="11" height="13" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M5 5.5h6M5 8h6M5 10.5h3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>'
   };
 
   /* ── Small helpers ─────────────────────────────────────────── */
@@ -92,6 +93,7 @@ var WorkoutRender = (function () {
             statChips(cfg),
             setDots(cfg.sets),
             restBtn(cfg.rest),
+            '<button class="note-btn" data-ex-id="' + esc(cfg.id) + '" data-ex-name="' + esc(form.name) + '" aria-label="Notes for ' + esc(form.name) + '">' + I.note + '</button>',
             '<div class="chevron">' + I.chevron + '</div>',
           '</div>',
         '</div>',
@@ -234,7 +236,7 @@ var WorkoutRender = (function () {
 
     var eveningSteps = [
       wuStep('Treadmill Walk', '3 min', [
-        'Set the treadmill speed to 4.5–5.5 km/h — a purposeful walking pace, slightly faster than casual.',
+        'Set the treadmill speed to 2.8–3.4 mph — a purposeful walking pace, slightly faster than casual.',
         'Set incline to 0%.',
         'Walk for 3 full minutes. This gets blood flowing to your legs, hips and core without taxing the system. You should feel slightly warmer by the end.'
       ]),
@@ -314,7 +316,7 @@ var WorkoutRender = (function () {
 
     var morningSteps = [
       wuStep('Slow Walk', '5 min', [
-        'Set the treadmill to 4.0–4.5 km/h — a gentle, comfortable pace.',
+        'Set the treadmill to 2.5–2.8 mph — a gentle, comfortable pace.',
         'Do not go faster in this first 5 minutes. Your spine is slightly compressed from lying down all night and needs time to decompress.',
         'Walk for the full 5 minutes before moving on.'
       ]),
@@ -373,7 +375,7 @@ var WorkoutRender = (function () {
 
     var cardioSteps = [
       wuStep('Slow Walk to Start', phase === 1 ? '3 min' : '5 min', [
-        'Begin walking at 4.0–4.5 km/h — noticeably slower than your target pace for today.',
+        'Begin walking at 2.5–2.8 mph — noticeably slower than your target pace for today.',
         'This initial slow walk is mandatory. Even though it is evening and your body feels warm from the day, your legs and lungs need a gradual ramp before being pushed harder.',
         phase === 1
           ? 'Walk slowly for 3 minutes, then build up to your brisk walking pace.'
