@@ -4,6 +4,14 @@ Pure vanilla HTML/CSS/JS. No frameworks, no build tools, no npm.
 
 ---
 
+## Session startup — always do this first
+
+1. Read `claude/workdone.md` — single source of truth: project map, design system, file structure, Firebase schema, active section status.
+2. When starting a **new section**: also read `claude/section-patterns.md` (UI/UX patterns from completed sections to ensure visual/structural consistency) + `claude/comprehensive-<section>-plan.md` (content spec for the section being built).
+3. When **finishing a section**: prune that section's build logs from `workdone.md`, move it to the "Completed Sections" registry, update `section-patterns.md` with any new patterns the section introduced, update the file structure tree in `workdone.md`, set the next section as "Active Section".
+
+---
+
 ## Non-negotiable rules
 
 - **Never `git commit` or `git push` anything.** The user always handles commits and pushes themselves. Do not suggest, stage, or run any git commit/push commands.

@@ -1,5 +1,7 @@
 # Meridian Health Website — Implementation Plan
 
+> **Historical** — This was the original planning doc. Actual implementation diverged (workout.css never extracted, Firebase/calendar additions not reflected, stub pages not yet built). See `workdone.md` for current project state.
+
 ## Context
 A personal health planning website ("Meridian") with a dark premium aesthetic. Currently: homepage with 10 module cards (only Workout is active) and a full CSS/JS design system. The homepage feels flat and visually undifferentiated. Architecture needs componentisation so nav/footer aren't duplicated across all pages. This plan covers the full website build: architecture restructuring, homepage redesign, and all section pages.
 
