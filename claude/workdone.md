@@ -1,6 +1,6 @@
 # Meridian — Project State
 
-Last updated: 2026-05-14
+Last updated: 2026-05-17
 
 > Single source of truth for all Claude sessions. Read this first, every time.
 
@@ -8,7 +8,7 @@ Last updated: 2026-05-14
 
 ## What This Is
 
-A personal health planning website called **Meridian**. Pure HTML/CSS/JS — no build tool, no framework. Covers 10 health modules: Workout, Nutrition, Hydration, Sleep, Habits, Supplements, Cardio, Back Management, Picky Eating, Progress. Currently only **Workout** is fully built.
+A personal health planning website called **Meridian**. Pure HTML/CSS/JS — no build tool, no framework. Covers 10 health modules: Workout, Nutrition, Hydration, Sleep, Habits, Supplements, Cardio, Back Management, Picky Eating, Progress. **Workout** is fully built. **Nutrition** is in progress (Step 2 of 9).
 
 ---
 
@@ -31,12 +31,15 @@ meridian/
 │   ├── nav.js                          ✅ injectNav(activePage, basePath) + hamburger menu
 │   ├── footer.js                       ✅ injectFooter()
 │   ├── firebase-config.js              ✅ Firebase init; exports db (Firestore) + auth
-│   ├── auth.js                         ✅ Google Sign-In popup; onAuthStateChanged; nav chip
+│   ├── auth.js                         ✅ Google Sign-In; whitelist (2 emails); meridian-auth-ready event
 │   ├── calendar.js                     ✅ Gym calendar UI + Firestore sync; streak + stats
 │   ├── firestore-sync.js               ✅ Weight sync + PR detection + exercise history
 │   ├── workout.js                      ✅ Full workout interactivity
 │   ├── workout-data.js                 ✅ Exercise form library (27 exercises)
-│   └── workout-render.js               ✅ Renders PHASE_CONFIG → DOM
+│   ├── workout-render.js               ✅ Renders PHASE_CONFIG → DOM
+│   ├── nutrition-data.js               ✅ All nutrition content (schedules, meals, health, supplements)
+│   ├── nutrition-render.js             ✅ buildAuthWall + buildUnauthorizedWall + page stubs
+│   └── nutrition.js                    ✅ NutritionInteract shell (populated per page step)
 ├── pages/workout/
 │   ├── index.html                      ✅ Workout landing — phase cards + calendar entry + quick links
 │   ├── calendar.html                   ✅ Gym calendar page
@@ -149,7 +152,7 @@ users/{uid}/
 
 ## Active Section: Nutrition
 
-**Status:** In progress — Step 1 of 9 (Foundation)
+**Status:** In progress — Step 1b open (homepage refinement decision needed before Step 2)
 **Content spec:** `claude/comprehensive_nutrition_plan.md` (read "Website Implementation Notes" section first)
 **Pattern reference:** `claude/section-patterns.md` — follow Workout patterns for all UI/UX decisions.
 
@@ -158,6 +161,7 @@ users/{uid}/
 | Step | Deliverable | Status |
 |---|---|---|
 | 1 | Foundation — auth.js whitelist, nutrition-data.js, nutrition-render.js, nutrition.js, CSS block, nav link, homepage card | ✅ Done |
+| 1b | Homepage restructure — resolve nutrition card placement + lock icon UX (see refinements below) | ⚠️ Decision needed |
 | 2 | `supplements.html` — product card, tables, no tabs (validates auth + basePath) | ⬜ Not started |
 | 3 | `lunch.html` — 5 lunch option cards + rotation table | ⬜ Not started |
 | 4 | `dinner.html` — 7 dinner cards + reheating table + Bhurji recipe collapsible | ⬜ Not started |
@@ -166,6 +170,73 @@ users/{uid}/
 | 7 | `meal-plan.html` — 7-day tab strip, today auto-activates, protein color-coded | ⬜ Not started |
 | 8 | `index.html` — auth wall → stat cards + Quick Reference collapsibles + nav links | ⬜ Not started |
 | 9 | Finish — sw.js PRECACHE (10 entries), bust.py, workdone.md completion protocol | ⬜ Not started |
+
+---
+
+### Step 1 — What Was Built
+
+**`js/auth.js`** — Added email whitelist (`amansaraf28@gmail.com`, `sarafaman1998@gmail.com`). Unauthorized accounts are signed out immediately. Added `window.meridianAuth.ready` flag and `meridian-auth-ready` custom event dispatched on every auth state change. All nutrition pages depend on this event to trigger their render.
+
+**`js/nutrition-data.js`** — All static content for all 7 pages in one IIFE (`var ND`). Exports: `GOALS`, `QUICK_REF`, `LUNCH_OPTIONS`, `LUNCH_ROTATION`, `DINNER_ROTATION`, `WFH_REHEATING`, `WFH_FALLBACKS`, `BHURJI_RECIPE`, `SUPPLEMENTS`, `BREAKFAST_OPTIONS`, `FRUIT_HABITS`, `HEALTH`, `SCHEDULE`, `MEAL_PLAN`, `MILK_SOLUTION`, `NAV_LINKS`. Content sourced from `comprehensive_nutrition_plan.md` Sections 1–18.
+
+**`js/nutrition-render.js`** — IIFE (`var NutritionRender`). Fully implemented: `buildAuthWall()` (lock icon + Sign In button, wires click to `window.meridianAuth.signInWithGoogle()`), `buildUnauthorizedWall()`. Page builders (`buildIndex`, `buildSchedule`, `buildMealPlan`, `buildLunch`, `buildDinner`, `buildSupplements`, `buildHealth`) are stubs that will be filled in Steps 2–8.
+
+**`js/nutrition.js`** — IIFE exposing `window.NutritionInteract = { init() }`. Shell only — populated per page step.
+
+**`css/components.css`** — Nutrition CSS block appended. Classes: `.auth-wall` (+ icon, title, desc, btn, note), `.nutrition-header`, `.key-numbers` (+ number, label, value, unit), `.schedule-table` (+ `tr.row-critical`, `.critical-badge`), `.protein-green` / `.protein-amber`, `.lunch-cards` / `.lunch-card` (+ meta, protein, order, note, days), `.type-chip` (gym/rest/cardio variants), `.dinner-cards` / `.dinner-card` (+ header, day, name, chips), `.chip-time` / `.chip-leftover`, `.health-panel` (+ `.a1c-stats`/`.a1c-stat`), `.product-card` (+ rows), `.breakfast-cards` / `.breakfast-card` (+ `.badge-keep` / `.badge-limit`), `.nut-nav-links` / `.nut-nav-link`, `.meal-rows` / `.meal-row` (+ `.critical-row`, time/label/food/protein).
+
+**`js/nav.js`** — Nutrition link enabled (removed `disabled: true`, now links to `pages/nutrition/index.html`).
+
+**`index.html`** — Nutrition roadmap card updated: `<div>` → `<a>` linking to nutrition index. Lock icon (`.nut-lock`) positioned top-right. `data-lock-tip` attribute drives hover tooltip text. Inline script listens for `meridian-auth-ready` and: adds `.unlocked` class (hides lock) for authorized user, updates tooltip to "Account not authorised" for unauthorized account, resets to "Sign in to view" when signed out.
+
+**`css/home.css`** — Added: `.lock-chip` (removed later — replaced by new lock system), `a.roadmap-card` base + hover styles, `.nut-card` (position relative), `.nut-lock` (absolute top-right, 24px circle), `::after` tooltip (dark pill, fades in below lock icon on hover, reads `data-lock-tip`), `.nut-card.unlocked .nut-lock { display: none }`.
+
+**HTML shell pattern used by every nutrition page:**
+```
+nutrition-data.js → nutrition-render.js → nav.js → footer.js → app.js → nutrition.js → auth.js (module) → inline auth-render script → SW registration
+```
+Inline auth-render script on each page:
+```javascript
+(function () {
+  function render() {
+    var a = window.meridianAuth;
+    if (!a || !a.ready) { window.addEventListener('meridian-auth-ready', render, { once: false }); return; }
+    if (a.isUnauthorized) { NutritionRender.buildUnauthorizedWall(); return; }
+    if (!a.currentUser)   { NutritionRender.buildAuthWall(); return; }
+    NutritionRender.buildXxx(ND.XXX);
+    NutritionInteract.init();
+  }
+  render();
+  window.addEventListener('meridian-auth-ready', render);
+}());
+```
+
+---
+
+### Step 1b — Open Refinements (Homepage)
+
+Three issues identified with the current homepage nutrition card that need a decision before moving to Step 2:
+
+**Issue 1 — Semantic mismatch: "On the Roadmap"**
+Nutrition is now built, but its card lives in the *"On the Roadmap"* section alongside Sleep, Habits, and other modules that literally don't exist yet. For the signed-in owner, this label is wrong. The roadmap should mean "not yet built."
+
+**Issue 2 — Lock icon flash for authorized users**
+The `.nut-lock` element is always in the HTML. JS removes it after `meridian-auth-ready` fires (~200–400ms). This means the authorized user briefly sees the lock icon on every page load before it disappears — a subtle but noticeable flicker on repeat visits.
+
+**Issue 3 — Card is undersized for what it represents**
+For the signed-in owner, Nutrition is the second active health module. A 1/3-width card in the roadmap grid treats it as an afterthought compared to the full-width featured Workout card.
+
+**Two options discussed — decision needed from user:**
+
+**Option A — JS-driven promotion (dynamic homepage)**
+After `meridian-auth-ready` resolves with an authorized user, JS moves the nutrition card into the "Active Now" section (either as a second featured card or a smaller companion card below the workout featured card). The roadmap grid drops nutrition entirely. Solves all three issues but adds JS complexity to the homepage.
+
+**Option B — Static "Your Modules" section (structural homepage change)**
+Add a new middle section between "Active Now" and "On the Roadmap": a small grid called something like *"Active Modules"* or just remove the label distinction. Nutrition lives here always — no JS needed, lock icon visible to non-signed-in visitors, no flicker. The roadmap only contains unbuilt modules. Simpler, more maintainable, resolves the semantic and prominence issues. Lock flash issue partially remains (icon still in HTML, hidden via JS) but is less jarring when the card isn't in a "coming soon" section.
+
+**Recommendation:** Option B. Static is more maintainable and honest — the homepage shouldn't dynamically rearrange itself. The lock icon flash is minor and acceptable when the card is clearly in an "active modules" context rather than the roadmap. Ask the user for a decision at the start of the new chat.
+
+---
 
 ### Page → Content Spec Mapping
 
@@ -184,7 +255,7 @@ users/{uid}/
 - **Auth gating:** All 7 pages behind Google OAuth. Whitelist: `amansaraf28@gmail.com`, `sarafaman1998@gmail.com`. Implemented in `auth.js` via `onAuthStateChanged` + `meridian-auth-ready` custom event. Auth wall is inline content (not a redirect).
 - **basePath:** `'../'` for `pages/nutrition/` — NOT `../../` (that's workout-specific). SW registered as `'../sw.js'`.
 - **JS pattern:** Data (`nutrition-data.js`) → Render (`nutrition-render.js`) → Interact (`nutrition.js`). `NutritionInteract.init()` is called by auth callback after render, NOT auto-run on DOMContentLoaded.
-- **CSS:** Append a `/* ── Nutrition ── */` block to `css/components.css`. Reuse `.ref-block`, `.mini-tabs`, `.day-selector` / `.day-panels-wrap` from workout.
+- **CSS:** Nutrition block appended to `css/components.css`. Reuse `.ref-block`, `.mini-tabs`, `.day-selector` / `.day-panels-wrap` from workout for applicable pages.
 
 ---
 

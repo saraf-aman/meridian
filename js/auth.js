@@ -7,6 +7,7 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 
 const provider = new GoogleAuthProvider();
+const ALLOWED_EMAILS = ['amansaraf28@gmail.com', 'sarafaman1998@gmail.com'];
 
 function signInWithGoogle() {
   return signInWithPopup(auth, provider);
@@ -19,16 +20,36 @@ function doSignOut() {
 window.meridianAuth = {
   signInWithGoogle,
   signOut: doSignOut,
-  getCurrentUser: () => auth.currentUser
+  getCurrentUser: () => auth.currentUser,
+  currentUser: undefined,
+  ready: false,
+  isUnauthorized: false,
 };
 
 onAuthStateChanged(auth, function (user) {
+  if (user && !ALLOWED_EMAILS.includes(user.email)) {
+    window.meridianAuth.currentUser = user;
+    window.meridianAuth.isUnauthorized = true;
+    window.meridianAuth.ready = true;
+    window.dispatchEvent(new CustomEvent('meridian-auth-ready'));
+    var slot = document.getElementById('nav-auth');
+    if (slot) renderAuthSlot(slot, user);
+    else document.addEventListener('DOMContentLoaded', function () {
+      var s = document.getElementById('nav-auth');
+      if (s) renderAuthSlot(s, user);
+    }, { once: true });
+    return;
+  }
+
   window.meridianAuth.currentUser = user;
+  window.meridianAuth.isUnauthorized = false;
+  window.meridianAuth.ready = true;
+  window.dispatchEvent(new CustomEvent('meridian-auth-ready'));
+
   var slot = document.getElementById('nav-auth');
   if (slot) {
     renderAuthSlot(slot, user);
   } else {
-    // Nav not yet injected — wait for DOMContentLoaded
     document.addEventListener('DOMContentLoaded', function () {
       var s = document.getElementById('nav-auth');
       if (s) renderAuthSlot(s, user);

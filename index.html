@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="css/base.css?v=2a52ee9d">
   <link rel="stylesheet" href="css/layout.css?v=ca476a89">
-  <link rel="stylesheet" href="css/home.css?v=5f90783f">
+  <link rel="stylesheet" href="css/home.css?v=c5b393a9">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#1a6b72">
 </head>
@@ -41,13 +41,34 @@
               <div class="featured-text">
                 <div class="featured-meta">
                   <h2 class="featured-title">Workout</h2>
-                  <span class="active-chip">Phase 1 Active</span>
+                  <span class="active-chip">Phase 1</span>
                 </div>
                 <p class="featured-desc">3-phase progressive strength program with back safety protocol, exercise guides, rest timer, and session tracking.</p>
               </div>
             </div>
             <span class="featured-action">
               Begin session
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+                <path d="M2 7.5h11M9 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </a>
+
+        <a class="module-card" href="pages/nutrition/index.html" id="nut-card" data-lock-tip="Sign in to view">
+          <div class="nut-lock" aria-hidden="true">🔒</div>
+          <div class="module-card-inner">
+            <div class="featured-left">
+              <div class="icon-badge green-tint">🥗</div>
+              <div class="featured-text">
+                <div class="featured-meta">
+                  <h2 class="featured-title">Nutrition</h2>
+                </div>
+                <p class="featured-desc">Personalised meal plans, protein targets, schedule, supplements, and dietary guidance.</p>
+              </div>
+            </div>
+            <span class="featured-action">
+              View plan
               <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
                 <path d="M2 7.5h11M9 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
@@ -61,13 +82,6 @@
         <p class="modules-label">On the Roadmap</p>
 
         <div class="roadmap-grid">
-
-          <a class="roadmap-card" href="pages/nutrition/index.html">
-            <div class="icon-badge green-tint">🥗</div>
-            <h4 class="roadmap-title">Nutrition</h4>
-            <p class="roadmap-desc">Personalised meal plans, protein targets, and dietary guidance.</p>
-            <span class="lock-chip">Sign in to view</span>
-          </a>
 
           <div class="roadmap-card">
             <div class="icon-badge amber-tint">😴</div>
@@ -135,7 +149,22 @@
 <script src="js/nav.js?v=53d1bd9f"></script>
 <script src="js/footer.js?v=040a11b6"></script>
 <script src="js/app.js?v=190fc37a"></script>
-<script type="module" src="js/auth.js?v=fdd1b423"></script>
+<script type="module" src="js/auth.js?v=4cc7276b"></script>
+<script>
+  window.addEventListener('meridian-auth-ready', function () {
+    var card = document.getElementById('nut-card');
+    if (!card) return;
+    var a = window.meridianAuth;
+    if (a && a.currentUser && !a.isUnauthorized) {
+      card.classList.remove('show-lock');
+    } else if (a && a.isUnauthorized) {
+      card.dataset.lockTip = 'Account not authorised';
+      card.classList.add('show-lock');
+    } else {
+      card.classList.add('show-lock');
+    }
+  });
+</script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {

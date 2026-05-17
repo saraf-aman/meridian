@@ -249,6 +249,106 @@
   gap: 11px;
 }
 
+/* ── Module card (active secondary module) ───────────────── */
+.module-card {
+  display: block;
+  border-radius: var(--r-xl);
+  padding: 1px;
+  background: linear-gradient(
+    130deg,
+    rgba(46, 125, 82, 0.18) 0%,
+    rgba(255, 255, 255, 0.04) 52%,
+    rgba(46, 125, 82, 0.06) 100%
+  );
+  transition: background var(--t-base), box-shadow var(--t-base);
+  text-decoration: none;
+  animation: homesFadeUp 0.5s 0.10s ease both;
+  box-shadow: var(--shadow-sm);
+}
+
+.module-card:hover {
+  background: linear-gradient(
+    130deg,
+    rgba(46, 125, 82, 0.32) 0%,
+    rgba(255, 255, 255, 0.06) 52%,
+    rgba(46, 125, 82, 0.12) 100%
+  );
+  box-shadow: 0 8px 40px rgba(46, 125, 82, 0.08), var(--shadow-lg);
+}
+
+.module-card:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+  border-radius: var(--r-xl);
+}
+
+.module-card-inner {
+  background: var(--surface-1);
+  border-radius: calc(var(--r-xl) - 1px);
+  padding: 22px 26px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+/* Lock icon — hidden by default, shown via JS .show-lock */
+.module-card { position: relative; }
+
+.nut-lock {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 24px;
+  height: 24px;
+  background: var(--surface-3);
+  border-radius: var(--r-full);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  z-index: 1;
+}
+
+.module-card.show-lock .nut-lock { display: flex; }
+
+.module-card.show-lock {
+  opacity: 0.45;
+  filter: saturate(0.35);
+  transition: opacity var(--t-base), filter var(--t-base), background var(--t-base), box-shadow var(--t-base);
+}
+
+.module-card.show-lock:hover { opacity: 0.62; filter: saturate(0.55); }
+
+/* Hide action arrow when locked — contradictory to show "View plan" with a lock */
+.module-card.show-lock .featured-action { display: none; }
+
+/* Tooltip — appears below the lock icon, warm surface */
+.module-card.show-lock::after {
+  content: attr(data-lock-tip);
+  position: absolute;
+  top: 44px;
+  right: 8px;
+  background: var(--surface-3);
+  color: var(--text-2);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  font-size: 0.68rem;
+  font-weight: 500;
+  white-space: nowrap;
+  padding: 5px 10px;
+  border-radius: var(--r-sm);
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity var(--t-fast), transform var(--t-fast);
+  pointer-events: none;
+}
+
+.module-card.show-lock:hover::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* ── Roadmap grid ─────────────────────────────────────────── */
 .roadmap-grid {
   display: grid;
@@ -308,6 +408,17 @@
   margin-top: 2px;
 }
 
+a.roadmap-card {
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow var(--t-fast), border-color var(--t-fast);
+}
+
+a.roadmap-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-md);
+}
+
 /* ── Animations ───────────────────────────────────────────── */
 @keyframes homesFadeUp {
   from { opacity: 0; transform: translateY(10px); }
@@ -331,6 +442,14 @@
     gap: 16px;
   }
 
+  .module-card-inner {
+    padding: 18px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .module-card .featured-action { align-self: flex-end; }
   .featured-action { align-self: flex-end; }
   .roadmap-grid { grid-template-columns: repeat(2, 1fr); }
 }
