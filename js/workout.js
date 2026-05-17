@@ -91,10 +91,20 @@ function initSetTracker() {
       if (saved[i]) dot.classList.add('done');
       dot.addEventListener('click', e => {
         e.stopPropagation();
-        dot.classList.toggle('done');
+        const dotArr = Array.from(dots);
+        if (dot.classList.contains('done')) {
+          // only allow undoing the most recently completed set
+          const lastDone = dotArr.reduce((last, d, idx) => d.classList.contains('done') ? idx : last, -1);
+          if (i !== lastDone) return;
+          dot.classList.remove('done');
+        } else {
+          // only allow marking done if all previous sets are already done
+          if (!dotArr.slice(0, i).every(d => d.classList.contains('done'))) return;
+          dot.classList.add('done');
+        }
         persist(card, dots);
         updateCardDone(card, dots);
-        if (Array.from(dots).every(d => d.classList.contains('done'))) {
+        if (dotArr.every(d => d.classList.contains('done'))) {
           const section = card.querySelector('.set-weights');
           if (section) {
             const exName = section.dataset.exName;
