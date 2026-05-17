@@ -152,7 +152,7 @@ users/{uid}/
 
 ## Active Section: Nutrition
 
-**Status:** In progress — Step 1b open (homepage refinement decision needed before Step 2)
+**Status:** In progress — Step 2 next (`supplements.html`)
 **Content spec:** `claude/comprehensive_nutrition_plan.md` (read "Website Implementation Notes" section first)
 **Pattern reference:** `claude/section-patterns.md` — follow Workout patterns for all UI/UX decisions.
 
@@ -161,7 +161,7 @@ users/{uid}/
 | Step | Deliverable | Status |
 |---|---|---|
 | 1 | Foundation — auth.js whitelist, nutrition-data.js, nutrition-render.js, nutrition.js, CSS block, nav link, homepage card | ✅ Done |
-| 1b | Homepage restructure — resolve nutrition card placement + lock icon UX (see refinements below) | ⚠️ Decision needed |
+| 1b | Homepage restructure — nutrition card in "Active Now" block, lock/auth UX, auth.js sign-out bug fix | ✅ Done |
 | 2 | `supplements.html` — product card, tables, no tabs (validates auth + basePath) | ⬜ Not started |
 | 3 | `lunch.html` — 5 lunch option cards + rotation table | ⬜ Not started |
 | 4 | `dinner.html` — 7 dinner cards + reheating table + Bhurji recipe collapsible | ⬜ Not started |
@@ -175,7 +175,7 @@ users/{uid}/
 
 ### Step 1 — What Was Built
 
-**`js/auth.js`** — Added email whitelist (`amansaraf28@gmail.com`, `sarafaman1998@gmail.com`). Unauthorized accounts are signed out immediately. Added `window.meridianAuth.ready` flag and `meridian-auth-ready` custom event dispatched on every auth state change. All nutrition pages depend on this event to trigger their render.
+**`js/auth.js`** — Added email whitelist (`amansaraf28@gmail.com`, `sarafaman1998@gmail.com`). Non-whitelisted users remain signed in (they see their avatar in the nav) but get `isUnauthorized = true` — they are NOT force-signed-out. Added `window.meridianAuth.ready` flag and `meridian-auth-ready` custom event dispatched on every auth state change. All nutrition pages depend on this event to trigger their render.
 
 **`js/nutrition-data.js`** — All static content for all 7 pages in one IIFE (`var ND`). Exports: `GOALS`, `QUICK_REF`, `LUNCH_OPTIONS`, `LUNCH_ROTATION`, `DINNER_ROTATION`, `WFH_REHEATING`, `WFH_FALLBACKS`, `BHURJI_RECIPE`, `SUPPLEMENTS`, `BREAKFAST_OPTIONS`, `FRUIT_HABITS`, `HEALTH`, `SCHEDULE`, `MEAL_PLAN`, `MILK_SOLUTION`, `NAV_LINKS`. Content sourced from `comprehensive_nutrition_plan.md` Sections 1–18.
 
@@ -187,9 +187,9 @@ users/{uid}/
 
 **`js/nav.js`** — Nutrition link enabled (removed `disabled: true`, now links to `pages/nutrition/index.html`).
 
-**`index.html`** — Nutrition roadmap card updated: `<div>` → `<a>` linking to nutrition index. Lock icon (`.nut-lock`) positioned top-right. `data-lock-tip` attribute drives hover tooltip text. Inline script listens for `meridian-auth-ready` and: adds `.unlocked` class (hides lock) for authorized user, updates tooltip to "Account not authorised" for unauthorized account, resets to "Sign in to view" when signed out.
+**`index.html`** — Nutrition card moved out of roadmap grid into the "Active Now" `modules-block` (below Workout) as a `.module-card`. Lock icon (`.nut-lock`, 🔒 emoji, 24px circle, `display:none` by default) positioned top-right. `data-lock-tip` drives hover tooltip. Inline script listens for `meridian-auth-ready`: authorized user → remove `.show-lock`; unauthorized → add `.show-lock` + set tip to "Account not authorised"; signed out → add `.show-lock`. "Phase 1" chip (not "Phase 1 Active").
 
-**`css/home.css`** — Added: `.lock-chip` (removed later — replaced by new lock system), `a.roadmap-card` base + hover styles, `.nut-card` (position relative), `.nut-lock` (absolute top-right, 24px circle), `::after` tooltip (dark pill, fades in below lock icon on hover, reads `data-lock-tip`), `.nut-card.unlocked .nut-lock { display: none }`.
+**`css/home.css`** — Added `.module-card` (green-tinted gradient border card, full-width), `.module-card-inner`, `a.roadmap-card` base + hover styles. Lock system: `.nut-lock { display:none }` by default; `.module-card.show-lock .nut-lock { display:flex }`; `.module-card.show-lock { opacity:0.45; filter:saturate(0.35) }` (clearly subdued); `.module-card.show-lock .featured-action { display:none }` (no action arrow when locked); tooltip via `::after` appears below lock icon at `top:44px; right:8px` with warm surface background (`var(--surface-3)`, `var(--border)` border — no harsh black).
 
 **HTML shell pattern used by every nutrition page:**
 ```
@@ -213,31 +213,6 @@ Inline auth-render script on each page:
 
 ---
 
-### Step 1b — Open Refinements (Homepage)
-
-Three issues identified with the current homepage nutrition card that need a decision before moving to Step 2:
-
-**Issue 1 — Semantic mismatch: "On the Roadmap"**
-Nutrition is now built, but its card lives in the *"On the Roadmap"* section alongside Sleep, Habits, and other modules that literally don't exist yet. For the signed-in owner, this label is wrong. The roadmap should mean "not yet built."
-
-**Issue 2 — Lock icon flash for authorized users**
-The `.nut-lock` element is always in the HTML. JS removes it after `meridian-auth-ready` fires (~200–400ms). This means the authorized user briefly sees the lock icon on every page load before it disappears — a subtle but noticeable flicker on repeat visits.
-
-**Issue 3 — Card is undersized for what it represents**
-For the signed-in owner, Nutrition is the second active health module. A 1/3-width card in the roadmap grid treats it as an afterthought compared to the full-width featured Workout card.
-
-**Two options discussed — decision needed from user:**
-
-**Option A — JS-driven promotion (dynamic homepage)**
-After `meridian-auth-ready` resolves with an authorized user, JS moves the nutrition card into the "Active Now" section (either as a second featured card or a smaller companion card below the workout featured card). The roadmap grid drops nutrition entirely. Solves all three issues but adds JS complexity to the homepage.
-
-**Option B — Static "Your Modules" section (structural homepage change)**
-Add a new middle section between "Active Now" and "On the Roadmap": a small grid called something like *"Active Modules"* or just remove the label distinction. Nutrition lives here always — no JS needed, lock icon visible to non-signed-in visitors, no flicker. The roadmap only contains unbuilt modules. Simpler, more maintainable, resolves the semantic and prominence issues. Lock flash issue partially remains (icon still in HTML, hidden via JS) but is less jarring when the card isn't in a "coming soon" section.
-
-**Recommendation:** Option B. Static is more maintainable and honest — the homepage shouldn't dynamically rearrange itself. The lock icon flash is minor and acceptable when the card is clearly in an "active modules" context rather than the roadmap. Ask the user for a decision at the start of the new chat.
-
----
-
 ### Page → Content Spec Mapping
 
 | Page | Nutrition Plan Sections |
@@ -252,7 +227,7 @@ Add a new middle section between "Active Now" and "On the Roadmap": a small grid
 
 ### Key Architecture Notes
 
-- **Auth gating:** All 7 pages behind Google OAuth. Whitelist: `amansaraf28@gmail.com`, `sarafaman1998@gmail.com`. Implemented in `auth.js` via `onAuthStateChanged` + `meridian-auth-ready` custom event. Auth wall is inline content (not a redirect).
+- **Auth gating:** All 7 pages behind Google OAuth. Whitelist: `amansaraf28@gmail.com`, `sarafaman1998@gmail.com`. Non-whitelisted users stay signed in (nav shows their avatar) but `isUnauthorized = true` gates locked content. Implemented in `auth.js` via `onAuthStateChanged` + `meridian-auth-ready` custom event. Auth wall is inline content (not a redirect). Homepage card: `.show-lock` class dims card (`opacity:0.45; filter:saturate(0.35)`) and shows lock icon for non-authorized visitors; authorized users see full-brightness card with no lock.
 - **basePath:** `'../'` for `pages/nutrition/` — NOT `../../` (that's workout-specific). SW registered as `'../sw.js'`.
 - **JS pattern:** Data (`nutrition-data.js`) → Render (`nutrition-render.js`) → Interact (`nutrition.js`). `NutritionInteract.init()` is called by auth callback after render, NOT auto-run on DOMContentLoaded.
 - **CSS:** Nutrition block appended to `css/components.css`. Reuse `.ref-block`, `.mini-tabs`, `.day-selector` / `.day-panels-wrap` from workout for applicable pages.
