@@ -3,6 +3,15 @@ var NutritionRender = (function () {
 
   function root() { return document.getElementById('page-root'); }
 
+  // Resolves the directory base URL of the current page regardless of whether
+  // the server serves it as /pages/nutrition/index.html, /pages/nutrition/, or /pages/nutrition
+  function pageBase() {
+    var p = window.location.pathname;
+    if (p.endsWith('/'))          return window.location.origin + p;
+    if (p.indexOf('.') !== -1)    return window.location.origin + p.replace(/[^\/]+$/, '');
+    return window.location.origin + p + '/';
+  }
+
   function esc(s) {
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
@@ -102,9 +111,10 @@ var NutritionRender = (function () {
     h += '</div>';
 
     // ── Page links (top — quick access) ──────────────────────────
+    var base = pageBase();
     h += '<div class="nut-nav-links">';
     navLinks.forEach(function (link) {
-      h += '<a class="nut-nav-link" href="' + esc(link.href) + '">';
+      h += '<a class="nut-nav-link" href="' + base + esc(link.href) + '">';
       h += '<span class="nut-nav-link-icon">' + link.icon + '</span>';
       h += esc(link.label);
       h += '</a>';
@@ -148,7 +158,7 @@ var NutritionRender = (function () {
     var h = '';
     h += '<div class="container">';
 
-    h += '<a href="/pages/nutrition/index.html" class="nut-back-link"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Nutrition</a>';
+    h += '<a href="index.html" class="nut-back-link"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Nutrition</a>';
 
     h += '<div class="nutrition-header">';
     h += '<h1>Daily Schedule</h1>';
@@ -189,7 +199,7 @@ var NutritionRender = (function () {
     var h = '';
     h += '<div class="container">';
 
-    h += '<a href="/pages/nutrition/index.html" class="nut-back-link"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Nutrition</a>';
+    h += '<a href="index.html" class="nut-back-link"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Nutrition</a>';
 
     h += '<div class="nutrition-header">';
     h += '<h1>7-Day Meal Plan</h1>';
@@ -263,7 +273,7 @@ var NutritionRender = (function () {
     var h = '';
     h += '<div class="container">';
 
-    h += '<a href="/pages/nutrition/index.html" class="nut-back-link"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Nutrition</a>';
+    h += '<a href="index.html" class="nut-back-link"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Nutrition</a>';
 
     h += '<div class="nutrition-header">';
     h += '<h1>Office Lunch</h1>';
@@ -313,7 +323,7 @@ var NutritionRender = (function () {
     var h = '';
     h += '<div class="container">';
 
-    h += '<a href="/pages/nutrition/index.html" class="nut-back-link"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Nutrition</a>';
+    h += '<a href="index.html" class="nut-back-link"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Nutrition</a>';
 
     h += '<div class="nutrition-header">';
     h += '<h1>Dinner Rotation</h1>';
@@ -405,7 +415,7 @@ var NutritionRender = (function () {
     var h = '';
     h += '<div class="container">';
 
-    h += '<a href="/pages/nutrition/index.html" class="nut-back-link"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Nutrition</a>';
+    h += '<a href="index.html" class="nut-back-link"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Nutrition</a>';
 
     // Page header
     h += '<div class="nutrition-header">';
@@ -515,7 +525,7 @@ var NutritionRender = (function () {
     var h = '';
     h += '<div class="container">';
 
-    h += '<a href="/pages/nutrition/index.html" class="nut-back-link"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Nutrition</a>';
+    h += '<a href="index.html" class="nut-back-link"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Nutrition</a>';
 
     h += '<div class="nutrition-header">';
     h += '<h1>Health Tracking</h1>';

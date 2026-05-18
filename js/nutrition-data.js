@@ -510,12 +510,12 @@ var ND = (function () {
 
   // ── Internal page nav links ──────────────────────────────────
   var NAV_LINKS = [
-    { href: '/pages/nutrition/schedule.html',    label: 'Daily Schedule',  icon: '🗓️' },
-    { href: '/pages/nutrition/meal-plan.html',   label: '7-Day Meal Plan', icon: '🍽️' },
-    { href: '/pages/nutrition/lunch.html',       label: 'Office Lunch',    icon: '🥗' },
-    { href: '/pages/nutrition/dinner.html',      label: 'Dinner Rotation', icon: '🍲' },
-    { href: '/pages/nutrition/supplements.html', label: 'Supplements',     icon: '💪' },
-    { href: '/pages/nutrition/health.html',      label: 'Health Tracking', icon: '❤️' },
+    { href: 'schedule.html',    label: 'Daily Schedule',  icon: '🗓️' },
+    { href: 'meal-plan.html',   label: '7-Day Meal Plan', icon: '🍽️' },
+    { href: 'lunch.html',       label: 'Office Lunch',    icon: '🥗' },
+    { href: 'dinner.html',      label: 'Dinner Rotation', icon: '🍲' },
+    { href: 'supplements.html', label: 'Supplements',     icon: '💪' },
+    { href: 'health.html',      label: 'Health Tracking', icon: '❤️' },
   ];
 
   return {
