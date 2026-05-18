@@ -44,7 +44,8 @@ meridian/
 │   ├── index.html                      ⚠️  STUB — nav links only. Step 8 adds stat cards + Quick Reference panels.
 │   ├── supplements.html                ✅ Supplements page (whey protein + breakfast + fruit habits)
 │   ├── lunch.html                      ✅ Office Lunch page (5 option cards + weekly rotation table)
-│   └── dinner.html                     ✅ Dinner Rotation (7 cards + WFH reheating + Bhurji recipe)
+│   ├── dinner.html                     ✅ Dinner Rotation (7 cards + WFH reheating + Bhurji recipe)
+│   └── health.html                     ✅ Health Tracking (A1C panel + protein sources + pre/post + snapshot)
 ├── pages/workout/
 │   ├── index.html                      ✅ Workout landing — phase cards + calendar entry + quick links
 │   ├── calendar.html                   ✅ Gym calendar page
@@ -170,7 +171,7 @@ users/{uid}/
 | 2 | `supplements.html` — product card, tables, no tabs (validates auth + basePath) | ✅ Done |
 | 3 | `lunch.html` — 5 lunch option cards + rotation table | ✅ Done |
 | 4 | `dinner.html` — 7 dinner cards + reheating table + Bhurji recipe collapsible | ✅ Done |
-| 5 | `health.html` — A1C panel + protein snapshot table + pre/post mini-tabs | ⬜ Not started |
+| 5 | `health.html` — A1C panel + protein snapshot table + pre/post mini-tabs | ✅ Done |
 | 6 | `schedule.html` — two-tab strip (Office/WFH) + schedule table with critical row highlights | ⬜ Not started |
 | 7 | `meal-plan.html` — 7-day tab strip, today auto-activates, protein color-coded | ⬜ Not started |
 | 8 | `index.html` — stat cards + Quick Reference collapsibles + nav links (nav links stub already exists) | ⬜ Not started |

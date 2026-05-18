@@ -323,7 +323,119 @@ var NutritionRender = (function () {
     h += '</div>'; // .container
     root().innerHTML = h;
   }
-  function buildHealth()      { _stub('Health Tracking'); }
+  function buildHealth(health) {
+    var h = '';
+    h += '<div class="container">';
+
+    h += '<div class="nutrition-header">';
+    h += '<h1>Health Tracking</h1>';
+    h += '<p>A1C management, protein sources, and workout nutrition timing.</p>';
+    h += '</div>';
+
+    // ── A1C Panel ─────────────────────────────────────────────────
+    h += '<div class="health-panel">';
+    h += '<h3>A1C &amp; Blood Sugar — Private</h3>';
+
+    h += '<div class="a1c-stats">';
+    h += '<div class="a1c-stat"><div class="a1c-stat-label">Current</div><div class="a1c-stat-value">' + esc(health.a1c.current) + '</div></div>';
+    h += '<div class="a1c-stat"><div class="a1c-stat-label">Target</div><div class="a1c-stat-value">' + esc(health.a1c.target) + '</div></div>';
+    h += '<div class="a1c-stat"><div class="a1c-stat-label">Status</div><div class="a1c-stat-value" style="font-size:0.88rem;">' + esc(health.a1c.status) + '</div></div>';
+    h += '</div>';
+
+    h += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">';
+    h += '<label for="a1c-last-tested" style="font-size:0.75rem;font-weight:600;color:var(--red);white-space:nowrap;">Last blood test</label>';
+    h += '<input type="date" id="a1c-last-tested" style="font-size:0.82rem;padding:4px 8px;border:1px solid rgba(184,50,50,0.25);border-radius:var(--r-sm);background:rgba(255,255,255,0.5);color:var(--text-1);">';
+    h += '</div>';
+
+    health.a1c.rules.forEach(function (rule) {
+      h += '<div style="padding:10px 0;border-top:1px solid rgba(184,50,50,0.12);">';
+      h += '<div style="font-size:0.82rem;font-weight:600;color:var(--text-1);margin-bottom:3px;">' + esc(rule.title) + '</div>';
+      h += '<div style="font-size:0.78rem;color:var(--text-2);line-height:1.5;">' + esc(rule.detail) + '</div>';
+      h += '</div>';
+    });
+
+    h += '</div>';
+
+    h += '<div class="ref-block" id="already-good">';
+    h += '<div class="ref-header"><h4>What\'s Already Working</h4>';
+    h += '<div class="ref-header-right"><div class="chevron">' + chevron() + '</div></div></div>';
+    h += '<div class="ref-body"><div class="ref-content"><ul>';
+    health.a1c.alreadyGood.forEach(function (item) { h += '<li>' + esc(item) + '</li>'; });
+    h += '</ul></div></div></div>';
+
+    // ── Protein Sources ───────────────────────────────────────────
+    h += '<h2 class="nut-section-head">Protein Sources</h2>';
+
+    h += '<div class="ref-block open" id="protein-sources">';
+    h += '<div class="ref-header"><h4>What Your Foods Actually Deliver</h4>';
+    h += '<div class="ref-header-right"><div class="chevron">' + chevron() + '</div></div></div>';
+    h += '<div class="ref-body"><div class="ref-content">';
+    h += '<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;">';
+    h += '<table class="schedule-table">';
+    h += '<thead><tr><th>Food</th><th>Serving</th><th>Protein</th><th>Calories</th><th>Notes</th></tr></thead><tbody>';
+    health.proteinSources.forEach(function (s) {
+      h += '<tr>';
+      h += '<td>' + esc(s.food) + '</td>';
+      h += '<td>' + esc(s.serving) + '</td>';
+      h += '<td><span class="protein-green">' + esc(s.protein) + '</span></td>';
+      h += '<td>' + esc(s.calories) + ' kcal</td>';
+      h += '<td style="color:var(--text-3);">' + esc(s.notes) + '</td>';
+      h += '</tr>';
+    });
+    h += '</tbody></table></div>';
+    h += '</div></div></div>';
+
+    // ── Pre & Post Workout ────────────────────────────────────────
+    h += '<h2 class="nut-section-head">Pre &amp; Post Workout</h2>';
+
+    var tabs = [health.prePostWorkout.gym, health.prePostWorkout.cardio, health.prePostWorkout.rest];
+    var keys = ['gym', 'cardio', 'rest'];
+
+    h += '<div class="mini-tabs" data-group="pwo">';
+    tabs.forEach(function (tab, i) {
+      h += '<button class="mini-tab' + (i === 0 ? ' active' : '') + '" data-tab="' + keys[i] + '">' + esc(tab.label) + '</button>';
+    });
+    h += '</div>';
+
+    tabs.forEach(function (tab, i) {
+      h += '<div class="mini-panel' + (i === 0 ? ' active' : '') + '" data-group="pwo" data-tab="' + keys[i] + '">';
+      h += '<div style="font-size:0.75rem;color:var(--text-3);margin-bottom:12px;">' + esc(tab.days) + '</div>';
+      h += '<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;">';
+      h += '<table class="schedule-table"><thead><tr><th>Timing</th><th>What</th></tr></thead><tbody>';
+      tab.items.forEach(function (item) {
+        h += '<tr' + (item.critical ? ' class="row-critical"' : '') + '>';
+        h += '<td>' + esc(item.timing) + '</td><td>' + esc(item.what) + '</td>';
+        h += '</tr>';
+      });
+      h += '</tbody></table></div>';
+      h += '</div>';
+    });
+
+    // ── Weekly Protein Snapshot ───────────────────────────────────
+    h += '<h2 class="nut-section-head">Weekly Protein Snapshot</h2>';
+
+    h += '<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;">';
+    h += '<table class="schedule-table">';
+    h += '<thead><tr><th>Day</th><th>Type</th><th>Dinner</th><th>No Whey</th><th>With Whey</th></tr></thead><tbody>';
+    health.proteinSnapshot.forEach(function (row) {
+      h += '<tr>';
+      h += '<td>' + esc(row.day) + '</td>';
+      h += '<td>' + esc(row.type) + '</td>';
+      h += '<td>' + esc(row.dinner) + '</td>';
+      h += '<td>' + esc(row.noWhey) + '</td>';
+      h += '<td><span class="' + (row.onTarget ? 'protein-green' : 'protein-amber') + '">' + esc(row.withWhey) + '</span></td>';
+      h += '</tr>';
+    });
+    h += '<tr style="background:var(--surface-2);font-weight:600;">';
+    h += '<td colspan="3">Weekly average</td>';
+    h += '<td>~77g</td>';
+    h += '<td><span class="protein-green">~93g</span></td>';
+    h += '</tr>';
+    h += '</tbody></table></div>';
+
+    h += '</div>';
+    root().innerHTML = h;
+  }
 
   return {
     buildAuthWall,
