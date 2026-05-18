@@ -1248,6 +1248,13 @@
   gap: 8px;
 }
 
+.lunch-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
 .lunch-card-name {
   font-size: 0.95rem;
   font-weight: 700;
@@ -1265,6 +1272,11 @@
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--accent);
+}
+
+.lunch-card-freq {
+  font-size: 0.75rem;
+  color: var(--text-3);
 }
 
 .lunch-card-order {
@@ -1628,6 +1640,16 @@
   color: var(--text-2);
   padding: 8px 14px;
   text-align: right;
+}
+
+/* Nutrition within-page section headings */
+.nut-section-head {
+  font-size: clamp(0.95rem, 3vw, 1.1rem);
+  font-weight: 700;
+  color: var(--text-1);
+  margin: 36px 0 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
 }
 
 /* ── Nutrition responsive ────────────────────────────────────── */

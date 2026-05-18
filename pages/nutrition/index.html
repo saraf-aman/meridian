@@ -3,42 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gym Calendar · Meridian</title>
+  <title>Nutrition · Meridian</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="../../css/base.css?v=2a52ee9d">
   <link rel="stylesheet" href="../../css/layout.css?v=ca476a89">
-  <link rel="stylesheet" href="../../css/calendar.css?v=ca57d032">
+  <link rel="stylesheet" href="../../css/components.css?v=17b5bdd4">
   <link rel="manifest" href="../../manifest.json">
   <meta name="theme-color" content="#1a6b72">
 </head>
 <body>
 
-<main class="page">
+<main class="page" id="page-root"></main>
 
-  <div class="workout-header">
-    <div class="container">
-      <h1>Gym Calendar</h1>
-      <p>Tap a day to mark a gym visit. Your data syncs across all your devices.</p>
-    </div>
-  </div>
-
-  <div class="container">
-    <div class="cal-wrap">
-      <div id="cal-root">
-        <div class="cal-loading">Loading…</div>
-      </div>
-    </div>
-  </div>
-
-</main>
-
+<script src="../../js/nutrition-data.js?v=47b0ca55"></script>
+<script src="../../js/nutrition-render.js?v=d9142a6d"></script>
 <script src="../../js/nav.js?v=53d1bd9f"></script>
 <script src="../../js/footer.js?v=040a11b6"></script>
 <script src="../../js/app.js?v=c1e1ccd0"></script>
+<script src="../../js/nutrition.js?v=8400dd00"></script>
 <script type="module" src="../../js/auth.js?v=4cc7276b"></script>
-<script type="module" src="../../js/calendar.js?v=f3d952cd"></script>
+
+<script>
+(function () {
+  function render() {
+    var a = window.meridianAuth;
+    if (!a || !a.ready) { window.addEventListener('meridian-auth-ready', render, { once: false }); return; }
+    if (a.isUnauthorized) { NutritionRender.buildUnauthorizedWall(); return; }
+    if (!a.currentUser)   { NutritionRender.buildAuthWall(); return; }
+    NutritionRender.buildIndex(ND.NAV_LINKS);
+    NutritionInteract.init();
+  }
+  render();
+  window.addEventListener('meridian-auth-ready', render);
+}());
+</script>
+
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {

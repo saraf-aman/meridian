@@ -39,7 +39,11 @@ meridian/
 │   ├── workout-render.js               ✅ Renders PHASE_CONFIG → DOM
 │   ├── nutrition-data.js               ✅ All nutrition content (schedules, meals, health, supplements)
 │   ├── nutrition-render.js             ✅ buildAuthWall + buildUnauthorizedWall + page stubs
-│   └── nutrition.js                    ✅ NutritionInteract shell (populated per page step)
+│   └── nutrition.js                    ✅ NutritionInteract — ref-block collapsible handler
+├── pages/nutrition/
+│   ├── index.html                      ⚠️  STUB — nav links only. Step 8 adds stat cards + Quick Reference panels.
+│   ├── supplements.html                ✅ Supplements page (whey protein + breakfast + fruit habits)
+│   └── lunch.html                      ✅ Office Lunch page (5 option cards + weekly rotation table)
 ├── pages/workout/
 │   ├── index.html                      ✅ Workout landing — phase cards + calendar entry + quick links
 │   ├── calendar.html                   ✅ Gym calendar page
@@ -162,13 +166,13 @@ users/{uid}/
 |---|---|---|
 | 1 | Foundation — auth.js whitelist, nutrition-data.js, nutrition-render.js, nutrition.js, CSS block, nav link, homepage card | ✅ Done |
 | 1b | Homepage restructure — nutrition card in "Active Now" block, lock/auth UX, auth.js sign-out bug fix | ✅ Done |
-| 2 | `supplements.html` — product card, tables, no tabs (validates auth + basePath) | ⬜ Not started |
-| 3 | `lunch.html` — 5 lunch option cards + rotation table | ⬜ Not started |
+| 2 | `supplements.html` — product card, tables, no tabs (validates auth + basePath) | ✅ Done |
+| 3 | `lunch.html` — 5 lunch option cards + rotation table | ✅ Done |
 | 4 | `dinner.html` — 7 dinner cards + reheating table + Bhurji recipe collapsible | ⬜ Not started |
 | 5 | `health.html` — A1C panel + protein snapshot table + pre/post mini-tabs | ⬜ Not started |
 | 6 | `schedule.html` — two-tab strip (Office/WFH) + schedule table with critical row highlights | ⬜ Not started |
 | 7 | `meal-plan.html` — 7-day tab strip, today auto-activates, protein color-coded | ⬜ Not started |
-| 8 | `index.html` — auth wall → stat cards + Quick Reference collapsibles + nav links | ⬜ Not started |
+| 8 | `index.html` — stat cards + Quick Reference collapsibles + nav links (nav links stub already exists) | ⬜ Not started |
 | 9 | Finish — sw.js PRECACHE (10 entries), bust.py, workdone.md completion protocol | ⬜ Not started |
 
 ---
@@ -228,7 +232,7 @@ Inline auth-render script on each page:
 ### Key Architecture Notes
 
 - **Auth gating:** All 7 pages behind Google OAuth. Whitelist: `amansaraf28@gmail.com`, `sarafaman1998@gmail.com`. Non-whitelisted users stay signed in (nav shows their avatar) but `isUnauthorized = true` gates locked content. Implemented in `auth.js` via `onAuthStateChanged` + `meridian-auth-ready` custom event. Auth wall is inline content (not a redirect). Homepage card: `.show-lock` class dims card (`opacity:0.45; filter:saturate(0.35)`) and shows lock icon for non-authorized visitors; authorized users see full-brightness card with no lock.
-- **basePath:** `'../'` for `pages/nutrition/` — NOT `../../` (that's workout-specific). SW registered as `'../sw.js'`.
+- **basePath:** `'../../'` for `pages/nutrition/` — same as workout (both are two directory levels deep). SW registered as `'../../sw.js'`. app.js detects `/pages/nutrition` explicitly before the generic `/pages/` fallback.
 - **JS pattern:** Data (`nutrition-data.js`) → Render (`nutrition-render.js`) → Interact (`nutrition.js`). `NutritionInteract.init()` is called by auth callback after render, NOT auto-run on DOMContentLoaded.
 - **CSS:** Nutrition block appended to `css/components.css`. Reuse `.ref-block`, `.mini-tabs`, `.day-selector` / `.day-panels-wrap` from workout for applicable pages.
 
