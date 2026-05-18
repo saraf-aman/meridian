@@ -38,10 +38,10 @@ meridian/
 │   ├── workout-data.js                 ✅ Exercise form library (27 exercises)
 │   ├── workout-render.js               ✅ Renders PHASE_CONFIG → DOM
 │   ├── nutrition-data.js               ✅ All nutrition content (schedules, meals, health, supplements)
-│   ├── nutrition-render.js             ✅ buildAuthWall + buildUnauthorizedWall + page stubs
-│   └── nutrition.js                    ✅ NutritionInteract — ref-block collapsible handler
+│   ├── nutrition-render.js             ✅ All 7 page builders fully implemented
+│   └── nutrition.js                    ✅ NutritionInteract — ref-blocks, mini-tabs, day-selector, A1C date
 ├── pages/nutrition/
-│   ├── index.html                      ⚠️  STUB — nav links only. Step 8 adds stat cards + Quick Reference panels.
+│   ├── index.html                      ✅ Nutrition landing (stat cards + Quick Reference + page nav links)
 │   ├── supplements.html                ✅ Supplements page (whey protein + breakfast + fruit habits)
 │   ├── lunch.html                      ✅ Office Lunch page (5 option cards + weekly rotation table)
 │   ├── dinner.html                     ✅ Dinner Rotation (7 cards + WFH reheating + Bhurji recipe)
@@ -155,90 +155,14 @@ users/{uid}/
 ## Completed Sections
 
 - **Workout** ✅ — 3 phase pages + workout landing + gym calendar. UI patterns → `claude/section-patterns.md`. Content spec → `claude/comprehensive_workout_plan.md`.
+- **Nutrition** ✅ — 7 pages (index, schedule, meal-plan, lunch, dinner, supplements, health) + auth gating + homepage card. UI patterns → `claude/section-patterns.md`. Content spec → `claude/comprehensive_nutrition_plan.md`.
 
 ---
 
-## Active Section: Nutrition
+## Active Section: Hydration
 
-**Status:** In progress — Step 2 next (`supplements.html`)
-**Content spec:** `claude/comprehensive_nutrition_plan.md` (read "Website Implementation Notes" section first)
-**Pattern reference:** `claude/section-patterns.md` — follow Workout patterns for all UI/UX decisions.
-
-### Build Log
-
-| Step | Deliverable | Status |
-|---|---|---|
-| 1 | Foundation — auth.js whitelist, nutrition-data.js, nutrition-render.js, nutrition.js, CSS block, nav link, homepage card | ✅ Done |
-| 1b | Homepage restructure — nutrition card in "Active Now" block, lock/auth UX, auth.js sign-out bug fix | ✅ Done |
-| 2 | `supplements.html` — product card, tables, no tabs (validates auth + basePath) | ✅ Done |
-| 3 | `lunch.html` — 5 lunch option cards + rotation table | ✅ Done |
-| 4 | `dinner.html` — 7 dinner cards + reheating table + Bhurji recipe collapsible | ✅ Done |
-| 5 | `health.html` — A1C panel + protein snapshot table + pre/post mini-tabs | ✅ Done |
-| 6 | `schedule.html` — two-tab strip (Office/WFH) + schedule table with critical row highlights | ✅ Done |
-| 7 | `meal-plan.html` — 7-day tab strip, today auto-activates, protein color-coded | ✅ Done |
-| 8 | `index.html` — stat cards + Quick Reference collapsibles + nav links (nav links stub already exists) | ✅ Done |
-| 9 | Finish — sw.js PRECACHE (10 entries), bust.py, workdone.md completion protocol | ⬜ Not started |
-
----
-
-### Step 1 — What Was Built
-
-**`js/auth.js`** — Added email whitelist (`amansaraf28@gmail.com`, `sarafaman1998@gmail.com`). Non-whitelisted users remain signed in (they see their avatar in the nav) but get `isUnauthorized = true` — they are NOT force-signed-out. Added `window.meridianAuth.ready` flag and `meridian-auth-ready` custom event dispatched on every auth state change. All nutrition pages depend on this event to trigger their render.
-
-**`js/nutrition-data.js`** — All static content for all 7 pages in one IIFE (`var ND`). Exports: `GOALS`, `QUICK_REF`, `LUNCH_OPTIONS`, `LUNCH_ROTATION`, `DINNER_ROTATION`, `WFH_REHEATING`, `WFH_FALLBACKS`, `BHURJI_RECIPE`, `SUPPLEMENTS`, `BREAKFAST_OPTIONS`, `FRUIT_HABITS`, `HEALTH`, `SCHEDULE`, `MEAL_PLAN`, `MILK_SOLUTION`, `NAV_LINKS`. Content sourced from `comprehensive_nutrition_plan.md` Sections 1–18.
-
-**`js/nutrition-render.js`** — IIFE (`var NutritionRender`). Fully implemented: `buildAuthWall()` (lock icon + Sign In button, wires click to `window.meridianAuth.signInWithGoogle()`), `buildUnauthorizedWall()`. Page builders (`buildIndex`, `buildSchedule`, `buildMealPlan`, `buildLunch`, `buildDinner`, `buildSupplements`, `buildHealth`) are stubs that will be filled in Steps 2–8.
-
-**`js/nutrition.js`** — IIFE exposing `window.NutritionInteract = { init() }`. Shell only — populated per page step.
-
-**`css/components.css`** — Nutrition CSS block appended. Classes: `.auth-wall` (+ icon, title, desc, btn, note), `.nutrition-header`, `.key-numbers` (+ number, label, value, unit), `.schedule-table` (+ `tr.row-critical`, `.critical-badge`), `.protein-green` / `.protein-amber`, `.lunch-cards` / `.lunch-card` (+ meta, protein, order, note, days), `.type-chip` (gym/rest/cardio variants), `.dinner-cards` / `.dinner-card` (+ header, day, name, chips), `.chip-time` / `.chip-leftover`, `.health-panel` (+ `.a1c-stats`/`.a1c-stat`), `.product-card` (+ rows), `.breakfast-cards` / `.breakfast-card` (+ `.badge-keep` / `.badge-limit`), `.nut-nav-links` / `.nut-nav-link`, `.meal-rows` / `.meal-row` (+ `.critical-row`, time/label/food/protein).
-
-**`js/nav.js`** — Nutrition link enabled (removed `disabled: true`, now links to `pages/nutrition/index.html`).
-
-**`index.html`** — Nutrition card moved out of roadmap grid into the "Active Now" `modules-block` (below Workout) as a `.module-card`. Lock icon (`.nut-lock`, 🔒 emoji, 24px circle, `display:none` by default) positioned top-right. `data-lock-tip` drives hover tooltip. Inline script listens for `meridian-auth-ready`: authorized user → remove `.show-lock`; unauthorized → add `.show-lock` + set tip to "Account not authorised"; signed out → add `.show-lock`. "Phase 1" chip (not "Phase 1 Active").
-
-**`css/home.css`** — Added `.module-card` (green-tinted gradient border card, full-width), `.module-card-inner`, `a.roadmap-card` base + hover styles. Lock system: `.nut-lock { display:none }` by default; `.module-card.show-lock .nut-lock { display:flex }`; `.module-card.show-lock { opacity:0.45; filter:saturate(0.35) }` (clearly subdued); `.module-card.show-lock .featured-action { display:none }` (no action arrow when locked); tooltip via `::after` appears below lock icon at `top:44px; right:8px` with warm surface background (`var(--surface-3)`, `var(--border)` border — no harsh black).
-
-**HTML shell pattern used by every nutrition page:**
-```
-nutrition-data.js → nutrition-render.js → nav.js → footer.js → app.js → nutrition.js → auth.js (module) → inline auth-render script → SW registration
-```
-Inline auth-render script on each page:
-```javascript
-(function () {
-  function render() {
-    var a = window.meridianAuth;
-    if (!a || !a.ready) { window.addEventListener('meridian-auth-ready', render, { once: false }); return; }
-    if (a.isUnauthorized) { NutritionRender.buildUnauthorizedWall(); return; }
-    if (!a.currentUser)   { NutritionRender.buildAuthWall(); return; }
-    NutritionRender.buildXxx(ND.XXX);
-    NutritionInteract.init();
-  }
-  render();
-  window.addEventListener('meridian-auth-ready', render);
-}());
-```
-
----
-
-### Page → Content Spec Mapping
-
-| Page | Nutrition Plan Sections |
-|---|---|
-| `index.html` | Section 18 (Quick Reference Card) + Section 1 (Daily Targets as stat cards) |
-| `schedule.html` | Section 14 (Fixed Daily Schedule) |
-| `meal-plan.html` | Section 4 (7-Day Meal Plan) + Section 5 (Milk Solution rules) |
-| `lunch.html` | Section 6 (Office Lunch Rotation) |
-| `dinner.html` | Section 7 (Dinner Rotation) + Section 8 (WFH Leftover System) + Section 9 (Bhurji Recipe) |
-| `supplements.html` | Section 11 (Whey Protein) + Section 12 (Breakfast Options) + Section 13 (Fruit Habit) |
-| `health.html` | Section 2 (A1C Panel) + Section 3 (Protein Sources) + Section 10 (Pre/Post Workout) + Section 16 (Protein Snapshot) |
-
-### Key Architecture Notes
-
-- **Auth gating:** All 7 pages behind Google OAuth. Whitelist: `amansaraf28@gmail.com`, `sarafaman1998@gmail.com`. Non-whitelisted users stay signed in (nav shows their avatar) but `isUnauthorized = true` gates locked content. Implemented in `auth.js` via `onAuthStateChanged` + `meridian-auth-ready` custom event. Auth wall is inline content (not a redirect). Homepage card: `.show-lock` class dims card (`opacity:0.45; filter:saturate(0.35)`) and shows lock icon for non-authorized visitors; authorized users see full-brightness card with no lock.
-- **basePath:** `'../../'` for `pages/nutrition/` — same as workout (both are two directory levels deep). SW registered as `'../../sw.js'`. app.js detects `/pages/nutrition` explicitly before the generic `/pages/` fallback.
-- **JS pattern:** Data (`nutrition-data.js`) → Render (`nutrition-render.js`) → Interact (`nutrition.js`). `NutritionInteract.init()` is called by auth callback after render, NOT auto-run on DOMContentLoaded.
-- **CSS:** Nutrition block appended to `css/components.css`. Reuse `.ref-block`, `.mini-tabs`, `.day-selector` / `.day-panels-wrap` from workout for applicable pages.
+**Status:** Not started — content plan needs to be created first.
+**Pattern reference:** `claude/section-patterns.md` — follow established patterns.
 
 ---
 
