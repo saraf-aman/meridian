@@ -75,7 +75,48 @@ var NutritionRender = (function () {
     h += '</div>';
     root().innerHTML = h;
   }
-  function buildSchedule()    { _stub('Daily Schedule'); }
+  function buildSchedule(schedule) {
+    var officeToday = [1, 2, 3].indexOf(new Date().getDay()) !== -1;
+
+    function scheduleTable(rows) {
+      var t = '<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;">';
+      t += '<table class="schedule-table">';
+      t += '<thead><tr><th>Time</th><th>Action</th><th>Notes</th></tr></thead><tbody>';
+      rows.forEach(function (r) {
+        t += '<tr' + (r.critical ? ' class="row-critical"' : '') + '>';
+        t += '<td>' + esc(r.time) + (r.critical ? '<span class="critical-badge">Critical</span>' : '') + '</td>';
+        t += '<td>' + esc(r.action) + '</td>';
+        t += '<td>' + esc(r.notes) + '</td>';
+        t += '</tr>';
+      });
+      t += '</tbody></table></div>';
+      return t;
+    }
+
+    var h = '';
+    h += '<div class="container">';
+
+    h += '<div class="nutrition-header">';
+    h += '<h1>Daily Schedule</h1>';
+    h += '<p>Fixed anchors for every day — office and WFH. The structure that makes everything else work.</p>';
+    h += '</div>';
+
+    h += '<div class="mini-tabs" data-group="schedule">';
+    h += '<button class="mini-tab' + (officeToday ? ' active' : '') + '" data-tab="office">Office Days <span style="font-weight:400;opacity:0.7;">Mon–Wed</span></button>';
+    h += '<button class="mini-tab' + (!officeToday ? ' active' : '') + '" data-tab="wfh">WFH / Home <span style="font-weight:400;opacity:0.7;">Thu–Sun</span></button>';
+    h += '</div>';
+
+    h += '<div class="mini-panel' + (officeToday ? ' active' : '') + '" data-group="schedule" data-tab="office">';
+    h += scheduleTable(schedule.office);
+    h += '</div>';
+
+    h += '<div class="mini-panel' + (!officeToday ? ' active' : '') + '" data-group="schedule" data-tab="wfh">';
+    h += scheduleTable(schedule.wfh);
+    h += '</div>';
+
+    h += '</div>';
+    root().innerHTML = h;
+  }
   function buildMealPlan()    { _stub('7-Day Meal Plan'); }
   function buildLunch(options, rotation) {
     var h = '';
