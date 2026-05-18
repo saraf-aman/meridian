@@ -1,4 +1,4 @@
-const CACHE = 'app-c09c70e5';
+const CACHE = 'app-81dfa378';
 
 // self.registration.scope resolves to the correct base regardless of
 // whether the site is deployed at the root or a sub-path (e.g. /meridian/).
@@ -35,6 +35,7 @@ const PRECACHE = [
   'pages/nutrition/index.html',
   'pages/nutrition/supplements.html',
   'pages/nutrition/lunch.html',
+  'pages/nutrition/dinner.html',
 ];
 
 function cacheKey(url) {

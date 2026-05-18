@@ -125,7 +125,96 @@ var NutritionRender = (function () {
     h += '</div>';
     root().innerHTML = h;
   }
-  function buildDinner()      { _stub('Dinner Rotation'); }
+  function buildDinner(rotation, reheating, fallbacks, recipe) {
+    var h = '';
+    h += '<div class="container">';
+
+    h += '<div class="nutrition-header">';
+    h += '<h1>Dinner Rotation</h1>';
+    h += '<p>7-day rotation with built-in leftover lunch coverage for WFH days.</p>';
+    h += '</div>';
+
+    // ── Dinner cards ──────────────────────────────────────────────
+    h += '<div class="dinner-cards">';
+    rotation.forEach(function (d) {
+      var typeClass = d.type === 'Gym'    ? 'type-chip type-chip--gym'
+                    : d.type === 'Cardio' ? 'type-chip type-chip--cardio'
+                    :                       'type-chip type-chip--rest';
+      h += '<div class="dinner-card">';
+      h += '<div class="dinner-card-header">';
+      h += '<div class="dinner-day">' + esc(d.day) + '</div>';
+      h += '<div class="dinner-card-main">';
+      h += '<div class="dinner-card-name">' + esc(d.name) + '</div>';
+      h += '<div class="dinner-chips">';
+      h += '<span class="' + typeClass + '">' + esc(d.type) + '</span>';
+      h += '<span class="chip-time">⏱ ' + esc(d.cookTime) + '</span>';
+      if (d.leftover) {
+        h += '<span class="chip-leftover">→ covers ' + esc(d.leftover) + '</span>';
+      }
+      h += '</div>';
+      h += '</div>';
+      h += '</div>';
+      if (d.notes) {
+        h += '<div class="dinner-card-notes">' + esc(d.notes) + '</div>';
+      }
+      h += '</div>';
+    });
+    h += '</div>';
+
+    // ── WFH Leftover System ───────────────────────────────────────
+    h += '<h2 class="nut-section-head">WFH Leftover System</h2>';
+
+    h += '<div class="ref-block open" id="reheating">';
+    h += '<div class="ref-header"><h4>How to Reheat</h4>';
+    h += '<div class="ref-header-right"><div class="chevron">' + chevron() + '</div></div></div>';
+    h += '<div class="ref-body"><div class="ref-content">';
+    h += '<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;">';
+    h += '<table class="schedule-table">';
+    h += '<thead><tr><th>Dish</th><th>Method</th></tr></thead><tbody>';
+    reheating.forEach(function (r) {
+      h += '<tr><td>' + esc(r.dish) + '</td><td>' + esc(r.method) + '</td></tr>';
+    });
+    h += '</tbody></table></div>';
+    h += '</div></div></div>';
+
+    h += '<div class="ref-block" id="no-leftovers">';
+    h += '<div class="ref-header"><h4>When There Are No Leftovers</h4>';
+    h += '<div class="ref-header-right"><div class="chevron">' + chevron() + '</div></div></div>';
+    h += '<div class="ref-body"><div class="ref-content"><ul>';
+    fallbacks.forEach(function (f) {
+      var text = f.name + (f.time ? ' — ' + f.time : '') + (f.note ? ' · ' + f.note : '');
+      h += '<li>' + esc(text) + '</li>';
+    });
+    h += '</ul></div></div></div>';
+
+    // ── Paneer Bhurji Recipe ──────────────────────────────────────
+    h += '<h2 class="nut-section-head">Fallback Dinner — Paneer Bhurji</h2>';
+
+    h += '<div class="ref-block" id="bhurji-recipe">';
+    h += '<div class="ref-header">';
+    h += '<h4>' + esc(recipe.name) + '</h4>';
+    h += '<div class="ref-header-right">';
+    h += '<span class="chip chip-default">' + esc(recipe.time) + '</span>';
+    h += '<span class="chip chip-green">' + esc(recipe.protein) + ' protein</span>';
+    h += '<div class="chevron">' + chevron() + '</div>';
+    h += '</div></div>';
+    h += '<div class="ref-body"><div class="ref-content">';
+
+    h += '<h5 style="margin-bottom:10px;">Always Keep Stocked</h5>';
+    h += '<ul>';
+    recipe.alwaysStock.forEach(function (item) { h += '<li>' + esc(item) + '</li>'; });
+    h += '</ul>';
+
+    h += '<h5 style="margin-top:20px;margin-bottom:10px;">Method</h5>';
+    h += '<ol>';
+    recipe.steps.forEach(function (step) { h += '<li>' + esc(step) + '</li>'; });
+    h += '</ol>';
+
+    h += '</div></div></div>';
+
+    h += '</div>';
+    root().innerHTML = h;
+  }
   function buildSupplements(supp, breakfast, fruits) {
     var h = '';
     h += '<div class="container">';

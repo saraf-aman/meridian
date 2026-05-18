@@ -43,7 +43,8 @@ meridian/
 ├── pages/nutrition/
 │   ├── index.html                      ⚠️  STUB — nav links only. Step 8 adds stat cards + Quick Reference panels.
 │   ├── supplements.html                ✅ Supplements page (whey protein + breakfast + fruit habits)
-│   └── lunch.html                      ✅ Office Lunch page (5 option cards + weekly rotation table)
+│   ├── lunch.html                      ✅ Office Lunch page (5 option cards + weekly rotation table)
+│   └── dinner.html                     ✅ Dinner Rotation (7 cards + WFH reheating + Bhurji recipe)
 ├── pages/workout/
 │   ├── index.html                      ✅ Workout landing — phase cards + calendar entry + quick links
 │   ├── calendar.html                   ✅ Gym calendar page
@@ -168,7 +169,7 @@ users/{uid}/
 | 1b | Homepage restructure — nutrition card in "Active Now" block, lock/auth UX, auth.js sign-out bug fix | ✅ Done |
 | 2 | `supplements.html` — product card, tables, no tabs (validates auth + basePath) | ✅ Done |
 | 3 | `lunch.html` — 5 lunch option cards + rotation table | ✅ Done |
-| 4 | `dinner.html` — 7 dinner cards + reheating table + Bhurji recipe collapsible | ⬜ Not started |
+| 4 | `dinner.html` — 7 dinner cards + reheating table + Bhurji recipe collapsible | ✅ Done |
 | 5 | `health.html` — A1C panel + protein snapshot table + pre/post mini-tabs | ⬜ Not started |
 | 6 | `schedule.html` — two-tab strip (Office/WFH) + schedule table with critical row highlights | ⬜ Not started |
 | 7 | `meal-plan.html` — 7-day tab strip, today auto-activates, protein color-coded | ⬜ Not started |
