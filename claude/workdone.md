@@ -176,7 +176,7 @@ users/{uid}/
 | 5 | `health.html` — A1C panel + protein snapshot table + pre/post mini-tabs | ✅ Done |
 | 6 | `schedule.html` — two-tab strip (Office/WFH) + schedule table with critical row highlights | ✅ Done |
 | 7 | `meal-plan.html` — 7-day tab strip, today auto-activates, protein color-coded | ✅ Done |
-| 8 | `index.html` — stat cards + Quick Reference collapsibles + nav links (nav links stub already exists) | ⬜ Not started |
+| 8 | `index.html` — stat cards + Quick Reference collapsibles + nav links (nav links stub already exists) | ✅ Done |
 | 9 | Finish — sw.js PRECACHE (10 entries), bust.py, workdone.md completion protocol | ⬜ Not started |
 
 ---

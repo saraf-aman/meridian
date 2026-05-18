@@ -56,22 +56,75 @@ var NutritionRender = (function () {
       '</div>';
   }
 
-  function buildIndex(navLinks) {
-    var base = (window._basePath || '') + 'pages/nutrition/';
+  function buildIndex(goals, quickRef, navLinks) {
+    var officeToday = [1, 2, 3].indexOf(new Date().getDay()) !== -1;
+
+    function statCard(label, value, unit) {
+      return '<div class="key-number">' +
+        '<div class="kn-label">' + esc(label) + '</div>' +
+        '<div class="kn-value">' + esc(value) + '</div>' +
+        '<div class="kn-unit">' + esc(unit) + '</div>' +
+        '</div>';
+    }
+
+    function qrTable(rows) {
+      var t = '<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;">';
+      t += '<table class="schedule-table"><thead><tr><th>When</th><th>What</th></tr></thead><tbody>';
+      rows.forEach(function (r) {
+        t += '<tr' + (r.critical ? ' class="row-critical"' : '') + '>';
+        t += '<td>' + esc(r.anchor) + (r.critical ? '<span class="critical-badge">Critical</span>' : '') + '</td>';
+        t += '<td>' + esc(r.what) + '</td>';
+        t += '</tr>';
+      });
+      t += '</tbody></table></div>';
+      return t;
+    }
+
+    function qrBlock(id, title, subtitle, isOpen, rows) {
+      var b = '<div class="ref-block' + (isOpen ? ' open' : '') + '" id="' + id + '">';
+      b += '<div class="ref-header">';
+      b += '<h4>' + esc(title) + '</h4>';
+      b += '<div class="ref-header-right">';
+      b += '<span class="chip chip-default">' + esc(subtitle) + '</span>';
+      b += '<div class="chevron">' + chevron() + '</div>';
+      b += '</div></div>';
+      b += '<div class="ref-body"><div class="ref-content">' + qrTable(rows) + '</div></div>';
+      b += '</div>';
+      return b;
+    }
+
     var h = '';
     h += '<div class="container">';
+
     h += '<div class="nutrition-header">';
     h += '<h1>Nutrition</h1>';
-    h += '<p>Your personalised meal plans, macros, and dietary guidance.</p>';
+    h += '<p>Your personalised meal plans, macros, and daily targets.</p>';
     h += '</div>';
+
+    // ── Daily target stat cards ───────────────────────────────────
+    h += '<div class="key-numbers">';
+    h += statCard('Protein',  goals.protein.min  + '–' + goals.protein.max  + 'g', goals.protein.unit);
+    h += statCard('Calories', goals.calories.min + '–' + goals.calories.max,       goals.calories.unit);
+    h += statCard('Carbs',    goals.carbs.min    + '–' + goals.carbs.max    + 'g', goals.carbs.unit);
+    h += statCard('Fats',     goals.fats.min     + '–' + goals.fats.max     + 'g', goals.fats.unit);
+    h += '</div>';
+
+    // ── Quick Reference ───────────────────────────────────────────
+    h += '<h2 class="nut-section-head">Quick Reference</h2>';
+    h += qrBlock('qr-office', 'Office Days',     'Mon · Tue · Wed',        officeToday,  quickRef.office);
+    h += qrBlock('qr-wfh',    'WFH / Home Days', 'Thu · Fri · Sat · Sun', !officeToday, quickRef.wfh);
+
+    // ── Page links ────────────────────────────────────────────────
+    h += '<h2 class="nut-section-head">Pages</h2>';
     h += '<div class="nut-nav-links">';
     navLinks.forEach(function (link) {
-      h += '<a class="nut-nav-link" href="' + esc(base + link.href) + '">';
+      h += '<a class="nut-nav-link" href="' + esc(link.href) + '">';
       h += '<span class="nut-nav-link-icon">' + link.icon + '</span>';
       h += esc(link.label);
       h += '</a>';
     });
     h += '</div>';
+
     h += '</div>';
     root().innerHTML = h;
   }

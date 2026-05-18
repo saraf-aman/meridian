@@ -18,7 +18,7 @@
 <main class="page" id="page-root"></main>
 
 <script src="../../js/nutrition-data.js?v=47b0ca55"></script>
-<script src="../../js/nutrition-render.js?v=48b7a063"></script>
+<script src="../../js/nutrition-render.js?v=04c92239"></script>
 <script src="../../js/nav.js?v=53d1bd9f"></script>
 <script src="../../js/footer.js?v=040a11b6"></script>
 <script src="../../js/app.js?v=c1e1ccd0"></script>
@@ -32,7 +32,7 @@
     if (!a || !a.ready) { window.addEventListener('meridian-auth-ready', render, { once: false }); return; }
     if (a.isUnauthorized) { NutritionRender.buildUnauthorizedWall(); return; }
     if (!a.currentUser)   { NutritionRender.buildAuthWall(); return; }
-    NutritionRender.buildIndex(ND.NAV_LINKS);
+    NutritionRender.buildIndex(ND.GOALS, ND.QUICK_REF, ND.NAV_LINKS);
     NutritionInteract.init();
   }
   render();
