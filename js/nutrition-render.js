@@ -101,6 +101,16 @@ var NutritionRender = (function () {
     h += '<p>Your personalised meal plans, macros, and daily targets.</p>';
     h += '</div>';
 
+    // ── Page links (top — quick access) ──────────────────────────
+    h += '<div class="nut-nav-links">';
+    navLinks.forEach(function (link) {
+      h += '<a class="nut-nav-link" href="' + esc(link.href) + '">';
+      h += '<span class="nut-nav-link-icon">' + link.icon + '</span>';
+      h += esc(link.label);
+      h += '</a>';
+    });
+    h += '</div>';
+
     // ── Daily target stat cards ───────────────────────────────────
     h += '<div class="key-numbers">';
     h += statCard('Protein',  goals.protein.min  + '–' + goals.protein.max  + 'g', goals.protein.unit);
@@ -113,17 +123,6 @@ var NutritionRender = (function () {
     h += '<h2 class="nut-section-head">Quick Reference</h2>';
     h += qrBlock('qr-office', 'Office Days',     'Mon · Tue · Wed',        officeToday,  quickRef.office);
     h += qrBlock('qr-wfh',    'WFH / Home Days', 'Thu · Fri · Sat · Sun', !officeToday, quickRef.wfh);
-
-    // ── Page links ────────────────────────────────────────────────
-    h += '<h2 class="nut-section-head">Pages</h2>';
-    h += '<div class="nut-nav-links">';
-    navLinks.forEach(function (link) {
-      h += '<a class="nut-nav-link" href="' + esc(link.href) + '">';
-      h += '<span class="nut-nav-link-icon">' + link.icon + '</span>';
-      h += esc(link.label);
-      h += '</a>';
-    });
-    h += '</div>';
 
     h += '</div>';
     root().innerHTML = h;
@@ -148,6 +147,8 @@ var NutritionRender = (function () {
 
     var h = '';
     h += '<div class="container">';
+
+    h += '<a href="/pages/nutrition/index.html" class="nut-back-link"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Nutrition</a>';
 
     h += '<div class="nutrition-header">';
     h += '<h1>Daily Schedule</h1>';
@@ -187,6 +188,8 @@ var NutritionRender = (function () {
 
     var h = '';
     h += '<div class="container">';
+
+    h += '<a href="/pages/nutrition/index.html" class="nut-back-link"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Nutrition</a>';
 
     h += '<div class="nutrition-header">';
     h += '<h1>7-Day Meal Plan</h1>';
@@ -260,6 +263,8 @@ var NutritionRender = (function () {
     var h = '';
     h += '<div class="container">';
 
+    h += '<a href="/pages/nutrition/index.html" class="nut-back-link"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Nutrition</a>';
+
     h += '<div class="nutrition-header">';
     h += '<h1>Office Lunch</h1>';
     h += '<p>Rotation of 5 options matched to your gym and rest days.</p>';
@@ -307,6 +312,8 @@ var NutritionRender = (function () {
   function buildDinner(rotation, reheating, fallbacks, recipe) {
     var h = '';
     h += '<div class="container">';
+
+    h += '<a href="/pages/nutrition/index.html" class="nut-back-link"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Nutrition</a>';
 
     h += '<div class="nutrition-header">';
     h += '<h1>Dinner Rotation</h1>';
@@ -397,6 +404,8 @@ var NutritionRender = (function () {
   function buildSupplements(supp, breakfast, fruits) {
     var h = '';
     h += '<div class="container">';
+
+    h += '<a href="/pages/nutrition/index.html" class="nut-back-link"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Nutrition</a>';
 
     // Page header
     h += '<div class="nutrition-header">';
@@ -505,6 +514,8 @@ var NutritionRender = (function () {
   function buildHealth(health) {
     var h = '';
     h += '<div class="container">';
+
+    h += '<a href="/pages/nutrition/index.html" class="nut-back-link"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Nutrition</a>';
 
     h += '<div class="nutrition-header">';
     h += '<h1>Health Tracking</h1>';
