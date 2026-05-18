@@ -27,6 +27,24 @@ window.NutritionInteract = (function () {
     });
   }
 
+  function bindDaySelectors() {
+    document.querySelectorAll('.day-selector').forEach(function (selector) {
+      var panelId = selector.getAttribute('data-panel');
+      var wrap = panelId ? document.querySelector('.day-panels-wrap[data-panel="' + panelId + '"]') : null;
+      if (!wrap) return;
+      selector.querySelectorAll('.day-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var day = btn.getAttribute('data-day');
+          selector.querySelectorAll('.day-btn').forEach(function (b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          wrap.querySelectorAll('.day-panel').forEach(function (p) { p.classList.remove('active'); });
+          var panel = wrap.querySelector('.day-panel[data-day="' + day + '"]');
+          if (panel) panel.classList.add('active');
+        });
+      });
+    });
+  }
+
   function bindA1cDate() {
     var input = document.getElementById('a1c-last-tested');
     if (!input) return;
@@ -40,6 +58,7 @@ window.NutritionInteract = (function () {
   function init() {
     bindRefBlocks();
     bindMiniTabs();
+    bindDaySelectors();
     bindA1cDate();
   }
 

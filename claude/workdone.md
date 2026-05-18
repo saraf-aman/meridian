@@ -46,7 +46,8 @@ meridian/
 │   ├── lunch.html                      ✅ Office Lunch page (5 option cards + weekly rotation table)
 │   ├── dinner.html                     ✅ Dinner Rotation (7 cards + WFH reheating + Bhurji recipe)
 │   ├── health.html                     ✅ Health Tracking (A1C panel + protein sources + pre/post + snapshot)
-│   └── schedule.html                   ✅ Daily Schedule (Office/WFH tabs, auto-selects by day, critical rows)
+│   ├── schedule.html                   ✅ Daily Schedule (Office/WFH tabs, auto-selects by day, critical rows)
+│   └── meal-plan.html                  ✅ 7-Day Meal Plan (day strip, today auto-active, meal rows + Milk System)
 ├── pages/workout/
 │   ├── index.html                      ✅ Workout landing — phase cards + calendar entry + quick links
 │   ├── calendar.html                   ✅ Gym calendar page
@@ -174,7 +175,7 @@ users/{uid}/
 | 4 | `dinner.html` — 7 dinner cards + reheating table + Bhurji recipe collapsible | ✅ Done |
 | 5 | `health.html` — A1C panel + protein snapshot table + pre/post mini-tabs | ✅ Done |
 | 6 | `schedule.html` — two-tab strip (Office/WFH) + schedule table with critical row highlights | ✅ Done |
-| 7 | `meal-plan.html` — 7-day tab strip, today auto-activates, protein color-coded | ⬜ Not started |
+| 7 | `meal-plan.html` — 7-day tab strip, today auto-activates, protein color-coded | ✅ Done |
 | 8 | `index.html` — stat cards + Quick Reference collapsibles + nav links (nav links stub already exists) | ⬜ Not started |
 | 9 | Finish — sw.js PRECACHE (10 entries), bust.py, workdone.md completion protocol | ⬜ Not started |
 

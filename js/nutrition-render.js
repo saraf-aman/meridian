@@ -117,7 +117,92 @@ var NutritionRender = (function () {
     h += '</div>';
     root().innerHTML = h;
   }
-  function buildMealPlan()    { _stub('7-Day Meal Plan'); }
+  function buildMealPlan(mealPlan, milkSolution) {
+    var DAY_ORDER = ['mon','tue','wed','thu','fri','sat','sun'];
+    var TODAY_KEY = ['sun','mon','tue','wed','thu','fri','sat'][new Date().getDay()];
+
+    function typeChipClass(type) {
+      if (type.indexOf('Gym')    !== -1) return 'type-chip type-chip--gym';
+      if (type.indexOf('Cardio') !== -1) return 'type-chip type-chip--cardio';
+      return 'type-chip type-chip--rest';
+    }
+    function typeShort(type) {
+      if (type.indexOf('Gym')    !== -1) return 'Gym';
+      if (type.indexOf('Cardio') !== -1) return 'Cardio';
+      return 'Rest';
+    }
+
+    var h = '';
+    h += '<div class="container">';
+
+    h += '<div class="nutrition-header">';
+    h += '<h1>7-Day Meal Plan</h1>';
+    h += '<p>Full daily breakdown. Today\'s plan is pre-selected.</p>';
+    h += '</div>';
+
+    // ── Day selector strip ────────────────────────────────────────
+    h += '<div class="day-selector" data-panel="mealplan">';
+    DAY_ORDER.forEach(function (key) {
+      var day = mealPlan[key];
+      var active = key === TODAY_KEY;
+      h += '<button class="day-btn' + (active ? ' active' : '') + '" data-day="' + key + '">';
+      h += esc(day.label) + '<small>' + typeShort(day.type) + '</small>';
+      h += '</button>';
+    });
+    h += '</div>';
+
+    // ── Day panels ────────────────────────────────────────────────
+    h += '<div class="day-panels-wrap" data-panel="mealplan">';
+    DAY_ORDER.forEach(function (key) {
+      var day = mealPlan[key];
+      var active = key === TODAY_KEY;
+      h += '<div class="day-panel' + (active ? ' active' : '') + '" data-day="' + key + '">';
+
+      h += '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:16px;">';
+      h += '<div>';
+      h += '<h3 style="font-size:1rem;font-weight:700;color:var(--text-1);margin-bottom:6px;">' + esc(day.fullLabel) + '</h3>';
+      h += '<span class="' + typeChipClass(day.type) + '">' + esc(day.type) + '</span>';
+      h += '</div>';
+      h += '<div style="font-size:0.8rem;font-weight:600;color:var(--accent);">' + esc(day.totalProtein) + '</div>';
+      h += '</div>';
+
+      h += '<div class="meal-rows">';
+      day.meals.forEach(function (meal) {
+        h += '<div class="meal-row' + (meal.critical ? ' critical-row' : '') + '">';
+        h += '<span class="meal-row-time">' + esc(meal.time) + '</span>';
+        h += '<span class="meal-row-label">' + esc(meal.label) + '</span>';
+        h += '<span class="meal-row-food">' + esc(meal.food) + '</span>';
+        h += '<span class="meal-row-protein">' + esc(meal.protein) + '</span>';
+        h += '</div>';
+      });
+      h += '</div>';
+
+      h += '<div class="meal-day-total">Day total: ' + esc(day.totalProtein) + '</div>';
+      h += '</div>';
+    });
+    h += '</div>';
+
+    // ── Milk System ───────────────────────────────────────────────
+    h += '<h2 class="nut-section-head">The Milk System</h2>';
+
+    milkSolution.forEach(function (m) {
+      h += '<div class="ref-block' + (m.critical ? ' open' : '') + '" id="milk-' + m.moment + '">';
+      h += '<div class="ref-header">';
+      h += '<h4>Moment ' + m.moment + ' — ' + esc(m.title) + '</h4>';
+      h += '<div class="ref-header-right">';
+      h += '<span class="chip ' + (m.critical ? 'chip-accent' : 'chip-default') + '">' + esc(m.amount) + '</span>';
+      h += '<div class="chevron">' + chevron() + '</div>';
+      h += '</div></div>';
+      h += '<div class="ref-body"><div class="ref-content">';
+      h += '<p style="font-size:0.78rem;color:var(--text-3);margin-bottom:6px;">' + esc(m.timing) + '</p>';
+      h += '<p style="font-size:0.84rem;color:var(--text-1);line-height:1.5;">' + esc(m.purpose) + '</p>';
+      h += '</div></div>';
+      h += '</div>';
+    });
+
+    h += '</div>';
+    root().innerHTML = h;
+  }
   function buildLunch(options, rotation) {
     var h = '';
     h += '<div class="container">';
