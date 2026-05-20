@@ -403,6 +403,7 @@ function initExerciseNotes() {
     popover.querySelector('.note-popover-title').textContent = btn.dataset.exName || '';
     const ta = popover.querySelector('.note-textarea');
     ta.value       = cache[activeId] || '';
+    ta.scrollTop   = 0;
     ta.disabled    = !user;
     ta.placeholder = user
       ? 'Add form notes, reminders…'
@@ -410,7 +411,6 @@ function initExerciseNotes() {
 
     positionPopover(btn);
     popover.classList.add('open');
-    if (user) requestAnimationFrame(() => ta.focus());
   }
 
   function closePopover() {
