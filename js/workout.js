@@ -153,9 +153,14 @@ function initWeightTracker() {
       const saved = localStorage.getItem(key);
       if (saved) tag.querySelector('.wt-val').textContent = saved;
 
-      tag.addEventListener('click', e => {
+      tag.addEventListener('mousedown', e => {
         e.stopPropagation();
         if (tag.querySelector('input')) return;
+
+        // prevent the browser from blurring the active input before our click lands
+        e.preventDefault();
+        // manually save any open input in this section first
+        section.querySelector('input.weight-input')?.blur();
 
         const current = tag.querySelector('.wt-val').textContent;
         const input = document.createElement('input');
